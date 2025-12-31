@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الشاملة - E-Commerce</title>
+    <title>نظام إدارة المخزون الشامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
@@ -60,40 +60,44 @@
         .btn-primary:hover { background: var(--primary-hover); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-        .btn-block { width: 100%; justify-content: center; margin-top: 1rem; }
 
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: right; padding: 1rem; background: #f1f5f9; color: var(--text-muted); font-size: 0.85rem; border-bottom: 2px solid var(--border); }
-        .data-table td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        .data-table tr:hover { background: #f8fafc; }
-        
+        /* Custom Table for Inventory */
+        .inventory-table { width: 100%; border-collapse: collapse; }
+        .inventory-table th { text-align: right; padding: 1rem; background: #f8fafc; color: var(--text-muted); font-size: 0.8rem; border-bottom: 2px solid var(--border); text-transform: uppercase; }
+        .inventory-table td { padding: 0.8rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .inventory-table tr:hover { background: #f8fafc; }
+
+        .product-img {
+            width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);
+            background: #e2e8f0;
+        }
+
         .actions { display: flex; gap: 8px; }
 
         /* Dashboard Widgets */
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
         .quick-add-card {
             background: white; padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border);
-            display: flex; flex-direction: column; justify-content: space-between; height: 180px;
+            display: flex; flex-direction: column; justify-content: space-between; height: 160px;
             transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
         }
         .quick-add-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); }
-        
-        .quick-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .quick-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; }
         .quick-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
         .quick-desc { font-size: 0.85rem; color: var(--text-muted); }
 
-        /* Forms */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        /* Forms & Modals */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .form-group.full { grid-column: span 2; }
+        .form-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
         .form-control {
-            padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;
-            font-size: 0.95rem; transition: 0.2s; width: 100%;
+            padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 0.9rem; width: 100%; transition: 0.2s;
         }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .form-control[readonly] { background: #f8fafc; color: var(--text-main); font-weight: 700; }
+        .form-control:focus { outline: none; border-color: var(--primary); }
+        .form-control[readonly] { background: #f1f5f9; font-weight: 600; border-color: transparent; }
 
-        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
@@ -101,7 +105,7 @@
         }
         .modal-overlay.open { opacity: 1; visibility: visible; }
         .modal {
-            background: white; padding: 2rem; border-radius: var(--radius); width: 550px; max-width: 90%;
+            background: white; padding: 2rem; border-radius: var(--radius); width: 600px; max-width: 95%;
             transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto;
         }
         .modal-overlay.open .modal { transform: translateY(0); }
@@ -113,7 +117,7 @@
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Floating Save Button */
+        /* Floating Save */
         .save-fab {
             position: fixed; bottom: 30px; left: 30px; background: var(--text-main); color: white;
             padding: 1rem 1.5rem; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
@@ -122,10 +126,16 @@
         }
         .save-fab:hover { transform: scale(1.05); background: black; }
 
-        /* Utility */
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
-        .badge-valid { background: #dcfce7; color: #166534; }
-        .badge-invalid { background: #fee2e2; color: #991b1b; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-stock { background: #eff6ff; color: #1d4ed8; }
+        .badge-profit { background: #f0fdf4; color: #166534; }
+
+        /* Stat Row */
+        .stat-row { display: flex; align-items: center; gap: 15px; }
+        .stat-icon { width: 32px; height: 32px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary); }
+        .stat-text { font-size: 0.9rem; font-weight: 700; }
+        .stat-sub { font-size: 0.75rem; color: var(--text-muted); }
+
     </style>
 </head>
 <body>
@@ -134,7 +144,7 @@
     <aside class="sidebar">
         <div class="brand">
             <i class="ri-dashboard-3-line"></i>
-            <span>لوحة المتجر</span>
+            <span>نظام المخزون</span>
         </div>
         <nav>
             <div class="nav-item active" onclick="navTo('simulator')">
@@ -155,131 +165,95 @@
     <!-- Main Content -->
     <main class="main-content">
         
-        <!-- 1. DASHBOARD (Home) -->
+        <!-- 1. DASHBOARD -->
         <section id="simulator" class="page-section active">
             <div class="section-header">
                 <div class="section-title">
                     <h2>لوحة القيادة الرئيسية</h2>
-                    <p>نظرة عامة سريعة والإضافة السريعة للبيانات.</p>
+                    <p>نظرة عامة والإضافة السريعة.</p>
                 </div>
             </div>
 
-            <!-- Quick Add Cards -->
             <div class="dashboard-grid">
-                <div class="quick-add-card" onclick="openWinningModal()">
-                    <i class="ri-trophy-line quick-icon"></i>
-                    <div>
-                        <div class="quick-title">إضافة منتج فائز</div>
-                        <div class="quick-desc">سجل منتجات Alibaba الجديدة مع حساب السعر.</div>
-                    </div>
-                </div>
                 <div class="quick-add-card" onclick="openMyProductModal()">
                     <i class="ri-shopping-bag-3-line quick-icon"></i>
                     <div>
                         <div class="quick-title">إضافة مخزون</div>
-                        <div class="quick-desc">تحديث الكميات المتوفرة في المستودع.</div>
+                        <div class="quick-desc">سجل منتجاتك مع الصور وتفاصيل التكلفة.</div>
+                    </div>
+                </div>
+                <div class="quick-add-card" onclick="openWinningModal()">
+                    <i class="ri-trophy-line quick-icon"></i>
+                    <div>
+                        <div class="quick-title">إضافة منتج فائز</div>
+                        <div class="quick-desc">أضف منتجات من Alibaba مع حساب السعر.</div>
                     </div>
                 </div>
                 <div class="quick-add-card" onclick="openObjectifModal()">
                     <i class="ri-ship-line quick-icon"></i>
                     <div>
                         <div class="quick-title">خطة استيراد</div>
-                        <div class="quick-desc">إضافة أهداف استيراد وتخطيط الميزانية.</div>
+                        <div class="quick-desc">خطط للمستقبل وحسب التكاليف.</div>
                     </div>
                 </div>
                 <div class="quick-add-card" onclick="openSimModal()">
                     <i class="ri-settings-4-line quick-icon"></i>
                     <div>
-                        <div class="quick-title">تعديل الإعدادات</div>
-                        <div class="quick-desc">تحديث تكاليف الشحن والمصاريف العامة.</div>
+                        <div class="quick-title">الإعدادات العامة</div>
+                        <div class="quick-desc">تكاليف الشحن والمصاريف الثابتة.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Simulator Status Card -->
             <div class="card">
                 <div class="section-header" style="margin-bottom: 1rem;">
-                    <h3><i class="ri-calculator-line" style="color:var(--primary)"></i> حالة الربحية الحالية (بناءً على الإعدادات)</h3>
-                    <button class="btn btn-primary btn-sm" onclick="openSimModal()">تعديل</button>
+                    <h3>حالة الربحية السريعة</h3>
+                    <button class="btn btn-sm" onclick="openSimModal()">تعديل</button>
                 </div>
-                <div class="form-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="form-group">
-                        <label>سعر الشراء (DH)</label>
-                        <input type="text" class="form-control" id="sim-buy" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>التكلفة الكلية (DH)</label>
-                        <input type="text" class="form-control" id="sim-total-cost" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>سعر البيع (DH)</label>
-                        <input type="text" class="form-control" id="sim-sell" readonly style="font-weight: bold; color: var(--primary);">
-                    </div>
-                    <div class="form-group">
-                        <label>هامش الربح (DH)</label>
-                        <input type="text" class="form-control" id="sim-profit" readonly style="font-weight: bold; color: var(--success);">
-                    </div>
+                <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:1rem; text-align:center;">
+                    <div><label style="font-size:0.8rem; color:#64748b">هامش الربح (وحدة)</label><div id="dash-profit" style="font-weight:800; color:var(--success); font-size:1.2rem;">0 DH</div></div>
                 </div>
             </div>
         </section>
 
-        <!-- 2. WINNING PRODUCTS SECTION -->
+        <!-- 2. WINNING PRODUCTS -->
         <section id="winning" class="page-section">
             <div class="section-header">
-                <div class="section-title">
-                    <h2>المنتجات الفائزة</h2>
-                    <p>قاعدة بيانات المنتجات المرشحة للبيع.</p>
-                </div>
-                <button class="btn btn-primary" onclick="openWinningModal()">
-                    <i class="ri-add-line"></i> إضافة منتج
-                </button>
+                <div class="section-title"><h2>المنتجات الفائزة</h2><p>المنتجات المرشحة للإعلان.</p></div>
+                <button class="btn btn-primary" onclick="openWinningModal()"><i class="ri-add-line"></i> إضافة</button>
             </div>
-            
             <div class="card">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>اسم المنتج</th>
-                            <th>شراء ($)</th>
-                            <th>بيع ($)</th>
-                            <th>الحالة</th>
-                            <th>الإجراءات</th>
-                        </tr>
-                    </thead>
+                <table class="inventory-table">
+                    <thead><tr><th>اسم المنتج</th><th>شراء ($)</th><th>بيع ($)</th><th>الحالة</th><th>إجراء</th></tr></thead>
                     <tbody id="winning-tbody"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- 3. MY PRODUCT SECTION -->
+        <!-- 3. MY PRODUCT (INVENTORY) -->
         <section id="myproduct" class="page-section">
             <div class="section-header">
-                <div class="section-title">
-                    <h2>مخزوني الحالي</h2>
-                    <p>المنتجات المتوفرة والمباعة حالياً.</p>
-                </div>
-                <button class="btn btn-primary" onclick="openMyProductModal()">
-                    <i class="ri-add-line"></i> إضافة مخزون
-                </button>
+                <div class="section-title"><h2>المخزون الحالي</h2><p>تفاصيل المخزون، الصور، التكاليف، والأرباح.</p></div>
+                <button class="btn btn-primary" onclick="openMyProductModal()"><i class="ri-add-line"></i> إضافة مخزون</button>
             </div>
 
             <div class="card">
-                <table class="data-table">
+                <table class="inventory-table">
                     <thead>
                         <tr>
-                            <th>اسم المنتج</th>
-                            <th>بيع (DH)</th>
-                            <th>شراء (DH)</th>
+                            <th>المنتج</th>
+                            <th>البيانات المالية (الوحدة)</th>
                             <th>المخزون</th>
-                            <th>صافي الربح الكلي</th>
+                            <th>الأرباح</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="myproduct-tbody"></tbody>
                     <tfoot>
-                        <tr style="background: #f1f5f9; font-weight: bold;">
-                            <td colspan="4">الإجمالي الكلي</td>
-                            <td id="total-my-profit">0 DH</td>
+                        <tr style="background: #f8fafc; font-weight: bold;">
+                            <td colspan="2">الإجمالي الكلي للمخزون</td>
+                            <td id="total-stock">0</td>
+                            <td id="total-profit" style="color:var(--success)">0 DH</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -287,488 +261,310 @@
             </div>
         </section>
 
-        <!-- 4. OBJECTIF SECTION -->
+        <!-- 4. OBJECTIF -->
         <section id="objectif" class="page-section">
             <div class="section-header">
-                <div class="section-title">
-                    <h2>خطط الاستيراد المستقبلية</h2>
-                    <p>إدارة الميزانية والكميات المخطط لاستيرادها.</p>
-                </div>
-                <button class="btn btn-primary" onclick="openObjectifModal()">
-                    <i class="ri-add-line"></i> إضافة خطة
-                </button>
+                <div class="section-title"><h2>خطط الاستيراد</h2></div>
+                <button class="btn btn-primary" onclick="openObjectifModal()"><i class="ri-add-line"></i> إضافة</button>
             </div>
-
             <div class="card">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>اسم المنتج</th>
-                            <th>الكمية المستهدفة</th>
-                            <th>التكلفة التقديرية ($)</th>
-                            <th>الإجراءات</th>
-                        </tr>
-                    </thead>
+                <table class="inventory-table">
+                    <thead><tr><th>المنتج</th><th>الكمية</th><th>التكلفة ($)</th><th>إجراء</th></tr></thead>
                     <tbody id="objectif-tbody"></tbody>
-                    <tfoot>
-                        <tr style="background: #f1f5f9; font-weight: bold;">
-                            <td>إجمالي الاستثمار</td>
-                            <td id="total-obj-qty">0</td>
-                            <td id="total-obj-cost">$0</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </section>
-
     </main>
 
-    <!-- SAVE BUTTON -->
-    <div class="save-fab" onclick="saveAllData()">
-        <i class="ri-save-3-line"></i>
-        حفظ جميع التغييرات
-    </div>
-
-    <!-- TOAST -->
-    <div id="toast" style="position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.3s;">تم الحفظ بنجاح</div>
+    <div class="save-fab" onclick="saveAllData()"><i class="ri-save-3-line"></i> حفظ البيانات</div>
 
     <!-- MODALS -->
 
-    <!-- Simulator Modal -->
+    <!-- Sim Settings -->
     <div class="modal-overlay" id="modal-sim">
         <div class="modal">
-            <div class="modal-header">
-                <h3>تعديل إعدادات المحاكاة</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-sim')"></i>
-            </div>
+            <div class="modal-header"><h3>الإعدادات العامة</h3><i class="ri-close-line" onclick="closeModal('modal-sim')" style="cursor:pointer; font-size:1.5rem;"></i></div>
             <div class="form-grid">
                 <div class="form-group"><label>شراء (DH)</label><input type="number" class="form-control" id="edit-sim-buy"></div>
                 <div class="form-group"><label>استيراد (DH)</label><input type="number" class="form-control" id="edit-sim-import"></div>
                 <div class="form-group"><label>توصيل (DH)</label><input type="number" class="form-control" id="edit-sim-delivery"></div>
                 <div class="form-group"><label>عمولات (DH)</label><input type="number" class="form-control" id="edit-sim-comm"></div>
                 <div class="form-group"><label>إعلانات (DH)</label><input type="number" class="form-control" id="edit-sim-ads"></div>
-                <div class="form-group"><label>إعلانات تجريبية (DH)</label><input type="number" class="form-control" id="edit-sim-testads"></div>
                 <div class="form-group"><label>سعر البيع (DH)</label><input type="number" class="form-control" id="edit-sim-sell"></div>
             </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('modal-sim')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveSimSettings()">تحديث الإعدادات</button>
-            </div>
+            <div class="modal-footer"><button class="btn" onclick="closeModal('modal-sim')">إلغاء</button><button class="btn btn-primary" onclick="saveSimSettings()">حفظ</button></div>
         </div>
     </div>
 
-    <!-- Winning Modal (With Auto Calc) -->
+    <!-- Winning Modal -->
     <div class="modal-overlay" id="modal-winning">
         <div class="modal">
-            <div class="modal-header">
-                <h3 id="winning-modal-title">إضافة منتج فائز</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-winning')"></i>
-            </div>
+            <div class="modal-header"><h3>منتج فائز</h3><i class="ri-close-line" onclick="closeModal('modal-winning')" style="cursor:pointer; font-size:1.5rem;"></i></div>
             <input type="hidden" id="winning-id">
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label>اسم المنتج</label>
-                <input type="text" class="form-control" id="winning-name">
-            </div>
+            <div class="form-group"><label>اسم المنتج</label><input type="text" class="form-control" id="winning-name"></div>
             <div class="form-grid">
-                <div class="form-group">
-                    <label>شراء ($)</label>
-                    <input type="number" class="form-control" id="winning-buy" oninput="calcWinningPrice()">
-                </div>
-                <div class="form-group">
-                    <label>الربح المطلوب ($)</label>
-                    <input type="number" class="form-control" id="winning-profit-target" placeholder="مثلاً: 15" value="15" oninput="calcWinningPrice()">
-                </div>
-                <div class="form-group">
-                    <label>بيع المقترح ($)</label>
-                    <input type="number" class="form-control" id="winning-sell" readonly style="background:#f0f9ff; border-color:#bfdbfe;">
-                </div>
-                <div class="form-group">
-                    <label>الحالة</label>
+                <div class="form-group"><label>شراء ($)</label><input type="number" class="form-control" id="winning-buy" oninput="calcWinning()"></div>
+                <div class="form-group"><label>الربح ($)</label><input type="number" class="form-control" id="winning-profit" value="15" oninput="calcWinning()"></div>
+                <div class="form-group"><label>بيع ($)</label><input type="number" class="form-control" id="winning-sell" readonly style="background:#eff6ff"></div>
+                <div class="form-group"><label>الحالة</label>
                     <select class="form-control" id="winning-status">
-                        <option value="">-- اختر --</option>
-                        <option value="Valid">Valid</option>
-                        <option value="Invalid">Invalid</option>
+                        <option value="">-</option><option value="Valid">Valid</option><option value="Invalid">Invalid</option>
                     </select>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('modal-winning')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveWinningProduct()">حفظ المنتج</button>
-            </div>
+            <div class="modal-footer"><button class="btn" onclick="closeModal('modal-winning')">إلغاء</button><button class="btn btn-primary" onclick="saveWinning()">حفظ</button></div>
         </div>
     </div>
 
-    <!-- My Product Modal (With Auto Calc) -->
+    <!-- MY PRODUCT Modal (With New Fields) -->
     <div class="modal-overlay" id="modal-myproduct">
         <div class="modal">
-            <div class="modal-header">
-                <h3 id="myproduct-modal-title">إضافة مخزون</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-myproduct')"></i>
-            </div>
+            <div class="modal-header"><h3>بيانات المخزون</h3><i class="ri-close-line" onclick="closeModal('modal-myproduct')" style="cursor:pointer; font-size:1.5rem;"></i></div>
             <input type="hidden" id="myproduct-id">
-            <div class="form-group" style="margin-bottom: 1rem;">
+            
+            <div class="form-group full">
                 <label>اسم المنتج</label>
                 <input type="text" class="form-control" id="myproduct-name">
             </div>
+
+            <div class="form-group full">
+                <label>رابط الصورة (URL)</label>
+                <input type="text" class="form-control" id="myproduct-img" placeholder="https://example.com/image.jpg (اتركه فارغاً للصورة الافتراضية)">
+            </div>
+
+            <!-- Financials -->
             <div class="form-grid">
-                <div class="form-group">
-                    <label>شراء (DH)</label>
-                    <input type="number" class="form-control" id="myproduct-buy" oninput="calcMyProductPrice()">
-                </div>
-                <div class="form-group">
-                    <label>الربح المطلوب (DH)</label>
-                    <input type="number" class="form-control" id="myproduct-profit-target" placeholder="مثلاً: 50" value="50" oninput="calcMyProductPrice()">
-                </div>
-                <div class="form-group">
-                    <label>بيع المقترح (DH)</label>
-                    <input type="number" class="form-control" id="myproduct-sell" readonly style="background:#f0fdf4; border-color:#bbf7d0;">
-                </div>
-                <div class="form-group">
-                    <label>المخزون المتوفر</label>
-                    <input type="number" class="form-control" id="myproduct-stock">
-                </div>
+                <div class="form-group"><label>سعر الشراء (DH)</label><input type="number" class="form-control" id="myproduct-buy" oninput="calcMyProduct()"></div>
+                <div class="form-group"><label>الربح المستهدف (DH)</label><input type="number" class="form-control" id="myproduct-profit" value="50" oninput="calcMyProduct()"></div>
+                <div class="form-group"><label>سعر البيع المقترح (DH)</label><input type="number" class="form-control" id="myproduct-sell" readonly style="background:#f0fdf4"></div>
+                <div class="form-group"><label>تكلفة الإعلان الكلي (Ads) (DH)</label><input type="number" class="form-control" id="myproduct-ads" value="0"></div>
+                <div class="form-group"><label>رسوم التوصيل والتأكيد (DH/وحدة)</label><input type="number" class="form-control" id="myproduct-delivery" value="0"></div>
             </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('modal-myproduct')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveMyProduct()">حفظ المنتج</button>
+
+            <!-- Inventory -->
+            <div class="form-grid" style="margin-top:1rem; border-top:1px dashed var(--border); padding-top:1rem;">
+                <div class="form-group"><label>إجمالي المخزون (Total Stock)</label><input type="number" class="form-control" id="myproduct-total-stock" placeholder="0"></div>
+                <div class="form-group"><label>الباقي في المخزون (Remaining)</label><input type="number" class="form-control" id="myproduct-remaining" placeholder="0"></div>
             </div>
+
+            <div class="modal-footer"><button class="btn" onclick="closeModal('modal-myproduct')">إلغاء</button><button class="btn btn-primary" onclick="saveMyProduct()">حفظ المنتج</button></div>
         </div>
     </div>
 
     <!-- Objectif Modal -->
     <div class="modal-overlay" id="modal-objectif">
         <div class="modal">
-            <div class="modal-header">
-                <h3 id="objectif-modal-title">خطة استيراد جديدة</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-objectif')"></i>
-            </div>
+            <div class="modal-header"><h3>خطة استيراد</h3><i class="ri-close-line" onclick="closeModal('modal-objectif')" style="cursor:pointer; font-size:1.5rem;"></i></div>
             <input type="hidden" id="objectif-id">
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label>اسم المنتج</label>
-                <input type="text" class="form-control" id="objectif-name">
-            </div>
-            <div class="form-grid">
-                <div class="form-group"><label>الكمية</label><input type="number" class="form-control" id="objectif-qty"></div>
-                <div class="form-group"><label>التكلفة ($)</label><input type="number" class="form-control" id="objectif-cost"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('modal-objectif')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveObjectif()">حفظ الخطة</button>
-            </div>
+            <div class="form-group"><label>المنتج</label><input type="text" class="form-control" id="objectif-name"></div>
+            <div class="form-grid"><div class="form-group"><label>الكمية</label><input type="number" class="form-control" id="objectif-qty"></div><div class="form-group"><label>التكلفة ($)</label><input type="number" class="form-control" id="objectif-cost"></div></div>
+            <div class="modal-footer"><button class="btn" onclick="closeModal('modal-objectif')">إلغاء</button><button class="btn btn-primary" onclick="saveObjectif()">حفظ</button></div>
         </div>
     </div>
 
     <script>
-        // --- DATA STATE ---
-        const DB_KEY = 'ecommerce_manager_db';
+        // --- DATA ---
+        const DB_KEY = 'ecommerce_inventory_db';
         
         let appData = {
-            simulator: { buyPrice: 50, importFees: 10, deliveryFees: 80, commissionFees: 0, adsFees: 50, testAdsFees: 0, sellingPrice: 190 },
+            sim: { buy: 50, imp: 10, del: 80, comm: 0, ads: 50, sell: 190 },
             winning: [
-                { id: 1715001, name: "USB Plug Kitchen Electric Double Sided Knife Sharpener", buy: 9, sell: 30, status: "Valid" },
-                { id: 1715002, name: "Console Blanche de jeu rétro 20 000 jeux", buy: 15, sell: 37, status: "Valid" }
+                { id: 1, name: "USB Plug Knife Sharpener", buy: 9, sell: 30, status: "Valid" },
+                { id: 2, name: "Console Retro 20000 Jeux", buy: 15, sell: 37, status: "Valid" }
             ],
             myProducts: [
-                { id: 1726001, name: "خيمة شاطئية وحمام سباحة للأطفال", sell: 28, buy: 11, stock: 100 },
-                { id: 1726002, name: "محول شاشة السيارة إلى كار بلاي", sell: 28, buy: 9.5, stock: 47 }
+                { id: 101, name: "خيمة شاطئية للأطفال", img: "", buy: 11, profit: 17, sell: 28, ads: 0, delivery: 8.6, totalStock: 100, remaining: 50 },
+                { id: 102, name: "محول شاشة كار بلاي", img: "", buy: 9.5, profit: 18.5, sell: 28, ads: 0, delivery: 8.6, totalStock: 47, remaining: 10 }
             ],
-            objectifs: [
-                { id: 1737001, name: "جهاز طارد الكلاب", qty: 200, cost: 600 },
-                { id: 1737002, name: "كاميرا السيارة ب 4 كاميرات", qty: 200, cost: 3110 }
-            ]
+            objectifs: [{ id: 201, name: "Dog Chaser", qty: 200, cost: 600 }]
         };
 
-        // --- INITIALIZATION ---
-        window.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            renderAll();
-        });
+        window.onload = () => { loadData(); renderAll(); };
 
-        function renderAll() {
-            renderSimulator();
-            renderWinning();
-            renderMyProduct();
-            renderObjectif();
-        }
-
-        // --- NAVIGATION ---
-        function navTo(sectionId) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(sectionId));
-            if(activeNav) activeNav.classList.add('active');
+        // --- CORE ---
+        function saveAllData() { localStorage.setItem(DB_KEY, JSON.stringify(appData)); showToast(); }
+        function loadData() { const s = localStorage.getItem(DB_KEY); if(s) appData = JSON.parse(s); }
+        function showToast() { alert("تم الحفظ بنجاح!"); }
+        function navTo(id) {
+            document.querySelectorAll('.page-section').forEach(e=>e.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+            document.querySelector(`.nav-item[onclick="navTo('${id}')"]`).classList.add('active');
         }
 
-        // --- STORAGE ---
-        function loadData() {
-            const stored = localStorage.getItem(DB_KEY);
-            if (stored) appData = JSON.parse(stored);
-        }
-        function saveAllData() {
-            localStorage.setItem(DB_KEY, JSON.stringify(appData));
-            const toast = document.getElementById('toast');
-            toast.style.opacity = '1';
-            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
-        }
+        function renderAll() { renderSim(); renderWinning(); renderMyProduct(); renderObjectif(); }
 
         // --- SIMULATOR ---
-        function renderSimulator() {
-            const s = appData.simulator;
-            const totalCost = s.buyPrice + s.importFees + s.deliveryFees + s.commissionFees + s.adsFees + s.testAdsFees;
-            const profit = s.sellingPrice - totalCost;
-            
-            document.getElementById('sim-buy').value = s.buyPrice;
-            document.getElementById('sim-total-cost').value = totalCost;
-            document.getElementById('sim-sell').value = s.sellingPrice;
-            document.getElementById('sim-profit').value = profit;
-            document.getElementById('sim-profit').style.color = profit >= 0 ? 'var(--success)' : 'var(--danger)';
+        function renderSim() {
+            const s = appData.sim;
+            const profit = s.sell - (s.buy + s.imp + s.del + s.comm + s.ads);
+            document.getElementById('dash-profit').innerText = profit + " DH";
+            // Fill modal inputs
+            document.getElementById('edit-sim-buy').value = s.buy; document.getElementById('edit-sim-imp').value = s.imp;
+            document.getElementById('edit-sim-del').value = s.del; document.getElementById('edit-sim-comm').value = s.comm;
+            document.getElementById('edit-sim-ads').value = s.ads; document.getElementById('edit-sim-sell').value = s.sell;
         }
-
-        function openSimModal() {
-            const s = appData.simulator;
-            document.getElementById('edit-sim-buy').value = s.buyPrice;
-            document.getElementById('edit-sim-import').value = s.importFees;
-            document.getElementById('edit-sim-delivery').value = s.deliveryFees;
-            document.getElementById('edit-sim-comm').value = s.commissionFees;
-            document.getElementById('edit-sim-ads').value = s.adsFees;
-            document.getElementById('edit-sim-testads').value = s.testAdsFees;
-            document.getElementById('edit-sim-sell').value = s.sellingPrice;
-            document.getElementById('modal-sim').classList.add('open');
-        }
-
+        function openSimModal() { document.getElementById('modal-sim').classList.add('open'); }
         function saveSimSettings() {
-            appData.simulator.buyPrice = parseFloat(document.getElementById('edit-sim-buy').value) || 0;
-            appData.simulator.importFees = parseFloat(document.getElementById('edit-sim-import').value) || 0;
-            appData.simulator.deliveryFees = parseFloat(document.getElementById('edit-sim-delivery').value) || 0;
-            appData.simulator.commissionFees = parseFloat(document.getElementById('edit-sim-comm').value) || 0;
-            appData.simulator.adsFees = parseFloat(document.getElementById('edit-sim-ads').value) || 0;
-            appData.simulator.testAdsFees = parseFloat(document.getElementById('edit-sim-testads').value) || 0;
-            appData.simulator.sellingPrice = parseFloat(document.getElementById('edit-sim-sell').value) || 0;
-            renderSimulator();
-            closeModal('modal-sim');
-            saveAllData();
+            appData.sim.buy = parseFloat(document.getElementById('edit-sim-buy').value)||0;
+            appData.sim.imp = parseFloat(document.getElementById('edit-sim-imp').value)||0;
+            appData.sim.del = parseFloat(document.getElementById('edit-sim-del').value)||0;
+            appData.sim.comm = parseFloat(document.getElementById('edit-sim-comm').value)||0;
+            appData.sim.ads = parseFloat(document.getElementById('edit-sim-ads').value)||0;
+            appData.sim.sell = parseFloat(document.getElementById('edit-sim-sell').value)||0;
+            renderSim(); closeModal('modal-sim'); saveAllData();
         }
 
-        // --- WINNING PRODUCTS ---
+        // --- WINNING ---
         function renderWinning() {
-            const tbody = document.getElementById('winning-tbody');
-            tbody.innerHTML = '';
-            appData.winning.forEach((item, index) => {
-                const badgeClass = item.status === 'Valid' ? 'badge-valid' : (item.status === 'Invalid' ? 'badge-invalid' : '');
+            const t = document.getElementById('winning-tbody'); t.innerHTML = '';
+            appData.winning.forEach((item, i) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>$${item.buy}</td>
-                    <td>$${item.sell}</td>
-                    <td><span class="badge ${badgeClass}">${item.status || '-'}</span></td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn btn-sm" onclick="editWinning(${index})"><i class="ri-pencil-line"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteWinning(${index})"><i class="ri-delete-bin-line"></i></button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                tr.innerHTML = `<td>${item.name}</td><td>$${item.buy}</td><td>$${item.sell}</td><td><span class="badge badge-${item.status}">${item.status}</span></td><td><button class="btn btn-sm btn-danger" onclick="delWinning(${i})">حذف</button></td>`;
+                t.appendChild(tr);
             });
         }
-
-        function openWinningModal() {
-            document.getElementById('winning-modal-title').innerText = "إضافة منتج فائز";
-            document.getElementById('winning-id').value = "";
-            document.getElementById('winning-name').value = "";
-            document.getElementById('winning-buy').value = "";
-            document.getElementById('winning-profit-target').value = "15"; // Default profit
-            document.getElementById('winning-sell').value = "";
-            document.getElementById('winning-status').value = "";
-            document.getElementById('modal-winning').classList.add('open');
+        function openWinningModal() { document.getElementById('modal-winning').classList.add('open'); document.getElementById('winning-id').value=""; }
+        function calcWinning() {
+            const b = parseFloat(document.getElementById('winning-buy').value)||0;
+            const p = parseFloat(document.getElementById('winning-profit').value)||0;
+            document.getElementById('winning-sell').value = b + p;
         }
-
-        function calcWinningPrice() {
-            const buy = parseFloat(document.getElementById('winning-buy').value) || 0;
-            const profit = parseFloat(document.getElementById('winning-profit-target').value) || 0;
-            document.getElementById('winning-sell').value = buy + profit;
-        }
-
-        function editWinning(index) {
-            const item = appData.winning[index];
-            document.getElementById('winning-modal-title').innerText = "تعديل المنتج";
-            document.getElementById('winning-id').value = index;
-            document.getElementById('winning-name').value = item.name;
-            document.getElementById('winning-buy').value = item.buy;
-            document.getElementById('winning-profit-target').value = (item.sell - item.buy).toFixed(2);
-            document.getElementById('winning-sell').value = item.sell;
-            document.getElementById('winning-status').value = item.status;
-            document.getElementById('modal-winning').classList.add('open');
-        }
-
-        function saveWinningProduct() {
+        function saveWinning() {
             const id = document.getElementById('winning-id').value;
-            const newData = {
-                id: id !== "" ? appData.winning[id].id : Date.now(),
-                name: document.getElementById('winning-name').value,
-                buy: parseFloat(document.getElementById('winning-buy').value) || 0,
-                sell: parseFloat(document.getElementById('winning-sell').value) || 0,
-                status: document.getElementById('winning-status').value
-            };
-            if (id !== "") appData.winning[id] = newData;
-            else appData.winning.push(newData);
-            renderWinning();
-            closeModal('modal-winning');
-            saveAllData();
+            const d = { id: id?appData.winning[id].id:Date.now(), name:document.getElementById('winning-name').value, buy:parseFloat(document.getElementById('winning-buy').value)||0, sell:parseFloat(document.getElementById('winning-sell').value)||0, status:document.getElementById('winning-status').value };
+            if(id) appData.winning[id] = d; else appData.winning.push(d);
+            renderWinning(); closeModal('modal-winning'); saveAllData();
         }
+        function delWinning(i) { if(confirm('حذف؟')){appData.winning.splice(i,1);renderWinning();saveAllData();} }
 
-        function deleteWinning(index) {
-            if(confirm('حذف؟')) { appData.winning.splice(index, 1); renderWinning(); saveAllData(); }
-        }
-
-        // --- MY PRODUCT ---
+        // --- MY PRODUCT (Main Logic) ---
         function renderMyProduct() {
-            const tbody = document.getElementById('myproduct-tbody');
-            tbody.innerHTML = '';
-            let totalProfit = 0;
-            appData.myProducts.forEach((item, index) => {
-                const profit = (item.sell - item.buy) * item.stock;
-                totalProfit += profit;
+            const t = document.getElementById('myproduct-tbody'); t.innerHTML = '';
+            let totalStock = 0; let totalProfit = 0;
+
+            appData.myProducts.forEach((p, i) => {
+                // Calculate Profit: (Sell - Buy) * Remaining - (Ads + Delivery) - (Delivery of Sold Units?)
+                // Let's follow user request: Net Profit usually means (Sell Price - Buy Price - Delivery) * Remaining - Ads Cost
+                
+                // Formula requested:
+                // Net Profit = ( (Sell - Buy - Delivery) * Remaining ) - Ads
+                
+                const unitCost = p.buy + p.delivery;
+                const unitProfit = p.sell - unitCost;
+                const totalItemProfit = (unitProfit * p.remaining) - p.ads;
+                
+                totalStock += parseInt(p.totalStock);
+                totalProfit += totalItemProfit;
+
+                const imgSrc = p.img && p.img.trim() !== "" ? p.img : "https://picsum.photos/seed/"+p.id+"/50/50";
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.sell}</td>
-                    <td>${item.buy}</td>
-                    <td>${item.stock}</td>
-                    <td style="font-weight:bold; color:${profit>=0?'var(--success)':'var(--danger)'}">${profit.toFixed(1)} DH</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn btn-sm" onclick="editMyProduct(${index})"><i class="ri-pencil-line"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteMyProduct(${index})"><i class="ri-delete-bin-line"></i></button>
+                    <td style="display:flex; align-items:center; gap:10px;">
+                        <img src="${imgSrc}" class="product-img" onerror="this.src='https://via.placeholder.com/50?text=IMG'">
+                        <div>
+                            <div style="font-weight:700;">${p.name}</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted)">شراء: ${p.buy} DH</div>
                         </div>
                     </td>
+                    <td>
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                            <div class="stat-row"><div class="stat-icon"><i class="ri-money-dollar-circle-line"></i></div><div class="stat-text">${p.sell} DH <span class="stat-sub">بيع</span></div></div>
+                            <div class="stat-row"><div class="stat-icon"><i class="ri-truck-line"></i></div><div class="stat-text">${p.delivery} DH <span class="stat-sub">توصيل</span></div></div>
+                            <div class="stat-row"><div class="stat-icon"><i class="ri-advertisement-line"></i></div><div class="stat-text">${p.ads} DH <span class="stat-sub">Ads</span></div></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight:700;">${p.remaining} <span class="stat-sub">باقي</span></div>
+                        <div style="font-size:0.8rem; color:var(--text-muted)">من ${p.totalStock} كلي</div>
+                    </td>
+                    <td style="font-weight:800; color: ${totalItemProfit>=0?'var(--success)':'var(--danger)'}">${totalItemProfit.toFixed(1)} DH</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="editMyProduct(${i})"><i class="ri-pencil-line"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="delMyProduct(${i})"><i class="ri-delete-bin-line"></i></button>
+                    </td>
                 `;
-                tbody.appendChild(tr);
+                t.appendChild(tr);
             });
-            document.getElementById('total-my-profit').innerText = totalProfit.toLocaleString() + ' DH';
+            document.getElementById('total-stock').innerText = totalStock;
+            document.getElementById('total-profit').innerText = totalProfit.toFixed(1) + " DH";
         }
 
         function openMyProductModal() {
-            document.getElementById('myproduct-modal-title').innerText = "إضافة مخزون";
+            document.getElementById('modal-myproduct').classList.add('open');
             document.getElementById('myproduct-id').value = "";
+            // Reset fields
             document.getElementById('myproduct-name').value = "";
+            document.getElementById('myproduct-img').value = "";
             document.getElementById('myproduct-buy').value = "";
-            document.getElementById('myproduct-profit-target').value = "50"; // Default profit
+            document.getElementById('myproduct-profit').value = "50";
             document.getElementById('myproduct-sell').value = "";
-            document.getElementById('myproduct-stock').value = "";
-            document.getElementById('modal-myproduct').classList.add('open');
+            document.getElementById('myproduct-ads').value = "0";
+            document.getElementById('myproduct-delivery').value = "0";
+            document.getElementById('myproduct-total-stock').value = "";
+            document.getElementById('myproduct-remaining').value = "";
         }
 
-        function calcMyProductPrice() {
-            const buy = parseFloat(document.getElementById('myproduct-buy').value) || 0;
-            const profit = parseFloat(document.getElementById('myproduct-profit-target').value) || 0;
-            document.getElementById('myproduct-sell').value = buy + profit;
+        function calcMyProduct() {
+            const b = parseFloat(document.getElementById('myproduct-buy').value)||0;
+            const p = parseFloat(document.getElementById('myproduct-profit').value)||0;
+            document.getElementById('myproduct-sell').value = b + p;
         }
 
-        function editMyProduct(index) {
-            const item = appData.myProducts[index];
-            document.getElementById('myproduct-modal-title').innerText = "تعديل المخزون";
-            document.getElementById('myproduct-id').value = index;
-            document.getElementById('myproduct-name').value = item.name;
-            document.getElementById('myproduct-buy').value = item.buy;
-            document.getElementById('myproduct-profit-target').value = (item.sell - item.buy).toFixed(2);
-            document.getElementById('myproduct-sell').value = item.sell;
-            document.getElementById('myproduct-stock').value = item.stock;
+        function editMyProduct(i) {
+            const p = appData.myProducts[i];
             document.getElementById('modal-myproduct').classList.add('open');
+            document.getElementById('myproduct-id').value = i;
+            document.getElementById('myproduct-name').value = p.name;
+            document.getElementById('myproduct-img').value = p.img;
+            document.getElementById('myproduct-buy').value = p.buy;
+            document.getElementById('myproduct-profit').value = (p.sell - p.buy).toFixed(1);
+            document.getElementById('myproduct-sell').value = p.sell;
+            document.getElementById('myproduct-ads').value = p.ads;
+            document.getElementById('myproduct-delivery').value = p.delivery;
+            document.getElementById('myproduct-total-stock').value = p.totalStock;
+            document.getElementById('myproduct-remaining').value = p.remaining;
         }
 
         function saveMyProduct() {
             const id = document.getElementById('myproduct-id').value;
-            const newData = {
-                id: id !== "" ? appData.myProducts[id].id : Date.now(),
+            const d = {
+                id: id ? appData.myProducts[id].id : Date.now(),
                 name: document.getElementById('myproduct-name').value,
-                sell: parseFloat(document.getElementById('myproduct-sell').value) || 0,
-                buy: parseFloat(document.getElementById('myproduct-buy').value) || 0,
-                stock: parseFloat(document.getElementById('myproduct-stock').value) || 0
+                img: document.getElementById('myproduct-img').value,
+                buy: parseFloat(document.getElementById('myproduct-buy').value)||0,
+                sell: parseFloat(document.getElementById('myproduct-sell').value)||0,
+                ads: parseFloat(document.getElementById('myproduct-ads').value)||0,
+                delivery: parseFloat(document.getElementById('myproduct-delivery').value)||0,
+                totalStock: parseInt(document.getElementById('myproduct-total-stock').value)||0,
+                remaining: parseInt(document.getElementById('myproduct-remaining').value)||0
             };
-            if (id !== "") appData.myProducts[id] = newData;
-            else appData.myProducts.push(newData);
-            renderMyProduct();
-            closeModal('modal-myproduct');
-            saveAllData();
+            if(id) appData.myProducts[id] = d; else appData.myProducts.push(d);
+            renderMyProduct(); closeModal('modal-myproduct'); saveAllData();
         }
 
-        function deleteMyProduct(index) {
-            if(confirm('حذف؟')) { appData.myProducts.splice(index, 1); renderMyProduct(); saveAllData(); }
-        }
+        function delMyProduct(i) { if(confirm('حذف؟')){appData.myProducts.splice(i,1);renderMyProduct();saveAllData();} }
 
         // --- OBJECTIF ---
         function renderObjectif() {
-            const tbody = document.getElementById('objectif-tbody');
-            tbody.innerHTML = '';
-            let totalQty = 0, totalCost = 0;
-            appData.objectifs.forEach((item, index) => {
-                totalQty += parseInt(item.qty);
-                totalCost += parseFloat(item.cost);
+            const t = document.getElementById('objectif-tbody'); t.innerHTML = '';
+            appData.objectifs.forEach((o,i) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.qty}</td>
-                    <td>$${item.cost}</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn btn-sm" onclick="editObjectif(${index})"><i class="ri-pencil-line"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteObjectif(${index})"><i class="ri-delete-bin-line"></i></button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                tr.innerHTML = `<td>${o.name}</td><td>${o.qty}</td><td>$${o.cost}</td><td><button class="btn btn-sm btn-danger" onclick="delObj(${i})">حذف</button></td>`;
+                t.appendChild(tr);
             });
-            document.getElementById('total-obj-qty').innerText = totalQty;
-            document.getElementById('total-obj-cost').innerText = '$' + totalCost.toLocaleString();
         }
-
-        function openObjectifModal() {
-            document.getElementById('objectif-modal-title').innerText = "خطة استيراد جديدة";
-            document.getElementById('objectif-id').value = "";
-            document.getElementById('objectif-name').value = "";
-            document.getElementById('objectif-qty').value = "";
-            document.getElementById('objectif-cost').value = "";
-            document.getElementById('modal-objectif').classList.add('open');
-        }
-
-        function editObjectif(index) {
-            const item = appData.objectifs[index];
-            document.getElementById('objectif-modal-title').innerText = "تعديل الخطة";
-            document.getElementById('objectif-id').value = index;
-            document.getElementById('objectif-name').value = item.name;
-            document.getElementById('objectif-qty').value = item.qty;
-            document.getElementById('objectif-cost').value = item.cost;
-            document.getElementById('modal-objectif').classList.add('open');
-        }
-
+        function openObjectifModal() { document.getElementById('modal-objectif').classList.add('open'); document.getElementById('objectif-id').value=""; }
         function saveObjectif() {
             const id = document.getElementById('objectif-id').value;
-            const newData = {
-                id: id !== "" ? appData.objectifs[id].id : Date.now(),
-                name: document.getElementById('objectif-name').value,
-                qty: parseInt(document.getElementById('objectif-qty').value) || 0,
-                price: parseFloat(document.getElementById('objectif-cost').value) || 0 // Typo fix in logic, using cost below
-            };
-            newData.cost = parseFloat(document.getElementById('objectif-cost').value) || 0; // Fix cost logic
-            
-            if (id !== "") appData.objectifs[id] = newData;
-            else appData.objectifs.push(newData);
-            renderObjectif();
-            closeModal('modal-objectif');
-            saveAllData();
+            const d = { id: id?appData.objectifs[id].id:Date.now(), name:document.getElementById('objectif-name').value, qty:parseInt(document.getElementById('objectif-qty').value)||0, cost:parseFloat(document.getElementById('objectif-cost').value)||0 };
+            if(id) appData.objectifs[id]=d; else appData.objectifs.push(d);
+            renderObjectif(); closeModal('modal-objectif'); saveAllData();
         }
+        function delObj(i) { if(confirm('حذف؟')){appData.objectifs.splice(i,1);renderObjectif();saveAllData();} }
 
-        function deleteObjectif(index) {
-            if(confirm('حذف؟')) { appData.objectifs.splice(index, 1); renderObjectif(); saveAllData(); }
-        }
-
-        // --- UTILS ---
         function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-        window.onclick = function(event) { if (event.target.classList.contains('modal-overlay')) event.target.classList.remove('open'); }
     </script>
 </body>
 </html>
