@@ -1,1237 +1,1205 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProDash | نظام إدارة المتجر المتطور</title>
+    <title>لوحة إدارة البيع والتجارة الإلكترونية</title>
+    <!-- مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- خط عربي جميل (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- خط تجوال -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <!-- أيقونات RemixIcon (أكثر حداثة) -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <!-- مكتبة الرسوم البيانية -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         :root {
-            /* الألوان الأساسية - الوضع النهار */
-            --primary: #4F46E5;
-            --primary-dark: #3730a3;
-            --secondary: #64748b;
-            --bg-body: #f8fafc;
-            --bg-sidebar: #ffffff;
-            --bg-card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --gradient-primary: linear-gradient(135deg, #4F46E5 0%, #818cf8 100%);
-            --radius: 16px;
-        }
-
-        [data-theme="dark"] {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #94a3b8;
-            --bg-body: #0f172a;
-            --bg-sidebar: #1e293b;
-            --bg-card: #1e293b;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --shadow-sm: none;
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --dark-bg: #1f2937;
+            --light-bg: #f3f4f6;
+            --white: #ffffff;
+            --text-gray: #6b7280;
+            --sidebar-width: 260px;
+            --transition: all 0.3s ease;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Tajawal', sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            outline: none;
         }
 
         body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark-bg);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
             height: 100vh;
-            overflow: hidden;
-            display: flex;
+            right: 0;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
         }
 
-        /* --- Scrollbar Styling --- */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
-
-        /* --- Layout --- */
-        aside {
-            width: 280px;
-            background-color: var(--bg-sidebar);
-            border-inline-end: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem 1rem;
-            z-index: 10;
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 2.5rem;
-            padding: 0 0.5rem;
-        }
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
-        .logo-text {
-            font-size: 1.4rem;
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .sidebar-header h2 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
         }
 
-        .nav-menu {
+        .nav-links {
             list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            padding: 20px 0;
             flex-grow: 1;
         }
 
-        .nav-item {
-            padding: 0.9rem 1rem;
-            border-radius: 12px;
-            cursor: pointer;
+        .nav-links li {
+            margin-bottom: 5px;
+        }
+
+        .nav-links a {
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 12px 20px;
+            color: #d1d5db;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border-right: 4px solid transparent;
         }
 
-        .nav-item:hover {
-            background-color: var(--bg-body);
-            color: var(--primary);
-            transform: translateX(4px);
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--white);
+            border-right-color: var(--primary-color);
         }
 
-        .nav-item.active {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        .nav-links a i {
+            margin-left: 10px;
+            width: 20px;
+            text-align: center;
         }
 
-        .nav-item i { font-size: 1.2rem; }
-
-        .main-wrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
+        /* --- Main Content --- */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 20px;
+            transition: var(--transition);
         }
 
         header {
-            height: 70px;
-            background-color: var(--bg-sidebar); /* ليتطابق مع السايد بار */
-            border-bottom: 1px solid var(--border);
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 2rem;
-        }
-
-        .header-title h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .header-actions {
-            display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
+            margin-bottom: 30px;
+            background: var(--white);
+            padding: 15px 20px;
             border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-        .icon-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--bg-body);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 12px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            cursor: pointer;
-        }
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.8rem;
-        }
-        .user-name { font-weight: 700; color: var(--text-main); }
-        .user-role { color: var(--text-muted); }
-
-        main {
-            padding: 2rem;
-            overflow-y: auto;
-            flex-grow: 1;
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--dark-bg);
         }
 
-        /* --- Cards & Dashboard --- */
+        /* --- Sections & Cards --- */
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
             display: flex;
-            align-items: flex-start;
             justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05));
-            border-radius: 50%;
-            transform: translate(30%, -30%);
-        }
-
-        .stat-content h4 {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        .stat-content .value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-        .stat-trend {
-            margin-top: 0.8rem;
-            font-size: 0.8rem;
-            display: flex;
             align-items: center;
-            gap: 4px;
+            border-bottom: 4px solid transparent;
         }
-        .trend-up { color: var(--success); }
-        .trend-down { color: var(--danger); }
+
+        .stat-card.blue { border-color: var(--primary-color); }
+        .stat-card.green { border-color: var(--success-color); }
+        .stat-card.orange { border-color: var(--warning-color); }
+        .stat-card.red { border-color: var(--danger-color); }
+
+        .stat-info h3 {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+        }
 
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            opacity: 0.2;
         }
-        .bg-indigo { background: #e0e7ff; color: #4338ca; }
-        .bg-emerald { background: #d1fae5; color: #047857; }
-        .bg-amber { background: #fef3c7; color: #b45309; }
-        .bg-rose { background: #ffe4e6; color: #be123c; }
 
-        [data-theme="dark"] .bg-indigo { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
-        [data-theme="dark"] .bg-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-        [data-theme="dark"] .bg-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-        [data-theme="dark"] .bg-rose { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
-
-        .charts-section {
+        /* --- Calculator --- */
+        .calc-container {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        @media (max-width: 1024px) { .charts-section { grid-template-columns: 1fr; } }
-
-        .chart-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-            height: 350px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* --- Tables --- */
-        .table-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-        .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .calc-inputs label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-bg);
         }
 
-        .search-box {
+        .input-group {
+            margin-bottom: 20px;
             position: relative;
         }
-        .search-box i {
+
+        .input-group i {
             position: absolute;
-            left: 12px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-        .search-input {
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-body);
-            color: var(--text-main);
-            outline: none;
-            width: 250px;
+            color: var(--text-gray);
         }
 
-        table {
+        .input-group input, .input-group select, .input-group textarea {
             width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        thead {
-            background-color: var(--bg-body);
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        th {
-            padding: 1rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: rgba(0,0,0,0.02); }
-
-        .product-cell {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .product-img {
-            width: 40px;
-            height: 40px;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid var(--border);
+            font-family: inherit;
+            transition: var(--transition);
         }
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: var(--primary-color); color: white; width: 100%; }
+        .btn-primary:hover { background: #4338ca; }
+        
+        .btn-secondary { background: var(--text-gray); color: white; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-success { background: var(--success-color); color: white; }
+        
+        .result-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px dashed #d1d5db;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .result-item:last-child { border: none; margin: 0; padding: 0; }
+        .result-label { font-size: 0.9rem; color: var(--text-gray); }
+        .result-value { font-size: 1.5rem; font-weight: 700; color: var(--dark-bg); }
+        .result-value span { font-size: 0.9rem; font-weight: 400; }
+
+        /* --- Product Lists & Tables --- */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #f3f4f6;
+            background-color: #eee;
+        }
+
+        .product-body {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-meta {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
             font-size: 0.75rem;
             font-weight: 600;
         }
-        .status-active { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .status-inactive { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
 
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.1s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-        }
-        .btn-primary:hover {
-            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-        }
-        .btn-icon { padding: 6px; border-radius: 6px; color: var(--text-muted); background: transparent; }
-        .btn-icon:hover { background: var(--bg-body); color: var(--text-main); }
-        .btn-delete:hover { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #b91c1c; }
 
-        /* --- Modal --- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(4px);
-            z-index: 100;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .modal-overlay.open { display: flex; opacity: 1; }
-        
-        .modal {
-            background: var(--bg-card);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
-            transform: translateY(20px);
-            transition: transform 0.3s;
-            overflow: hidden;
-        }
-        .modal-overlay.open .modal { transform: translateY(0); }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-body { padding: 1.5rem; }
-        
-        .form-group { margin-bottom: 1.2rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main); }
-        .form-control {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: var(--bg-body);
-            color: var(--text-main);
-            outline: none;
-        }
-        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            background: var(--bg-body);
+        .card-actions {
+            padding: 10px 15px;
+            border-top: 1px solid #f3f4f6;
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
 
-        /* --- Toast --- */
-        .toast-container {
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem; /* LTR Layout so left is start */
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        .btn-icon {
+            padding: 6px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .toast {
-            background: var(--bg-card);
-            color: var(--text-main);
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: var(--shadow-lg);
-            border-inline-start: 4px solid var(--primary);
+
+        .btn-edit { background: #e0e7ff; color: var(--primary-color); }
+        .btn-delete { background: #fee2e2; color: var(--danger-color); }
+        .btn-check { background: #d1fae5; color: var(--success-color); }
+
+        /* --- Modal --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            justify-content: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
         }
-        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-        /* Helper for view toggling */
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeView 0.3s ease; }
-        @keyframes fadeView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .image-preview span {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
 
+        /* --- Toast Notification --- */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--dark-bg);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            min-width: 250px;
+        }
+
+        .toast.success { border-right: 4px solid var(--success-color); }
+        .toast.error { border-right: 4px solid var(--danger-color); }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-right: 0;
+                width: 100%;
+            }
+            .calc-container {
+                grid-template-columns: 1fr;
+            }
+            .toggle-menu {
+                display: block;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-left: 15px;
+            }
+        }
+        @media (min-width: 769px) {
+            .toggle-menu {
+                display: none;
+            }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-gray);
+            grid-column: 1 / -1;
+        }
     </style>
 </head>
 <body>
 
-    <div class="toast-container" id="toastContainer"></div>
-
-    <aside>
-        <div class="logo-area">
-            <div class="logo-icon"><i class="ri-dashboard-3-line"></i></div>
-            <div class="logo-text">ProDash</div>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-chart-line"></i> لوحة التحكم</h2>
         </div>
-        
-        <ul class="nav-menu">
-            <li class="nav-item active" onclick="switchView('dashboard', this)">
-                <i class="ri-home-4-line"></i> لوحة التحكم
-            </li>
-            <li class="nav-item" onclick="switchView('products', this)">
-                <i class="ri-store-2-line"></i> المنتجات
-            </li>
-            <li class="nav-item" onclick="switchView('import', this)">
-                <i class="ri-ship-line"></i> الشحن والاستيراد
-            </li>
-            <li class="nav-item" onclick="switchView('winning', this)">
-                <i class="ri-fire-line"></i> المنتجات الرابحة
-            </li>
-            <li class="nav-item" onclick="switchView('ads', this)">
-                <i class="ri-advertisement-line"></i> الحملات الإعلانية
-            </li>
+        <ul class="nav-links">
+            <li><a href="#" class="active" onclick="showSection('dashboard', this)"><i class="fas fa-home"></i> الملخص</a></li>
+            <li><a href="#" onclick="showSection('calculator', this)"><i class="fas fa-calculator"></i> حساب الأرباح</a></li>
+            <li><a href="#" onclick="showSection('inventory', this)"><i class="fas fa-boxes"></i> المخزون (متوفر)</a></li>
+            <li><a href="#" onclick="showSection('importing', this)"><i class="fas fa-shipping-fast"></i> قيد الاستيراد</a></li>
+            <li><a href="#" onclick="showSection('winning', this)"><i class="fas fa-trophy"></i> المنتجات الرابحة</a></li>
+            <li><a href="#" onclick="showSection('best-pages', this)"><i class="fas fa-store"></i> أفضل الصفحات</a></li>
         </ul>
+    </nav>
 
-        <div class="nav-item" style="margin-top: auto; color: var(--secondary);">
-            <i class="ri-settings-4-line"></i> الإعدادات
-        </div>
-    </aside>
-
-    <div class="main-wrapper">
+    <!-- Main Content -->
+    <main class="main-content">
         <header>
-            <div class="header-title">
-                <h2 id="pageTitle">نظرة عامة</h2>
+            <div style="display:flex; align-items:center;">
+                <i class="fas fa-bars toggle-menu" onclick="toggleSidebar()"></i>
+                <h1 id="page-title">الملخص العام</h1>
             </div>
-            
-            <div class="header-actions">
-                <button class="icon-btn" onclick="toggleTheme()" title="تبديل الوضع">
-                    <i class="ri-moon-line" id="themeIcon"></i>
-                </button>
-                <button class="icon-btn">
-                    <i class="ri-notification-3-line"></i>
-                </button>
-                <div class="user-profile">
-                    <img src="https://picsum.photos/seed/admin/64/64" class="user-avatar" alt="Admin">
-                    <div class="user-info">
-                        <span class="user-name">أحمد محمد</span>
-                        <span class="user-role">مدير النظام</span>
-                    </div>
-                    <i class="ri-arrow-down-s-line" style="margin-right: 5px; color: var(--text-muted)"></i>
-                </div>
+            <div class="user-profile">
+                <i class="fas fa-user-circle fa-2x" style="color: var(--primary-color);"></i>
             </div>
         </header>
 
-        <main>
-            <!-- Dashboard View -->
-            <section id="dashboard" class="view-section active">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-content">
-                            <h4>إجمالي الأرباح</h4>
-                            <div class="value" id="totalProfit">$0.00</div>
-                            <div class="stat-trend trend-up"><i class="ri-arrow-up-line"></i> +12.5% من الشهر الماضي</div>
-                        </div>
-                        <div class="stat-icon bg-emerald"><i class="ri-money-dollar-circle-line"></i></div>
+        <!-- 1. Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-info">
+                        <h3>عدد المنتجات الكلي</h3>
+                        <p id="stat-total-products">0</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-content">
-                            <h4>إجمالي الطلبات</h4>
-                            <div class="value">1,240</div>
-                            <div class="stat-trend trend-up"><i class="ri-arrow-up-line"></i> +5.2%</div>
-                        </div>
-                        <div class="stat-icon bg-indigo"><i class="ri-shopping-bag-3-line"></i></div>
+                    <i class="fas fa-box stat-icon"></i>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-info">
+                        <h3>منتجات رابحة</h3>
+                        <p id="stat-winning-products">0</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-content">
-                            <h4>المنتجات الرابحة</h4>
-                            <div class="value" id="winningCount">0</div>
-                            <div class="stat-trend trend-down"><i class="ri-arrow-down-line"></i> -2 منتجات</div>
-                        </div>
-                        <div class="stat-icon bg-amber"><i class="ri-trophy-line"></i></div>
+                    <i class="fas fa-check-circle stat-icon"></i>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-info">
+                        <h3>رأس المال المستثمر</h3>
+                        <p id="stat-capital">0 <span>MAD</span></p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-content">
-                            <h4>قيد الاستيراد</h4>
-                            <div class="value" id="importCount">0</div>
-                            <div class="stat-trend"><i class="ri-subtract-line"></i> ثابت</div>
-                        </div>
-                        <div class="stat-icon bg-rose"><i class="ri-ship-2-line"></i></div>
+                    <i class="fas fa-coins stat-icon"></i>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-info">
+                        <h3>الأرباح المتوقعة</h3>
+                        <p id="stat-profit">0 <span>MAD</span></p>
+                    </div>
+                    <i class="fas fa-chart-pie stat-icon"></i>
+                </div>
+            </div>
+
+            <!-- Simple Visual Bars for Capital Distribution -->
+            <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <h3 style="margin-bottom: 15px;">توزيع الاستثمار</h3>
+                <div style="display: flex; height: 30px; border-radius: 15px; overflow: hidden; margin-bottom: 10px;">
+                    <div id="bar-stock" style="width: 40%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">المخزون</div>
+                    <div id="bar-import" style="width: 30%; background: var(--warning-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">الاستيراد</div>
+                    <div id="bar-winning" style="width: 30%; background: var(--success-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">الرابحة</div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-gray); text-align: center;">تمثيل بصري لتوزيع الأموال حسب الحالة</p>
+            </div>
+        </section>
+
+        <!-- 2. Profit Calculator Section -->
+        <section id="calculator" class="section">
+            <div class="calc-container">
+                <div class="calc-inputs">
+                    <div class="input-group">
+                        <label>ثمن شراء المنتج (MAD)</label>
+                        <input type="number" id="calc-buy-price" placeholder="0.00" oninput="calculateProfit()">
+                    </div>
+                    <div class="input-group">
+                        <label>ثمن التوصيل (MAD)</label>
+                        <input type="number" id="calc-delivery" placeholder="0.00" oninput="calculateProfit()">
+                    </div>
+                    <div class="input-group">
+                        <label>ثمن الإشهار / Ads (MAD)</label>
+                        <input type="number" id="calc-ads" placeholder="0.00" oninput="calculateProfit()">
+                    </div>
+                    <div class="input-group">
+                        <label>هامش الربح المطلوب (MAD)</label>
+                        <input type="number" id="calc-margin" placeholder="0.00" oninput="calculateProfit()">
+                    </div>
+                    <div class="input-group">
+                        <label>العمولة الثابتة</label>
+                        <input type="text" value="9 MAD" disabled style="background: #f3f4f6;">
                     </div>
                 </div>
-
-                <div class="charts-section">
-                    <div class="chart-container">
-                        <canvas id="revenueChart"></canvas>
+                
+                <div class="result-box">
+                    <h3 style="margin-bottom: 20px; color: var(--primary-color);">نتائج الحساب</h3>
+                    
+                    <div class="result-item">
+                        <div class="result-label">مجموع التكاليف</div>
+                        <div class="result-value" id="res-cost">0 <span>MAD</span></div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="categoryChart"></canvas>
+
+                    <div class="result-item">
+                        <div class="result-label">السعر النهائي للبيع</div>
+                        <div class="result-value" style="color: var(--primary-color);" id="res-sale">0 <span>MAD</span></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">الربح الصافي</div>
+                        <div class="result-value" style="color: var(--success-color);" id="res-net">0 <span>MAD</span></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">السعر بالدولار (USD)</div>
+                        <div class="result-value" style="color: var(--text-gray); font-size: 1.2rem;" id="res-usd">$0.00</div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="table-wrapper">
-                    <div class="table-header">
-                        <h3>أحدث المنتجات المضافة</h3>
-                        <button class="btn btn-primary" onclick="openModal('productModal')">إضافة منتج جديد</button>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table id="dashProductTable">
-                            <thead>
-                                <tr>
-                                    <th>المنتج</th>
-                                    <th>السعر</th>
-                                    <th>الربح</th>
-                                    <th>الحالة</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+        <!-- 3. Inventory Section -->
+        <section id="inventory" class="section">
+            <div class="toolbar">
+                <h3>المخزون الحالي</h3>
+                <button class="btn btn-primary" onclick="openModal('inventory')"><i class="fas fa-plus"></i> إضافة منتج</button>
+            </div>
+            <div id="inventory-list" class="card-grid">
+                <!-- Products rendered by JS -->
+            </div>
+        </section>
 
-            <!-- Products View -->
-            <section id="products" class="view-section">
-                <div class="table-wrapper">
-                    <div class="table-header">
-                        <div class="search-box">
-                            <i class="ri-search-line"></i>
-                            <input type="text" class="search-input" placeholder="بحث..." onkeyup="filterTable('productsTableBody', this.value)">
-                        </div>
-                        <button class="btn btn-primary" onclick="openModal('productModal')"><i class="ri-add-line"></i> إضافة منتج</button>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table id="productsTable">
-                            <thead>
-                                <tr>
-                                    <th>صورة</th>
-                                    <th>اسم المنتج</th>
-                                    <th>SKU</th>
-                                    <th>تكلفة</th>
-                                    <th>سعر البيع</th>
-                                    <th>الربح</th>
-                                    <th>الحالة</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productsTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+        <!-- 4. Importing Section -->
+        <section id="importing" class="section">
+            <div class="toolbar">
+                <h3>منتجات قيد الاستيراد</h3>
+                <button class="btn btn-primary" onclick="openModal('importing')"><i class="fas fa-plus"></i> إضافة منتج</button>
+            </div>
+            <div id="importing-list" class="card-grid">
+                <!-- Products rendered by JS -->
+            </div>
+        </section>
 
-            <!-- Import View -->
-            <section id="import" class="view-section">
-                <div class="table-wrapper">
-                    <div class="table-header">
-                        <h3>طلبات الاستيراد</h3>
-                        <button class="btn btn-primary" onclick="openModal('importModal')"><i class="ri-add-line"></i> طلب جديد</button>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table id="importTable">
-                            <thead>
-                                <tr>
-                                    <th>المنتج</th>
-                                    <th>المورد</th>
-                                    <th>الكمية</th>
-                                    <th>إجمالي التكلفة</th>
-                                    <th>تاريخ الوصول</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="importTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+        <!-- 5. Winning Products Section -->
+        <section id="winning" class="section">
+            <div class="toolbar">
+                <h3>المنتجات الرابحة (Winning)</h3>
+                <button class="btn btn-primary" onclick="openModal('winning')"><i class="fas fa-plus"></i> إضافة منتج رابح</button>
+            </div>
+            <div id="winning-list" class="card-grid">
+                <!-- Products rendered by JS -->
+            </div>
+        </section>
 
-            <!-- Winning View -->
-            <section id="winning" class="view-section">
-                <div class="table-wrapper">
-                    <div class="table-header">
-                        <h3>قائمة المنتجات الرابحة</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table id="winningTable">
-                            <thead>
-                                <tr>
-                                    <th>المنتج</th>
-                                    <th>الربح</th>
-                                    <th>هامش الربح</th>
-                                    <th>الحالة</th>
-                                    <th>التحكم</th>
-                                </tr>
-                            </thead>
-                            <tbody id="winningTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+        <!-- 6. Best Pages Section -->
+        <section id="best-pages" class="section">
+            <div class="toolbar">
+                <h3>مصادر وأفضل الصفحات</h3>
+                <button class="btn btn-primary" onclick="openModal('pages')"><i class="fas fa-plus"></i> إضافة صفحة</button>
+            </div>
+            <div id="pages-list" class="card-grid">
+                <!-- Pages rendered by JS -->
+            </div>
+        </section>
 
-            <!-- Ads View -->
-            <section id="ads" class="view-section">
-                <div class="table-wrapper">
-                    <div class="table-header">
-                        <h3>أداء الصفحات الإعلانية</h3>
-                        <button class="btn btn-primary" onclick="openModal('adModal')"><i class="ri-add-line"></i> إضافة صفحة</button>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table id="adsTable">
-                            <thead>
-                                <tr>
-                                    <th>اسم الصفحة</th>
-                                    <th>المنصة</th>
-                                    <th>المبيعات</th>
-                                    <th>الطلبات</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adsTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+    </main>
 
-        </main>
-    </div>
-
-    <!-- Modals -->
-    <!-- Product Modal -->
-    <div class="modal-overlay" id="productModal">
-        <div class="modal">
+    <!-- Generic Modal -->
+    <div class="modal" id="generic-modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>بيانات المنتج</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem" onclick="closeModal('productModal')"></i>
+                <h3 id="modal-title">عنوان النافذة</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="productForm">
-                    <input type="hidden" id="p_id">
-                    <div class="form-group">
-                        <label class="form-label">اسم المنتج</label>
-                        <input type="text" id="p_name" class="form-control" required>
-                    </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
-                        <div class="form-group">
-                            <label class="form-label">سعر الشراء ($)</label>
-                            <input type="number" id="p_cost" class="form-control" required step="0.01" oninput="calcProfit()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">سعر البيع ($)</label>
-                            <input type="number" id="p_price" class="form-control" required step="0.01" oninput="calcProfit()">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">SKU</label>
-                        <input type="text" id="p_sku" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem">
-                            <span class="form-label">صورة</span>
-                            <span id="p_profit_preview" style="color:var(--success-color); font-weight:bold">الربح: $0.00</span>
-                        </div>
-                        <input type="file" class="form-control" id="p_image">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:transparent; color:var(--text-muted)" onclick="closeModal('productModal')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveProduct()">حفظ</button>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic Form Content -->
             </div>
         </div>
     </div>
 
-    <!-- Import Modal -->
-    <div class="modal-overlay" id="importModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>طلب استيراد</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem" onclick="closeModal('importModal')"></i>
-            </div>
-            <div class="modal-body">
-                <form id="importForm">
-                    <div class="form-group">
-                        <label class="form-label">اسم المنتج</label>
-                        <input type="text" id="i_name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">المورد</label>
-                        <input type="text" id="i_supplier" class="form-control" required>
-                    </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
-                        <div class="form-group">
-                            <label class="form-label">الكمية</label>
-                            <input type="number" id="i_qty" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">التكلفة الإجمالية ($)</label>
-                            <input type="number" id="i_total" class="form-control" required step="0.01">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">تاريخ الوصول المتوقع</label>
-                        <input type="date" id="i_date" class="form-control" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:transparent; color:var(--text-muted)" onclick="closeModal('importModal')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveImport()">حفظ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ad Modal -->
-    <div class="modal-overlay" id="adModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>صفحة إعلانية جديدة</h3>
-                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem" onclick="closeModal('adModal')"></i>
-            </div>
-            <div class="modal-body">
-                <form id="adForm">
-                    <div class="form-group">
-                        <label class="form-label">اسم الصفحة</label>
-                        <input type="text" id="a_name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">المنصة</label>
-                        <select id="a_platform" class="form-control">
-                            <option value="Facebook">Facebook Ads</option>
-                            <option value="TikTok">TikTok Ads</option>
-                            <option value="Google">Google Ads</option>
-                        </select>
-                    </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
-                        <div class="form-group">
-                            <label class="form-label">عدد الطلبات</label>
-                            <input type="number" id="a_orders" class="form-control" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">المبيعات ($)</label>
-                            <input type="number" id="a_sales" class="form-control" value="0">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:transparent; color:var(--text-muted)" onclick="closeModal('adModal')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveAd()">حفظ</button>
-            </div>
-        </div>
-    </div>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 
     <script>
-        // --- 1. State Management ---
+        // --- State Management ---
         const db = {
-            products: [
-                { id: 1, name: "ساعة ذكية رياضية Pro", sku: "SP-001", cost: 18.50, price: 49.99, status: "active", img: "https://picsum.photos/seed/p1/40/40" },
-                { id: 2, name: "سماعات لاسلكية NoiseCancel", sku: "AU-002", cost: 12.00, price: 35.00, status: "active", img: "https://picsum.photos/seed/p2/40/40" },
-                { id: 3, name: "حقيبة ظهر للسفر", sku: "BG-003", cost: 8.00, price: 24.50, status: "low_stock", img: "https://picsum.photos/seed/p3/40/40" }
-            ],
-            imports: [
-                { id: 1, name: "شواحن سريعة 20W", supplier: "Shenzhen Tech", qty: 500, total: 1000, date: "2023-12-01" }
-            ],
-            winning: [
-                { id: 1, name: "مصباح مكتب LED", img: "https://picsum.photos/seed/w1/40/40", cost: 5.50, price: 19.99, status: "valid" }
-            ],
-            ads: [
-                { id: 1, name: "Winter Sale", platform: "Facebook", orders: 120, sales: 3400 }
-            ]
+            inventory: JSON.parse(localStorage.getItem('inventory')) || [],
+            importing: JSON.parse(localStorage.getItem('importing')) || [],
+            winning: JSON.parse(localStorage.getItem('winning')) || [],
+            pages: JSON.parse(localStorage.getItem('pages')) || []
         };
 
-        // --- 2. Utility Functions ---
-        const $ = (s) => document.querySelector(s);
-        const formatMoney = (n) => '$' + parseFloat(n).toFixed(2);
-        
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const el = document.createElement('div');
-            el.className = 'toast';
-            el.style.borderInlineStartColor = type === 'error' ? 'var(--danger)' : 'var(--success)';
-            el.innerHTML = `
-                <i class="${type === 'error' ? 'ri-error-warning-line' : 'ri-checkbox-circle-line'}" 
-                   style="color: ${type === 'error' ? 'var(--danger)' : 'var(--success)'}; font-size: 1.2rem"></i>
-                <span>${msg}</span>
-            `;
-            container.appendChild(el);
-            setTimeout(() => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateX(-100%)';
-                setTimeout(() => el.remove(), 300);
-            }, 3000);
-        }
+        const USD_RATE = 10.5; // Simple exchange rate
 
-        // --- 3. Rendering ---
-        function renderAll() {
-            renderStats();
-            renderProducts();
-            renderImports();
+        // --- Navigation Logic ---
+        function showSection(sectionId, element) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            // Show target section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active link
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            // Update Header Title
+            const titles = {
+                'dashboard': 'الملخص العام',
+                'calculator': 'حساب الأرباح',
+                'inventory': 'إدارة المخزون',
+                'importing': 'الاستيراد',
+                'winning': 'المنتجات الرابحة',
+                'best-pages': 'أفضل الصفحات'
+            };
+            document.getElementById('page-title').innerText = titles[sectionId] || 'لوحة التحكم';
+
+            // Refresh data if needed
+            renderDashboard();
+            renderInventory();
+            renderImporting();
             renderWinning();
-            renderAds();
-            initCharts();
+            renderPages();
+
+            // Close sidebar on mobile
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
         }
 
-        function renderStats() {
-            let total = 0;
-            db.products.forEach(p => total += (p.price - p.cost));
-            $('#totalProfit').innerText = formatMoney(total);
-            $('#winningCount').innerText = db.winning.filter(w => w.status === 'valid').length;
-            $('#importCount').innerText = db.imports.length;
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
 
-            // Mini table for dashboard
-            const tbody = $('#dashProductTable tbody');
-            tbody.innerHTML = '';
-            db.products.slice(0, 3).forEach(p => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>
-                            <div class="product-cell">
-                                <img src="${p.img}" class="product-img">
-                                <span>${p.name}</span>
-                            </div>
-                        </td>
-                        <td>${formatMoney(p.price)}</td>
-                        <td style="color: var(--success-color); font-weight:600">${formatMoney(p.price - p.cost)}</td>
-                        <td><span class="status-badge ${p.status === 'active' ? 'status-active' : 'status-inactive'}">${p.status === 'active' ? 'نشط' : 'منخفض'}</span></td>
-                    </tr>
-                `;
+        // --- Dashboard Logic ---
+        function renderDashboard() {
+            // Counts
+            const totalProducts = db.inventory.length + db.importing.length + db.winning.length;
+            document.getElementById('stat-total-products').innerText = totalProducts;
+            document.getElementById('stat-winning-products').innerText = db.winning.length;
+
+            // Capitals (Calculated as Price * Quantity for inventory, or just Price for others as per "Investment")
+            let totalCapital = 0;
+            let totalProfit = 0;
+
+            db.inventory.forEach(p => totalCapital += (p.price * p.quantity));
+            db.importing.forEach(p => totalCapital += (p.price * p.quantity));
+            db.winning.forEach(p => totalCapital += (p.buyPrice * p.quantity)); // Investment cost
+            
+            // Expected Profit (Sum of winning products margins * quantity)
+            db.winning.forEach(p => totalProfit += (p.margin * p.quantity));
+
+            document.getElementById('stat-capital').innerHTML = `${totalCapital.toLocaleString()} <span>MAD</span>`;
+            document.getElementById('stat-profit').innerHTML = `${totalProfit.toLocaleString()} <span>MAD</span>`;
+
+            // Visual Bars Update
+            const capStock = db.inventory.reduce((acc, p) => acc + (p.price*p.quantity), 0);
+            const capImport = db.importing.reduce((acc, p) => acc + (p.price*p.quantity), 0);
+            const capWin = db.winning.reduce((acc, p) => acc + (p.buyPrice*p.quantity), 0);
+            const totalCapVal = capStock + capImport + capWin || 1;
+
+            document.getElementById('bar-stock').style.width = `${(capStock/totalCapVal)*100}%`;
+            document.getElementById('bar-import').style.width = `${(capImport/totalCapVal)*100}%`;
+            document.getElementById('bar-winning').style.width = `${(capWin/totalCapVal)*100}%`;
+        }
+
+        // --- Calculator Logic ---
+        function calculateProfit() {
+            const buy = parseFloat(document.getElementById('calc-buy-price').value) || 0;
+            const delivery = parseFloat(document.getElementById('calc-delivery').value) || 0;
+            const ads = parseFloat(document.getElementById('calc-ads').value) || 0;
+            const margin = parseFloat(document.getElementById('calc-margin').value) || 0;
+            const fixedCommission = 9;
+
+            const totalCost = buy + delivery + ads + fixedCommission;
+            const salePrice = totalCost + margin; // Net profit is the margin input by user
+            const usdPrice = salePrice / USD_RATE;
+
+            document.getElementById('res-cost').innerHTML = `${totalCost.toFixed(2)} <span>MAD</span>`;
+            document.getElementById('res-sale').innerHTML = `${salePrice.toFixed(2)} <span>MAD</span>`;
+            document.getElementById('res-net').innerHTML = `${margin.toFixed(2)} <span>MAD</span>`;
+            document.getElementById('res-usd').innerText = `$${usdPrice.toFixed(2)}`;
+        }
+
+        // --- Data Rendering Functions ---
+
+        function renderInventory() {
+            const container = document.getElementById('inventory-list');
+            container.innerHTML = '';
+            if(db.inventory.length === 0) container.innerHTML = '<div class="empty-state">لا توجد منتجات في المخزون</div>';
+
+            db.inventory.forEach(item => {
+                container.innerHTML += createCardHTML(item, 'inventory');
             });
         }
 
-        function renderProducts() {
-            const tbody = $('#productsTableBody');
-            tbody.innerHTML = '';
-            db.products.forEach(p => {
-                const profit = (p.price - p.cost).toFixed(2);
-                tbody.innerHTML += `
-                    <tr>
-                        <td><img src="${p.img}" class="product-img"></td>
-                        <td>${p.name}</td>
-                        <td>${p.sku}</td>
-                        <td>${formatMoney(p.cost)}</td>
-                        <td>${formatMoney(p.price)}</td>
-                        <td style="color: var(--success-color)">${formatMoney(profit)}</td>
-                        <td><span class="status-badge ${p.status === 'active' ? 'status-active' : 'status-inactive'}">${p.status === 'active' ? 'نشط' : 'منخفض'}</span></td>
-                        <td>
-                            <button class="btn btn-icon" onclick="editProduct(${p.id})"><i class="ri-pencil-line"></i></button>
-                            <button class="btn btn-icon btn-delete" onclick="deleteItem('products', ${p.id})"><i class="ri-delete-bin-line"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderImports() {
-            const tbody = $('#importTableBody');
-            tbody.innerHTML = '';
-            db.imports.forEach(i => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${i.name}</td>
-                        <td>${i.supplier}</td>
-                        <td>${i.qty}</td>
-                        <td>${formatMoney(i.total)}</td>
-                        <td>${i.date}</td>
-                        <td><button class="btn btn-icon btn-delete" onclick="deleteItem('imports', ${i.id})"><i class="ri-delete-bin-line"></i></button></td>
-                    </tr>
-                `;
+        function renderImporting() {
+            const container = document.getElementById('importing-list');
+            container.innerHTML = '';
+            if(db.importing.length === 0) container.innerHTML = '<div class="empty-state">لا توجد منتجات قيد الاستيراد</div>';
+            
+            db.importing.forEach(item => {
+                container.innerHTML += createCardHTML(item, 'importing');
             });
         }
 
         function renderWinning() {
-            const tbody = $('#winningTableBody');
-            tbody.innerHTML = '';
-            db.winning.forEach(w => {
-                const profit = (w.price - w.cost).toFixed(2);
-                const margin = ((profit / w.price) * 100).toFixed(1);
-                const is_valid = w.status === 'valid';
+            const container = document.getElementById('winning-list');
+            container.innerHTML = '';
+            if(db.winning.length === 0) container.innerHTML = '<div class="empty-state">لم يتم إضافة منتجات رابحة بعد</div>';
+
+            db.winning.forEach(item => {
+                let statusBadge = item.status === 'valid' 
+                    ? `<span class="badge badge-success"><i class="fas fa-check"></i> Valid</span>` 
+                    : `<span class="badge badge-danger"><i class="fas fa-times"></i> Invalid</span>`;
                 
-                tbody.innerHTML += `
-                    <tr>
-                        <td>
-                            <div class="product-cell">
-                                <img src="${w.img}" class="product-img">
-                                <span>${w.name}</span>
+                let links = `
+                    <div style="font-size:0.8rem; margin-top:5px; word-break:break-all;">
+                        ${item.alibaba ? `<a href="${item.alibaba}" target="_blank" style="color:#f59e0b"><i class="fas fa-link"></i> Alibaba</a>` : ''}
+                        ${item.store ? `<a href="${item.store}" target="_blank" style="color:#4f46e5; margin-right:10px;"><i class="fas fa-link"></i> Store</a>` : ''}
+                    </div>
+                `;
+
+                container.innerHTML += `
+                    <div class="product-card">
+                        <img src="${item.image || 'https://via.placeholder.com/300x200?text=No+Image'}" class="product-img">
+                        <div class="product-body">
+                            <div class="product-title" title="${item.name}">${item.name}</div>
+                            <div class="product-meta">
+                                <span>شراء: ${item.buyPrice}</span>
+                                <span>بيع: ${item.salePrice}</span>
                             </div>
-                        </td>
-                        <td style="color: var(--success-color); font-weight:bold">${formatMoney(profit)}</td>
-                        <td>${margin}%</td>
-                        <td>
-                            <button class="btn ${is_valid ? 'btn-primary' : ''}" style="padding: 4px 12px; font-size: 0.8rem; border: 1px solid var(--border); background: ${is_valid ? 'var(--success)' : 'transparent'}; color: ${is_valid ? '#fff' : 'var(--text-muted)'}" onclick="toggleWinning(${w.id})">
-                                ${is_valid ? 'صالح' : 'غير صالح'}
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-icon btn-delete" onclick="deleteItem('winning', ${w.id})"><i class="ri-delete-bin-line"></i></button>
-                        </td>
-                    </tr>
+                            <div class="product-meta">
+                                <span>هامش: ${item.margin}</span>
+                                ${statusBadge}
+                            </div>
+                            ${links}
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-icon btn-check" onclick="toggleWinningStatus(${item.id})" title="تغيير الحالة"><i class="fas fa-exchange-alt"></i></button>
+                            <button class="btn-icon btn-edit" onclick="openModal('winning', ${item.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon btn-delete" onclick="deleteItem('winning', ${item.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
                 `;
             });
         }
 
-        function renderAds() {
-            const tbody = $('#adsTableBody');
-            tbody.innerHTML = '';
-            db.ads.forEach(a => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${a.name}</td>
-                        <td><span class="status-badge status-pending">${a.platform}</span></td>
-                        <td style="font-weight:bold">${formatMoney(a.sales)}</td>
-                        <td>${a.orders}</td>
-                        <td><button class="btn btn-icon btn-delete" onclick="deleteItem('ads', ${a.id})"><i class="ri-delete-bin-line"></i></button></td>
-                    </tr>
+        function renderPages() {
+            const container = document.getElementById('pages-list');
+            container.innerHTML = '';
+            if(db.pages.length === 0) container.innerHTML = '<div class="empty-state">لا توجد صفحات محفوظة</div>';
+
+            db.pages.forEach(item => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-body">
+                            <div class="product-title">${item.name}</div>
+                            <a href="${item.link}" target="_blank" style="color:var(--primary-color); text-decoration:none; font-size:0.9rem; display:block; margin-bottom:10px;">
+                                <i class="fas fa-external-link-alt"></i> زيارة الصفحة
+                            </a>
+                            <p style="font-size:0.85rem; color:var(--text-gray); height:40px; overflow:hidden;">${item.notes || 'لا توجد ملاحظات'}</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-icon btn-edit" onclick="openModal('pages', ${item.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon btn-delete" onclick="deleteItem('pages', ${item.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
                 `;
             });
         }
 
-        // --- 4. Logic & Actions ---
-        
-        function switchView(viewId, navItem) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(navItem) navItem.classList.add('active');
+        function createCardHTML(item, type) {
+            const isInv = type === 'inventory';
+            const statusClass = isInv ? (item.status === 'available' ? 'badge-success' : 'badge-danger') : 'badge-warning';
+            const statusText = isInv ? (item.status === 'available' ? 'متوفر' : 'نفذت') : 'قيد الاستيراد';
 
-            // Update Title
-            const titles = { 'dashboard': 'نظرة عامة', 'products': 'إدارة المنتجات', 'import': 'الشحن والاستيراد', 'winning': 'المنتجات الرابحة', 'ads': 'الحملات الإعلانية' };
-            $('#pageTitle').innerText = titles[viewId];
+            return `
+                <div class="product-card">
+                    <img src="${item.image || 'https://via.placeholder.com/300x200?text=No+Image'}" class="product-img">
+                    <div class="product-body">
+                        <div class="product-title" title="${item.name}">${item.name}</div>
+                        <div class="product-meta">
+                            <span>الكمية: ${item.quantity}</span>
+                            <span>السعر: ${item.price} MAD</span>
+                        </div>
+                        <div class="product-meta">
+                            <span>الاستثمار: ${(item.price * item.quantity).toFixed(1)}</span>
+                            <span class="badge ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-icon btn-edit" onclick="openModal('${type}', ${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteItem('${type}', ${item.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
         }
 
-        function toggleTheme() {
-            const body = document.body;
-            const icon = $('#themeIcon');
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                icon.className = 'ri-moon-line';
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                icon.className = 'ri-sun-line';
+        // --- Modal & Form Logic ---
+        let currentModalType = '';
+        let editingId = null;
+        let tempImage = '';
+
+        function openModal(type, id = null) {
+            currentModalType = type;
+            editingId = id;
+            tempImage = ''; // Reset image
+
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modal = document.getElementById('generic-modal');
+
+            // Pre-fill data if editing
+            let data = {};
+            if (id) {
+                if(type === 'inventory') data = db.inventory.find(i => i.id === id);
+                if(type === 'importing') data = db.importing.find(i => i.id === id);
+                if(type === 'winning') data = db.winning.find(i => i.id === id);
+                if(type === 'pages') data = db.pages.find(i => i.id === id);
+                tempImage = data.image || '';
             }
-            // Update charts colors
-            updateChartTheme();
-        }
 
-        // Modal Handling
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            modal.querySelector('form')?.reset();
-            // Reset hidden IDs for edit mode
-            if(id === 'productModal') { $('#p_id').value = ''; $('#p_profit_preview').innerText = 'الربح: $0.00'; }
+            // Generate Form based on Type
+            if (type === 'inventory' || type === 'importing') {
+                modalTitle.innerText = id ? 'تعديل المنتج' : 'إضافة منتج جديد';
+                const isInv = type === 'inventory';
+                modalBody.innerHTML = `
+                    <div class="image-preview" onclick="document.getElementById('img-upload').click()">
+                        ${tempImage ? `<img src="${tempImage}">` : '<span><i class="fas fa-camera fa-2x"></i><br>اضغط لرفع صورة</span>'}
+                    </div>
+                    <input type="file" id="img-upload" style="display:none" accept="image/*" onchange="handleImageUpload(this)">
+                    
+                    <div class="input-group" style="margin-top:15px;">
+                        <label>اسم المنتج</label>
+                        <input type="text" id="inp-name" value="${data.name || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>الكمية</label>
+                        <input type="number" id="inp-qty" value="${data.quantity || 0}">
+                    </div>
+                    <div class="input-group">
+                        <label>ثمن الاستثمار/الوحدة (MAD)</label>
+                        <input type="number" id="inp-price" value="${data.price || 0}">
+                    </div>
+                    ${isInv ? `
+                    <div class="input-group">
+                        <label>الحالة</label>
+                        <select id="inp-status">
+                            <option value="available" ${data.status === 'available' ? 'selected' : ''}>متوفر</option>
+                            <option value="unavailable" ${data.status === 'unavailable' ? 'selected' : ''}>غير متوفر</option>
+                        </select>
+                    </div>` : `
+                    <div class="input-group">
+                        <label>ملاحظات</label>
+                        <textarea id="inp-notes" rows="3">${data.notes || ''}</textarea>
+                    </div>`}
+                    
+                    <button class="btn btn-primary" onclick="saveProduct()">حفظ</button>
+                `;
+            } 
+            else if (type === 'winning') {
+                modalTitle.innerText = id ? 'تعديل منتج رابح' : 'إضافة منتج رابح';
+                modalBody.innerHTML = `
+                    <div class="image-preview" onclick="document.getElementById('img-upload').click()">
+                        ${tempImage ? `<img src="${tempImage}">` : '<span><i class="fas fa-camera fa-2x"></i><br>اضغط لرفع صورة</span>'}
+                    </div>
+                    <input type="file" id="img-upload" style="display:none" accept="image/*" onchange="handleImageUpload(this)">
+
+                    <div class="input-group" style="margin-top:15px;">
+                        <label>اسم المنتج</label>
+                        <input type="text" id="inp-name" value="${data.name || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>سعر الشراء (MAD)</label>
+                        <input type="number" id="inp-buy" value="${data.buyPrice || 0}">
+                    </div>
+                    <div class="input-group">
+                        <label>سعر البيع (MAD)</label>
+                        <input type="number" id="inp-sale" value="${data.salePrice || 0}">
+                    </div>
+                    <div class="input-group">
+                        <label>هامش الربح (MAD)</label>
+                        <input type="number" id="inp-margin" value="${data.margin || 0}">
+                    </div>
+                    <div class="input-group">
+                        <label>رابط Alibaba</label>
+                        <input type="text" id="inp-alibaba" value="${data.alibaba || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>رابط المتجر</label>
+                        <input type="text" id="inp-store" value="${data.store || ''}">
+                    </div>
+                     <div class="input-group">
+                        <label>الحالة الافتراضية</label>
+                        <select id="inp-status">
+                            <option value="valid" ${data.status === 'valid' ? 'selected' : ''}>Valid (ناجح)</option>
+                            <option value="invalid" ${data.status === 'invalid' ? 'selected' : ''}>Invalid (فاشل)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>الكمية (للإحصائيات)</label>
+                        <input type="number" id="inp-qty" value="${data.quantity || 0}">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveWinning()">حفظ</button>
+                `;
+            }
+            else if (type === 'pages') {
+                modalTitle.innerText = id ? 'تعديل الصفحة' : 'إضافة صفحة جديدة';
+                modalBody.innerHTML = `
+                    <div class="input-group">
+                        <label>اسم الصفحة</label>
+                        <input type="text" id="inp-name" value="${data.name || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>الرابط</label>
+                        <input type="text" id="inp-link" value="${data.link || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>ملاحظات</label>
+                        <textarea id="inp-notes" rows="3">${data.notes || ''}</textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="savePage()">حفظ</button>
+                `;
+            }
+
             modal.classList.add('open');
         }
-        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-        // Product Actions
-        function calcProfit() {
-            const cost = parseFloat($('#p_cost').value) || 0;
-            const price = parseFloat($('#p_price').value) || 0;
-            $('#p_profit_preview').innerText = `الربح: ${formatMoney(price - cost)}`;
+        function closeModal() {
+            document.getElementById('generic-modal').classList.remove('open');
         }
+
+        // --- Image Handling ---
+        function handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempImage = e.target.result;
+                    // Update preview immediately
+                    input.previousElementSibling.innerHTML = `<img src="${tempImage}">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- Save & Delete Logic ---
+
         function saveProduct() {
-            const id = $('#p_id').value;
-            const name = $('#p_name').value;
-            const cost = parseFloat($('#p_cost').value);
-            const price = parseFloat($('#p_price').value);
-            const sku = $('#p_sku').value;
-            // In a real app, handle image upload here. Using random seed for demo.
-            const img = `https://picsum.photos/seed/${Date.now()}/40/40`;
+            const name = document.getElementById('inp-name').value;
+            const qty = parseInt(document.getElementById('inp-qty').value);
+            const price = parseFloat(document.getElementById('inp-price').value);
+            
+            if(!name) { showToast('الرجاء إدخال اسم المنتج', 'error'); return; }
 
-            if(id) {
-                // Edit logic
-                const idx = db.products.findIndex(p => p.id == id);
-                db.products[idx] = { ...db.products[idx], name, cost, price, sku };
-                showToast('تم تحديث المنتج');
+            const item = {
+                id: editingId || Date.now(),
+                name,
+                quantity: qty,
+                price,
+                image: tempImage,
+                status: currentModalType === 'inventory' ? document.getElementById('inp-status').value : 'importing',
+                notes: currentModalType === 'importing' ? document.getElementById('inp-notes').value : ''
+            };
+
+            const targetArray = currentModalType === 'inventory' ? db.inventory : db.importing;
+
+            if (editingId) {
+                const index = targetArray.findIndex(i => i.id === editingId);
+                targetArray[index] = item;
+                showToast('تم تعديل المنتج بنجاح');
             } else {
-                // Add logic
-                const newId = db.products.length ? Math.max(...db.products.map(p=>p.id)) + 1 : 1;
-                db.products.push({ id: newId, name, cost, price, sku, status: 'active', img });
-                showToast('تمت إضافة المنتج');
+                targetArray.push(item);
+                showToast('تمت إضافة المنتج بنجاح');
             }
-            closeModal('productModal');
-            renderAll();
-        }
-        function editProduct(id) {
-            const p = db.products.find(x => x.id === id);
-            $('#p_id').val(p.id);
-            $('#p_name').val(p.name);
-            $('#p_cost').val(p.cost);
-            $('#p_price').val(p.price);
-            $('#p_sku').val(p.sku);
-            calcProfit();
-            openModal('productModal');
+
+            updateDB();
+            closeModal();
+            if(currentModalType === 'inventory') renderInventory(); else renderImporting();
+            renderDashboard();
         }
 
-        // Import Actions
-        function saveImport() {
-            const name = $('#i_name').value;
-            const supplier = $('#i_supplier').value;
-            const qty = $('#i_qty').value;
-            const total = $('#i_total').value;
-            const date = $('#i_date').value;
+        function saveWinning() {
+            const name = document.getElementById('inp-name').value;
+            const buy = parseFloat(document.getElementById('inp-buy').value);
+            const sale = parseFloat(document.getElementById('inp-sale').value);
+            const margin = parseFloat(document.getElementById('inp-margin').value);
+            const qty = parseInt(document.getElementById('inp-qty').value) || 1;
 
-            const newId = db.imports.length + 1;
-            db.imports.push({ id: newId, name, supplier, qty, total, date });
-            closeModal('importModal');
-            renderAll();
-            showToast('تم إضافة طلب الاستيراد');
+            if(!name) { showToast('الرجاء إدخال اسم المنتج', 'error'); return; }
+
+            const item = {
+                id: editingId || Date.now(),
+                name,
+                buyPrice: buy,
+                salePrice: sale,
+                margin,
+                alibaba: document.getElementById('inp-alibaba').value,
+                store: document.getElementById('inp-store').value,
+                image: tempImage,
+                status: document.getElementById('inp-status').value,
+                quantity: qty
+            };
+
+            if (editingId) {
+                const index = db.winning.findIndex(i => i.id === editingId);
+                db.winning[index] = item;
+                showToast('تم التعديل بنجاح');
+            } else {
+                db.winning.push(item);
+                showToast('تمت الإضافة بنجاح');
+            }
+
+            updateDB();
+            closeModal();
+            renderWinning();
+            renderDashboard();
         }
 
-        // Winning Actions
-        function toggleWinning(id) {
-            const idx = db.winning.findIndex(w => w.id === id);
-            db.winning[idx].status = db.winning[idx].status === 'valid' ? 'invalid' : 'valid';
-            renderAll();
+        function savePage() {
+            const name = document.getElementById('inp-name').value;
+            const link = document.getElementById('inp-link').value;
+            const notes = document.getElementById('inp-notes').value;
+
+            if(!name || !link) { showToast('الاسم والرابط مطلوبان', 'error'); return; }
+
+            const item = {
+                id: editingId || Date.now(),
+                name, link, notes
+            };
+
+            if (editingId) {
+                const index = db.pages.findIndex(i => i.id === editingId);
+                db.pages[index] = item;
+                showToast('تم التعديل بنجاح');
+            } else {
+                db.pages.push(item);
+                showToast('تمت الإضافة بنجاح');
+            }
+
+            updateDB();
+            closeModal();
+            renderPages();
         }
 
-        // Ad Actions
-        function saveAd() {
-            const name = $('#a_name').value;
-            const platform = $('#a_platform').value;
-            const orders = $('#a_orders').value;
-            const sales = $('#a_sales').value;
-            
-            db.ads.push({ id: Date.now(), name, platform, orders, sales });
-            closeModal('adModal');
-            renderAll();
-            showToast('تم إضافة الصفحة الإعلانية');
-        }
-
-        // Generic Delete
-        function deleteItem(table, id) {
+        function deleteItem(type, id) {
             if(confirm('هل أنت متأكد من الحذف؟')) {
-                db[table] = db[table].filter(item => item.id !== id);
-                renderAll();
-                showToast('تم الحذف بنجاح', 'error');
+                if(type === 'inventory') db.inventory = db.inventory.filter(i => i.id !== id);
+                if(type === 'importing') db.importing = db.importing.filter(i => i.id !== id);
+                if(type === 'winning') db.winning = db.winning.filter(i => i.id !== id);
+                if(type === 'pages') db.pages = db.pages.filter(i => i.id !== id);
+                
+                updateDB();
+                if(type === 'inventory') renderInventory();
+                if(type === 'importing') renderImporting();
+                if(type === 'winning') renderWinning();
+                if(type === 'pages') renderPages();
+                renderDashboard();
+                showToast('تم الحذف بنجاح');
             }
         }
 
-        // Search Filter
-        function filterTable(tbodyId, query) {
-            const rows = document.querySelectorAll(`#${tbodyId} tr`);
-            query = query.toLowerCase();
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
+        function toggleWinningStatus(id) {
+            const item = db.winning.find(i => i.id === id);
+            if(item) {
+                item.status = item.status === 'valid' ? 'invalid' : 'valid';
+                updateDB();
+                renderWinning();
+                showToast(`تم تغيير الحالة إلى ${item.status}`);
+            }
         }
 
-        // --- 5. Charts (Chart.js) ---
-        let revenueChartInst = null;
-        let categoryChartInst = null;
+        function updateDB() {
+            localStorage.setItem('inventory', JSON.stringify(db.inventory));
+            localStorage.setItem('importing', JSON.stringify(db.importing));
+            localStorage.setItem('winning', JSON.stringify(db.winning));
+            localStorage.setItem('pages', JSON.stringify(db.pages));
+        }
 
-        function initCharts() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            const textColor = isDark ? '#94a3b8' : '#64748b';
-            const gridColor = isDark ? '#334155' : '#e2e8f0';
-
-            // Revenue Chart
-            const ctx1 = document.getElementById('revenueChart').getContext('2d');
-            if(revenueChartInst) revenueChartInst.destroy();
+        // --- Utilities ---
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
             
-            revenueChartInst = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
-                    datasets: [{
-                        label: 'الأرباح الشهرية ($)',
-                        data: [1200, 1900, 3000, 2500, 4200, 5100],
-                        borderColor: '#4F46E5',
-                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: textColor, font: {family: 'Tajawal'} } },
-                        title: { display: true, text: 'تحليل الأرباح (6 أشهر)', color: textColor, font: {family: 'Tajawal', size: 16} }
-                    },
-                    scales: {
-                        y: { grid: { color: gridColor }, ticks: { color: textColor } },
-                        x: { grid: { display: false }, ticks: { color: textColor } }
-                    }
-                }
-            });
+            container.appendChild(toast);
 
-            // Category Chart
-            const ctx2 = document.getElementById('categoryChart').getContext('2d');
-            if(categoryChartInst) categoryChartInst.destroy();
-
-            categoryChartInst = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['إلكترونيات', 'أزياء', 'منزل', 'أخرى'],
-                    datasets: [{
-                        data: [45, 25, 20, 10],
-                        backgroundColor: ['#4F46E5', '#10b981', '#f59e0b', '#ef4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: textColor, font: {family: 'Tajawal'} } },
-                        title: { display: true, text: 'توزيع الفئات', color: textColor, font: {family: 'Tajawal', size: 16} }
-                    }
-                }
-            });
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
-        function updateChartTheme() {
-            initCharts();
-        }
-
-        // Initial Load
-        window.addEventListener('load', renderAll);
+        // Initialize
+        renderDashboard();
 
     </script>
 </body>
