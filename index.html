@@ -3,636 +3,780 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Pro - Fully Editable</title>
-    <!-- خط تجوال -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <!-- أيقونات RemixIcon -->
+    <title>إدارة التجارة الإلكترونية - النظام المتكامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
     <style>
         :root {
             --primary: #2563eb;
-            --primary-dark: #1e40af;
+            --primary-hover: #1d4ed8;
             --secondary: #64748b;
             --success: #10b981;
-            --warning: #f59e0b;
             --danger: #ef4444;
-            --bg-body: #f1f5f9;
+            --bg-body: #f8fafc;
             --bg-card: #ffffff;
             --border: #e2e8f0;
-            --text-main: #0f172a;
+            --text-main: #1e293b;
             --text-muted: #64748b;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --radius: 12px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
 
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        body { background-color: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- Layout --- */
-        .app-container { display: flex; height: 100vh; overflow: hidden; }
-        
+        /* Sidebar */
         .sidebar {
-            width: 260px;
-            background: var(--bg-card);
-            border-left: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem 1rem;
-            box-shadow: var(--shadow-sm);
-            z-index: 10;
+            width: 280px; background: var(--bg-card); border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 1.5rem; z-index: 20;
         }
-
-        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2.5rem; padding: 0 0.5rem; }
-        .brand i { font-size: 1.5rem; color: var(--primary); }
-        .brand h1 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); line-height: 1.2; }
-        .brand span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
-
-        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
-
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; }
+        
         .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 0.85rem 1rem; border-radius: var(--radius);
-            color: var(--text-muted); text-decoration: none; font-weight: 500;
-            transition: all 0.2s ease; cursor: pointer;
+            padding: 1rem; margin-bottom: 0.5rem; border-radius: var(--radius);
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+            font-weight: 500; color: var(--text-muted);
         }
-        .nav-item i { font-size: 1.25rem; }
-        .nav-item:hover { background-color: #f8fafc; color: var(--primary); }
-        .nav-item.active { background-color: #eff6ff; color: var(--primary); font-weight: 700; }
+        .nav-item:hover, .nav-item.active { background: #eff6ff; color: var(--primary); }
+        .nav-item i { font-size: 1.2rem; }
 
+        /* Main Content */
         .main-content { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
-
-        /* --- Components --- */
-        .card {
-            background: var(--bg-card); border-radius: var(--radius);
-            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
-            padding: 1.5rem; margin-bottom: 1.5rem;
-        }
         
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
-        .card-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-        
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .section-title h2 { font-size: 1.8rem; font-weight: 800; }
+        .section-title p { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
 
-        /* Inputs */
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        /* Cards & Tables */
+        .card { background: var(--bg-card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 2rem; }
         
-        .input-wrapper { position: relative; }
-        .input-wrapper input {
-            width: 100%; padding: 0.75rem 1rem; padding-left: 2.5rem;
-            border: 1px solid var(--border); border-radius: 8px;
-            font-family: inherit; font-size: 0.95rem; background: #f8fafc;
-            transition: all 0.2s;
-        }
-        .input-wrapper .suffix {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted); font-size: 0.85rem; font-weight: 600;
-        }
-        .input-wrapper input:focus {
-            border-color: var(--primary); background: #fff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        /* Table Inputs (Seamless Editing) */
-        .table-input {
-            width: 100%; border: 1px solid transparent; background: transparent;
-            font-family: inherit; font-size: inherit; color: inherit;
-            padding: 4px; border-radius: 4px; transition: all 0.2s;
-        }
-        .table-input:hover { background: #f1f5f9; border-color: #e2e8f0; }
-        .table-input:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
-        
-        /* Tables */
-        .table-container { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        thead { background: #f8fafc; }
-        th { padding: 1rem; text-align: right; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; }
-        td { padding: 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #f8fafc; }
-
-        /* Buttons */
         .btn {
-            padding: 0.6rem 1.2rem; border-radius: 8px; border: none;
-            font-family: inherit; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+            padding: 0.6rem 1.2rem; border-radius: 8px; border: none; cursor: pointer;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; font-size: 0.9rem;
         }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-danger { background: #fee2e2; color: #991b1b; }
-        .btn-danger:hover { background: #fecaca; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #dc2626; }
         .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
 
-        .btn-icon { padding: 0.4rem; border-radius: 6px; color: var(--secondary); background: transparent; cursor: pointer; border: 1px solid transparent; }
-        .btn-icon:hover { color: var(--danger); background: #fee2e2; }
-
-        /* Stats */
-        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0.25rem 0; }
-        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: right; padding: 1rem; background: #f1f5f9; color: var(--text-muted); font-size: 0.85rem; border-bottom: 2px solid var(--border); }
+        .data-table td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .data-table tr:hover { background: #f8fafc; }
         
-        /* Sections */
-        section { display: none; animation: fadeIn 0.4s ease; }
-        section.active { display: block; }
+        .actions { display: flex; gap: 8px; }
+
+        /* Forms (Inputs) */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .form-control {
+            padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.95rem; transition: 0.2s; width: 100%;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal-overlay.open { opacity: 1; visibility: visible; }
+        .modal {
+            background: white; padding: 2rem; border-radius: var(--radius); width: 500px; max-width: 90%;
+            transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto;
+        }
+        .modal-overlay.open .modal { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .modal-footer { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 10px; }
+
+        /* Sections Visibility */
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Status Indicators */
-        #save-status { position: fixed; bottom: 20px; right: 20px; background: #333; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100; }
-        #save-status.show { opacity: 1; }
-
-        @media (max-width: 1024px) {
-            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .app-container { flex-direction: column; height: auto; }
-            .sidebar { width: 100%; border-bottom: 1px solid var(--border); border-left: none; }
-            .nav-links { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
-            .nav-item { white-space: nowrap; }
+        /* Floating Save Button */
+        .save-fab {
+            position: fixed; bottom: 30px; left: 30px; background: var(--text-main); color: white;
+            padding: 1rem 1.5rem; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 700;
+            transition: transform 0.2s; z-index: 900;
         }
+        .save-fab:hover { transform: scale(1.05); background: black; }
+
+        /* Utility */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .badge-valid { background: #dcfce7; color: #166534; }
+        .badge-invalid { background: #fee2e2; color: #991b1b; }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="brand">
-            <i class="ri-edit-box-line"></i>
-            <div>
-                <h1>E-Com Editor</h1>
-                <span>نسخة قابلة للتعديل</span>
-            </div>
+            <i class="ri-dashboard-3-line"></i>
+            <span>إدارة المتجر</span>
         </div>
-
-        <nav class="nav-links">
-            <a class="nav-item active" onclick="showSection('simulator')">
-                <i class="ri-calculator-line"></i> المحاكاة
-            </a>
-            <a class="nav-item" onclick="showSection('winning')">
-                <i class="ri-list-check"></i> المنتجات الفائزة
-            </a>
-            <a class="nav-item" onclick="showSection('myproduct')">
-                <i class="ri-store-3-line"></i> منتجاتي
-            </a>
-            <a class="nav-item" onclick="showSection('objectif')">
-                <i class="ri-flag-2-line"></i> الأهداف
-            </a>
+        <nav>
+            <div class="nav-item active" onclick="navTo('simulator')">
+                <i class="ri-calculator-line"></i> المحاكاة المالية
+            </div>
+            <div class="nav-item" onclick="navTo('winning')">
+                <i class="ri-trophy-line"></i> المنتجات الفائزة
+            </div>
+            <div class="nav-item" onclick="navTo('myproduct')">
+                <i class="ri-store-3-line"></i> مخزوني الحالي
+            </div>
+            <div class="nav-item" onclick="navTo('objectif')">
+                <i class="ri-flag-2-line"></i> خطط الاستيراد
+            </div>
         </nav>
-        <div style="margin-top:auto; text-align:center;">
-            <button onclick="resetData()" class="btn btn-sm" style="width:100%; justify-content:center; background:#f1f5f9; color:var(--danger);">إعادة ضبط المصنع</button>
+        <div style="margin-top: auto;">
+            <button class="btn" style="width: 100%; justify-content: center; background: #fee2e2; color: #991b1b;" onclick="resetAll()">
+                <i class="ri-refresh-line"></i> إعادة ضبط المصنع
+            </button>
         </div>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
         
-        <!-- Simulator -->
-        <section id="simulator" class="active">
-            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
-                <div class="page-title">
+        <!-- 1. SIMULATOR SECTION -->
+        <section id="simulator" class="page-section active">
+            <div class="section-header">
+                <div class="section-title">
                     <h2>المحاكاة المالية</h2>
-                    <p>قم بتعديل القيم لرؤية التغييرات فوراً.</p>
+                    <p>قم بتحديث تكاليف المنتج الأساسية لحساب الأرباح.</p>
                 </div>
+                <button class="btn btn-primary" onclick="openSimModal()">
+                    <i class="ri-edit-2-line"></i> تعديل الإعدادات
+                </button>
             </div>
 
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header"><div class="card-title">التكاليف</div></div>
-                    <div class="grid-2">
-                        <div class="form-group"><label>سعر الشراء</label><div class="input-wrapper"><input type="number" id="buy-price" oninput="updateSimState('buyPrice', this.value)"><span class="suffix">DH</span></div></div>
-                        <div class="form-group"><label>الاستيراد</label><div class="input-wrapper"><input type="number" id="import-fees" oninput="updateSimState('importFees', this.value)"><span class="suffix">DH</span></div></div>
-                        <div class="form-group"><label>التوصيل</label><div class="input-wrapper"><input type="number" id="delivery-fees" oninput="updateSimState('deliveryFees', this.value)"><span class="suffix">DH</span></div></div>
-                        <div class="form-group"><label>العمولات</label><div class="input-wrapper"><input type="number" id="commission-fees" oninput="updateSimState('commissionFees', this.value)"><span class="suffix">DH</span></div></div>
-                        <div class="form-group"><label>إعلانات</label><div class="input-wrapper"><input type="number" id="ads-fees" oninput="updateSimState('adsFees', this.value)"><span class="suffix">DH</span></div></div>
-                        <div class="form-group"><label>إعلانات تجريبية</label><div class="input-wrapper"><input type="number" id="test-ads-fees" oninput="updateSimState('testAdsFees', this.value)"><span class="suffix">DH</span></div></div>
+            <div class="card">
+                <div class="form-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="form-group">
+                        <label>سعر الشراء (DH)</label>
+                        <input type="text" class="form-control" id="sim-buy" readonly>
                     </div>
-                    <div style="margin-top:1rem; border-top:1px solid var(--border); padding-top:1rem;">
-                        <div class="form-group"><label>سعر البيع</label><div class="input-wrapper"><input type="number" id="selling-price-dh" oninput="updateSimState('sellingPriceDh', this.value)" style="font-weight:700; color:var(--primary);"><span class="suffix">DH</span></div></div>
-                        <div class="grid-2">
-                            <div style="background:#f8fafc; padding:10px; border-radius:8px; text-align:center;"><div class="stat-label">هامش الربح</div><div class="stat-value" id="unit-profit">0 DH</div></div>
-                            <div style="background:#f8fafc; padding:10px; border-radius:8px; text-align:center;"><div class="stat-label">نسبة الربح</div><div class="stat-value" id="profit-margin">0%</div></div>
-                        </div>
+                    <div class="form-group">
+                        <label>الاستيراد (DH)</label>
+                        <input type="text" class="form-control" id="sim-import" readonly>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><div class="card-title">الشحن</div></div>
-                    <div style="background:#f0f9ff; padding:1rem; border-radius:8px; margin-bottom:1rem;">
-                        <h4 style="color:#0369a1; margin-bottom:0.5rem;">شحن جوي</h4>
-                        <div class="grid-3">
-                            <input type="number" id="air-price-kg" class="table-input" placeholder="$ / Kg" oninput="updateSimState('airPriceKg', this.value)">
-                            <input type="number" id="air-weight" class="table-input" placeholder="Kg" oninput="updateSimState('airWeight', this.value)">
-                            <input type="number" id="air-pcs-kg" class="table-input" placeholder="Qty / Kg" oninput="updateSimState('airPcsKg', this.value)">
-                        </div>
-                        <div style="text-align:left; font-weight:bold; margin-top:0.5rem;">Total: $<span id="air-total">0</span></div>
+                    <div class="form-group">
+                        <label>التوصيل (DH)</label>
+                        <input type="text" class="form-control" id="sim-delivery" readonly>
                     </div>
-                    <div style="background:#f0fdf4; padding:1rem; border-radius:8px;">
-                        <h4 style="color:#15803d; margin-bottom:0.5rem;">شحن بحري</h4>
-                        <div class="grid-3">
-                            <input type="number" id="ocean-price-pcs" class="table-input" placeholder="$ / Pcs" oninput="updateSimState('oceanPricePcs', this.value)">
-                            <input type="number" id="ocean-qty" class="table-input" placeholder="Qty" oninput="updateSimState('oceanQty', this.value)">
-                            <input type="number" id="ocean-import" class="table-input" placeholder="Import $" oninput="updateSimState('oceanImport', this.value)">
-                        </div>
-                        <div style="text-align:left; font-weight:bold; margin-top:0.5rem;">Total: $<span id="ocean-total">0</span></div>
+                    <div class="form-group">
+                        <label>العمولات (DH)</label>
+                        <input type="text" class="form-control" id="sim-commission" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>إعلانات (DH)</label>
+                        <input type="text" class="form-control" id="sim-ads" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>إعلانات تجريبية (DH)</label>
+                        <input type="text" class="form-control" id="sim-test-ads" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>سعر البيع (DH)</label>
+                        <input type="text" class="form-control" id="sim-sell" readonly style="font-weight: bold; color: var(--primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>هامش الربح</label>
+                        <input type="text" class="form-control" id="sim-profit" readonly style="font-weight: bold; color: var(--success);">
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- 2. WINNING PRODUCTS SECTION -->
+        <section id="winning" class="page-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>المنتجات الفائزة</h2>
+                    <p>قاعدة بيانات المنتجات المرشحة للبيع.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openWinningModal()">
+                    <i class="ri-add-line"></i> إضافة منتج
+                </button>
             </div>
             
             <div class="card">
-                <div class="card-header"><div class="card-title">توقعات الأداء (الشهر = 20 يوم)</div></div>
-                <input type="range" id="daily-qty-range" min="1" max="50" value="1" style="width:100%" oninput="updateSimState('dailyQty', this.value); calcSim();">
-                <div class="grid-4" style="margin-top:1rem;">
-                    <div class="stat-block" style="text-align:center;"><div class="stat-label">إيراد يومي</div><div class="stat-value" id="rev-day">0</div></div>
-                    <div class="stat-block" style="text-align:center;"><div class="stat-label">إيراد شهري</div><div class="stat-value" id="rev-month">0</div></div>
-                    <div class="stat-block" style="text-align:center;"><div class="stat-label">ربح يومي</div><div class="stat-value" id="prof-day" style="color:var(--success)">0</div></div>
-                    <div class="stat-block" style="text-align:center;"><div class="stat-label">ربح شهري</div><div class="stat-value" id="prof-month" style="color:var(--success)">0</div></div>
-                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>اسم المنتج</th>
+                            <th>سعر الشراء ($)</th>
+                            <th>سعر البيع ($)</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="winning-tbody">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                </table>
+                <div id="winning-empty" class="empty-state" style="display:none;">لا توجد منتجات فائزة حالياً.</div>
             </div>
         </section>
 
-        <!-- Winning Products (Editable) -->
-        <section id="winning">
-            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
-                <h2>المنتجات الفائزة</h2>
-                <button class="btn btn-primary" onclick="addWinningProduct()"><i class="ri-add-line"></i> إضافة منتج</button>
-            </div>
-            <div class="card" style="padding:0;">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم المنتج</th>
-                                <th>شراء ($)</th>
-                                <th>بيع ($)</th>
-                                <th>الحالة</th>
-                                <th style="width:50px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="winning-tbody"></tbody>
-                    </table>
+        <!-- 3. MY PRODUCT SECTION -->
+        <section id="myproduct" class="page-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>مخزوني الحالي</h2>
+                    <p>المنتجات المتوفرة والمباعة حالياً.</p>
                 </div>
+                <button class="btn btn-primary" onclick="openMyProductModal()">
+                    <i class="ri-add-line"></i> إضافة مخزون
+                </button>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>اسم المنتج</th>
+                            <th>سعر البيع (DH)</th>
+                            <th>سعر الشراء (DH)</th>
+                            <th>المخزون</th>
+                            <th>صافي الربح الكلي</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myproduct-tbody">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                    <tfoot>
+                        <tr style="background: #f1f5f9; font-weight: bold;">
+                            <td colspan="4">الإجمالي الكلي</td>
+                            <td id="total-my-profit">0 DH</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </section>
 
-        <!-- My Product (Editable) -->
-        <section id="myproduct">
-            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
-                <h2>مخزون منتجاتي</h2>
-                <button class="btn btn-primary" onclick="addMyProduct()"><i class="ri-add-line"></i> إضافة منتج</button>
-            </div>
-            <div class="card" style="padding:0;">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>المنتج</th>
-                                <th>بيع (DH)</th>
-                                <th>شراء (DH)</th>
-                                <th>مخزون</th>
-                                <th>ربح/وحدة (DH)</th>
-                                <th>إجمالي الربح</th>
-                                <th style="width:50px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="myproduct-tbody"></tbody>
-                        <tfoot>
-                            <tr style="background:#f8fafc; font-weight:bold;">
-                                <td colspan="3">الإجمالي</td>
-                                <td id="total-stock">0</td>
-                                <td>-</td>
-                                <td id="total-profit" style="color:var(--success)">0 DH</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+        <!-- 4. OBJECTIF SECTION -->
+        <section id="objectif" class="page-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>خطط الاستيراد المستقبلية</h2>
+                    <p>إدارة الميزانية والكميات المخطط لاستيرادها.</p>
                 </div>
+                <button class="btn btn-primary" onclick="openObjectifModal()">
+                    <i class="ri-add-line"></i> إضافة خطة
+                </button>
             </div>
-        </section>
 
-        <!-- Objectif (Editable) -->
-        <section id="objectif">
-            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
-                <h2>خطة الاستيراد</h2>
-                <button class="btn btn-primary" onclick="addObjectif()"><i class="ri-add-line"></i> إضافة خطة</button>
-            </div>
-            <div class="grid-2">
-                <div class="card" style="padding:0;">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>المنتج</th>
-                                    <th>كمية</th>
-                                    <th>تكلفة ($)</th>
-                                    <th style="width:50px;"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="objectif-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card" style="text-align:center; display:flex; flex-direction:column; justify-content:center;">
-                    <div class="stat-label">إجمالي الاستثمار المطلوب</div>
-                    <div class="stat-value" id="total-invest" style="color:var(--primary); font-size:3rem;">$0</div>
-                </div>
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>اسم المنتج</th>
+                            <th>الكمية المستهدفة</th>
+                            <th>التكلفة التقديرية ($)</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="objectif-tbody">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                    <tfoot>
+                        <tr style="background: #f1f5f9; font-weight: bold;">
+                            <td>إجمالي الاستثمار</td>
+                            <td id="total-obj-qty">0</td>
+                            <td id="total-obj-cost">$0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </section>
 
     </main>
-</div>
 
-<div id="save-status">تم الحفظ تلقائياً</div>
+    <!-- SAVE BUTTON -->
+    <div class="save-fab" onclick="saveAllData()">
+        <i class="ri-save-3-line"></i>
+        حفظ جميع التغييرات
+    </div>
 
-<script>
-    // --- DATA MANAGEMENT ---
-    const STORAGE_KEY = 'ecommerce_pro_v1';
-    
-    // Default Initial Data
-    const defaultData = {
-        sim: {
-            buyPrice: 50, importFees: 10, deliveryFees: 80, commissionFees: 0, adsFees: 50, testAdsFees: 0, sellingPriceDh: 190,
-            airPriceKg: 100, airWeight: 100, airPcsKg: 10,
-            oceanPricePcs: 3, oceanQty: 200, oceanImport: 600,
-            dailyQty: 1
-        },
-        winning: [
-            { id: 1, name: "USB Plug Kitchen Electric Double Sided Knife Sharpener", buy: 9, sell: 30, status: "Valid" },
-            { id: 2, name: "Portable HD 2K Infrared Night Vision Body Camera", buy: 14, sell: 35, status: "" },
-            { id: 6, name: "Console Blanche de jeu rétro 20 000 jeux", buy: 15, sell: 37, status: "Valid" },
-            { id: 23, name: "Dash Cam HD 1080P Car DVR Camera", buy: 13, sell: 40, status: "Valid" }
-        ],
-        myProducts: [
-            { id: 101, name: "خيمة شاطئية وحمام سباحة للأطفال", sell: 28, buy: 11, stock: 100 },
-            { id: 102, name: "محول شاشة السيارة إلى كار بلاي", sell: 28, buy: 9.5, stock: 47 },
-            { id: 103, name: "مجموعة مفكات براغي صغيرة 46 في 1", sell: 25, buy: 9.71, stock: 120 }
-        ],
-        objectifs: [
-            { id: 201, name: "جهاز طارد الكلاب", qty: 200, cost: 600 },
-            { id: 202, name: "نظارات مضادة للضوء الأزرق", qty: 350, cost: 770 },
-            { id: 203, name: "كاميرا السيارة ب 4 كاميرات", qty: 200, cost: 3110 }
-        ]
-    };
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" style="position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.3s;">تم الحفظ بنجاح</div>
 
-    // State Container
-    let appData = {};
+    <!-- MODALS -->
 
-    // Load or Init
-    function loadData() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            appData = JSON.parse(stored);
-        } else {
-            appData = JSON.parse(JSON.stringify(defaultData)); // Deep copy
-        }
-    }
+    <!-- Simulator Modal -->
+    <div class="modal-overlay" id="modal-sim">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>تعديل إعدادات المحاكاة</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-sim')"></i>
+            </div>
+            <div class="form-grid">
+                <div class="form-group"><label>سعر الشراء</label><input type="number" class="form-control" id="edit-sim-buy"></div>
+                <div class="form-group"><label>الاستيراد</label><input type="number" class="form-control" id="edit-sim-import"></div>
+                <div class="form-group"><label>التوصيل</label><input type="number" class="form-control" id="edit-sim-delivery"></div>
+                <div class="form-group"><label>العمولات</label><input type="number" class="form-control" id="edit-sim-comm"></div>
+                <div class="form-group"><label>الإعلانات</label><input type="number" class="form-control" id="edit-sim-ads"></div>
+                <div class="form-group"><label>إعلانات تجريبية</label><input type="number" class="form-control" id="edit-sim-testads"></div>
+                <div class="form-group"><label>سعر البيع</label><input type="number" class="form-control" id="edit-sim-sell"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-sim')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveSimSettings()">تحديث الإعدادات</button>
+            </div>
+        </div>
+    </div>
 
-    function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-        const status = document.getElementById('save-status');
-        status.classList.add('show');
-        setTimeout(() => status.classList.remove('show'), 2000);
-    }
-
-    function resetData() {
-        if(confirm("هل أنت متأكد من مسح جميع البيانات والعودة للوضع الافتراضي؟")) {
-            localStorage.removeItem(STORAGE_KEY);
-            location.reload();
-        }
-    }
-
-    // --- RENDER FUNCTIONS ---
-
-    function renderAll() {
-        renderSim();
-        renderWinning();
-        renderMyProduct();
-        renderObjectif();
-    }
-
-    // 1. Simulator Renderer
-    function renderSim() {
-        const s = appData.sim;
-        document.getElementById('buy-price').value = s.buyPrice;
-        document.getElementById('import-fees').value = s.importFees;
-        document.getElementById('delivery-fees').value = s.deliveryFees;
-        document.getElementById('commission-fees').value = s.commissionFees;
-        document.getElementById('ads-fees').value = s.adsFees;
-        document.getElementById('test-ads-fees').value = s.testAdsFees;
-        document.getElementById('selling-price-dh').value = s.sellingPriceDh;
-        
-        document.getElementById('air-price-kg').value = s.airPriceKg;
-        document.getElementById('air-weight').value = s.airWeight;
-        document.getElementById('air-pcs-kg').value = s.airPcsKg;
-        
-        document.getElementById('ocean-price-pcs').value = s.oceanPricePcs;
-        document.getElementById('ocean-qty').value = s.oceanQty;
-        document.getElementById('ocean-import').value = s.oceanImport;
-        
-        document.getElementById('daily-qty-range').value = s.dailyQty;
-
-        calcSim(); // Run calc logic
-    }
-
-    function updateSimState(key, val) {
-        appData.sim[key] = parseFloat(val) || 0;
-        calcSim();
-        saveData();
-    }
-
-    function calcSim() {
-        const s = appData.sim;
-        const daysPerMonth = 20;
-        
-        // Costs
-        const totalCost = s.buyPrice + s.importFees + s.deliveryFees + s.commissionFees + s.adsFees + s.testAdsFees;
-        const profit = s.sellingPriceDh - totalCost;
-        const margin = s.sellingPriceDh > 0 ? ((profit / s.sellingPriceDh) * 100).toFixed(1) : 0;
-
-        // UI Updates
-        document.getElementById('unit-profit').innerText = profit.toLocaleString() + ' DH';
-        document.getElementById('unit-profit').style.color = profit >= 0 ? 'var(--success)' : 'var(--danger)';
-        document.getElementById('profit-margin').innerText = margin + '%';
-
-        // Shipping
-        document.getElementById('air-total').innerText = (s.airPriceKg * s.airWeight).toLocaleString();
-        document.getElementById('ocean-total').innerText = ((s.oceanPricePcs * s.oceanQty) + s.oceanImport).toLocaleString();
-
-        // Projections
-        const revDay = s.dailyQty * s.sellingPriceDh;
-        const revMonth = revDay * daysPerMonth;
-        const profDay = s.dailyQty * profit;
-        const profMonth = profDay * daysPerMonth;
-
-        document.getElementById('rev-day').innerText = revDay.toLocaleString();
-        document.getElementById('rev-month').innerText = revMonth.toLocaleString();
-        
-        document.getElementById('prof-day').innerText = profDay.toLocaleString();
-        document.getElementById('prof-day').style.color = profDay >= 0 ? 'var(--success)' : 'var(--danger)';
-        
-        document.getElementById('prof-month').innerText = profMonth.toLocaleString();
-        document.getElementById('prof-month').style.color = profMonth >= 0 ? 'var(--success)' : 'var(--danger)';
-    }
-
-    // 2. Winning Products Renderer
-    function renderWinning() {
-        const tbody = document.getElementById('winning-tbody');
-        tbody.innerHTML = '';
-        appData.winning.forEach((p, index) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input class="table-input" value="${p.name}" oninput="updateWinning(${index}, 'name', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.buy}" oninput="updateWinning(${index}, 'buy', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.sell}" oninput="updateWinning(${index}, 'sell', this.value)"></td>
-                <td>
-                    <select class="table-input" onchange="updateWinning(${index}, 'status', this.value)">
-                        <option value="" ${p.status==''?'selected':''}>-</option>
-                        <option value="Valid" ${p.status=='Valid'?'selected':''}>Valid</option>
-                        <option value="Invalid" ${p.status=='Invalid'?'selected':''}>Invalid</option>
+    <!-- Winning Modal -->
+    <div class="modal-overlay" id="modal-winning">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="winning-modal-title">إضافة منتج فائز</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-winning')"></i>
+            </div>
+            <input type="hidden" id="winning-id">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label>اسم المنتج</label>
+                <input type="text" class="form-control" id="winning-name">
+            </div>
+            <div class="form-grid">
+                <div class="form-group"><label>شراء ($)</label><input type="number" class="form-control" id="winning-buy"></div>
+                <div class="form-group"><label>بيع ($)</label><input type="number" class="form-control" id="winning-sell"></div>
+                <div class="form-group">
+                    <label>الحالة</label>
+                    <select class="form-control" id="winning-status">
+                        <option value="">-- اختر --</option>
+                        <option value="Valid">Valid</option>
+                        <option value="Invalid">Invalid</option>
                     </select>
-                </td>
-                <td style="text-align:center;"><button class="btn-icon" onclick="deleteWinning(${index})"><i class="ri-delete-bin-line"></i></button></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-winning')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveWinningProduct()">حفظ المنتج</button>
+            </div>
+        </div>
+    </div>
 
-    function updateWinning(index, field, val) {
-        appData.winning[index][field] = val;
-        saveData();
-    }
-    
-    function addWinningProduct() {
-        appData.winning.push({ id: Date.now(), name: "منتج جديد", buy: 0, sell: 0, status: "" });
-        renderWinning();
-        saveData();
-    }
-    
-    function deleteWinning(index) {
-        if(confirm('حذف هذا المنتج؟')) {
-            appData.winning.splice(index, 1);
+    <!-- My Product Modal -->
+    <div class="modal-overlay" id="modal-myproduct">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="myproduct-modal-title">إضافة مخزون</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-myproduct')"></i>
+            </div>
+            <input type="hidden" id="myproduct-id">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label>اسم المنتج</label>
+                <input type="text" class="form-control" id="myproduct-name">
+            </div>
+            <div class="form-grid">
+                <div class="form-group"><label>سعر البيع (DH)</label><input type="number" class="form-control" id="myproduct-sell"></div>
+                <div class="form-group"><label>سعر الشراء (DH)</label><input type="number" class="form-control" id="myproduct-buy"></div>
+                <div class="form-group"><label>المخزون المتوفر</label><input type="number" class="form-control" id="myproduct-stock"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-myproduct')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveMyProduct()">حفظ المنتج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Objectif Modal -->
+    <div class="modal-overlay" id="modal-objectif">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="objectif-modal-title">خطة استيراد جديدة</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="closeModal('modal-objectif')"></i>
+            </div>
+            <input type="hidden" id="objectif-id">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label>اسم المنتج</label>
+                <input type="text" class="form-control" id="objectif-name">
+            </div>
+            <div class="form-grid">
+                <div class="form-group"><label>الكمية</label><input type="number" class="form-control" id="objectif-qty"></div>
+                <div class="form-group"><label>التكلفة ($)</label><input type="number" class="form-control" id="objectif-cost"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-objectif')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveObjectif()">حفظ الخطة</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA STATE ---
+        const DB_KEY = 'ecommerce_manager_db';
+        
+        let appData = {
+            simulator: { buyPrice: 50, importFees: 10, deliveryFees: 80, commissionFees: 0, adsFees: 50, testAdsFees: 0, sellingPrice: 190 },
+            winning: [
+                { id: 1715001, name: "USB Plug Kitchen Electric Double Sided Knife Sharpener", buy: 9, sell: 30, status: "Valid" },
+                { id: 1715002, name: "Console Blanche de jeu rétro 20 000 jeux", buy: 15, sell: 37, status: "Valid" },
+                { id: 1715003, name: "Dash Cam HD 1080P Car DVR Camera", buy: 13, sell: 40, status: "Valid" }
+            ],
+            myProducts: [
+                { id: 1726001, name: "خيمة شاطئية وحمام سباحة للأطفال", sell: 28, buy: 11, stock: 100 },
+                { id: 1726002, name: "محول شاشة السيارة إلى كار بلاي", sell: 28, buy: 9.5, stock: 47 }
+            ],
+            objectifs: [
+                { id: 1737001, name: "جهاز طارد الكلاب", qty: 200, cost: 600 },
+                { id: 1737002, name: "كاميرا السيارة ب 4 كاميرات", qty: 200, cost: 3110 }
+            ]
+        };
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderSimulator();
             renderWinning();
-            saveData();
-        }
-    }
-
-    // 3. My Product Renderer
-    function renderMyProduct() {
-        const tbody = document.getElementById('myproduct-tbody');
-        tbody.innerHTML = '';
-        let totalStock = 0;
-        let totalProfit = 0;
-
-        appData.myProducts.forEach((p, index) => {
-            const unitProfit = p.sell - p.buy;
-            const totalItemProfit = unitProfit * p.stock;
-            
-            totalStock += parseInt(p.stock);
-            totalProfit += totalItemProfit;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input class="table-input" value="${p.name}" oninput="updateMyProduct(${index}, 'name', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.sell}" oninput="updateMyProduct(${index}, 'sell', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.buy}" oninput="updateMyProduct(${index}, 'buy', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.stock}" oninput="updateMyProduct(${index}, 'stock', this.value)"></td>
-                <td style="text-align:center; font-weight:bold; color:${unitProfit>0?'var(--success)':'var(--danger)'}">${unitProfit}</td>
-                <td style="text-align:center; font-weight:bold;">${totalItemProfit.toFixed(1)}</td>
-                <td style="text-align:center;"><button class="btn-icon" onclick="deleteMyProduct(${index})"><i class="ri-delete-bin-line"></i></button></td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById('total-stock').innerText = totalStock;
-        document.getElementById('total-profit').innerText = totalProfit.toLocaleString() + ' DH';
-    }
-
-    function updateMyProduct(index, field, val) {
-        appData.myProducts[index][field] = parseFloat(val) || 0;
-        if(field === 'name') appData.myProducts[index][field] = val;
-        renderMyProduct(); // Re-calc totals
-        saveData();
-    }
-
-    function addMyProduct() {
-        appData.myProducts.push({ id: Date.now(), name: "منتج جديد", sell: 0, buy: 0, stock: 0 });
-        renderMyProduct();
-        saveData();
-    }
-
-    function deleteMyProduct(index) {
-        if(confirm('حذف هذا المنتج؟')) {
-            appData.myProducts.splice(index, 1);
             renderMyProduct();
-            saveData();
-        }
-    }
-
-    // 4. Objectif Renderer
-    function renderObjectif() {
-        const tbody = document.getElementById('objectif-tbody');
-        tbody.innerHTML = '';
-        let totalInvest = 0;
-
-        appData.objectifs.forEach((p, index) => {
-            totalInvest += p.cost;
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input class="table-input" value="${p.name}" oninput="updateObjectif(${index}, 'name', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.qty}" oninput="updateObjectif(${index}, 'qty', this.value)"></td>
-                <td><input type="number" class="table-input" value="${p.cost}" oninput="updateObjectif(${index}, 'cost', this.value)"></td>
-                <td style="text-align:center;"><button class="btn-icon" onclick="deleteObjectif(${index})"><i class="ri-delete-bin-line"></i></button></td>
-            `;
-            tbody.appendChild(tr);
+            renderObjectif();
         });
 
-        document.getElementById('total-invest').innerText = '$' + totalInvest.toLocaleString();
-    }
-
-    function updateObjectif(index, field, val) {
-        appData.objectifs[index][field] = parseFloat(val) || 0;
-        if(field === 'name') appData.objectifs[index][field] = val;
-        renderObjectif(); // Re-calc total
-        saveData();
-    }
-
-    function addObjectif() {
-        appData.objectifs.push({ id: Date.now(), name: "منتج جديد", qty: 100, cost: 500 });
-        renderObjectif();
-        saveData();
-    }
-
-    function deleteObjectif(index) {
-        if(confirm('حذف هذه الخطة؟')) {
-            appData.objectifs.splice(index, 1);
-            renderObjectif();
-            saveData();
+        // --- NAVIGATION ---
+        function navTo(sectionId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            // Find the nav item that calls this section
+            const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(sectionId));
+            if(activeNav) activeNav.classList.add('active');
         }
-    }
 
-    // --- GLOBAL NAVIGATION ---
-    function showSection(id) {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelector(`.nav-item[onclick="showSection('${id}')"]`).classList.add('active');
-    }
+        // --- STORAGE ---
+        function loadData() {
+            const stored = localStorage.getItem(DB_KEY);
+            if (stored) {
+                appData = JSON.parse(stored);
+            }
+        }
 
-    // --- INIT ---
-    window.addEventListener('DOMContentLoaded', () => {
-        loadData();
-        renderAll();
-    });
+        function saveAllData() {
+            localStorage.setItem(DB_KEY, JSON.stringify(appData));
+            showToast();
+        }
 
-</script>
+        function resetAll() {
+            if(confirm('هل أنت متأكد من حذف جميع البيانات والعودة للوضع الافتراضي؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                localStorage.removeItem(DB_KEY);
+                location.reload();
+            }
+        }
 
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        }
+
+        // --- SIMULATOR LOGIC ---
+        function renderSimulator() {
+            const s = appData.simulator;
+            const profit = s.sellingPrice - (s.buyPrice + s.importFees + s.deliveryFees + s.commissionFees + s.adsFees + s.testAdsFees);
+            
+            document.getElementById('sim-buy').value = s.buyPrice;
+            document.getElementById('sim-import').value = s.importFees;
+            document.getElementById('sim-delivery').value = s.deliveryFees;
+            document.getElementById('sim-commission').value = s.commissionFees;
+            document.getElementById('sim-ads').value = s.adsFees;
+            document.getElementById('sim-test-ads').value = s.testAdsFees;
+            document.getElementById('sim-sell').value = s.sellingPrice;
+            
+            document.getElementById('sim-profit').value = profit + ' DH';
+            document.getElementById('sim-profit').style.color = profit >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        function openSimModal() {
+            const s = appData.simulator;
+            document.getElementById('edit-sim-buy').value = s.buyPrice;
+            document.getElementById('edit-sim-import').value = s.importFees;
+            document.getElementById('edit-sim-delivery').value = s.deliveryFees;
+            document.getElementById('edit-sim-comm').value = s.commissionFees;
+            document.getElementById('edit-sim-ads').value = s.adsFees;
+            document.getElementById('edit-sim-testads').value = s.testAdsFees;
+            document.getElementById('edit-sim-sell').value = s.sellingPrice;
+            
+            document.getElementById('modal-sim').classList.add('open');
+        }
+
+        function saveSimSettings() {
+            appData.simulator.buyPrice = parseFloat(document.getElementById('edit-sim-buy').value) || 0;
+            appData.simulator.importFees = parseFloat(document.getElementById('edit-sim-import').value) || 0;
+            appData.simulator.deliveryFees = parseFloat(document.getElementById('edit-sim-delivery').value) || 0;
+            appData.simulator.commissionFees = parseFloat(document.getElementById('edit-sim-comm').value) || 0;
+            appData.simulator.adsFees = parseFloat(document.getElementById('edit-sim-ads').value) || 0;
+            appData.simulator.testAdsFees = parseFloat(document.getElementById('edit-sim-testads').value) || 0;
+            appData.simulator.sellingPrice = parseFloat(document.getElementById('edit-sim-sell').value) || 0;
+            
+            renderSimulator();
+            closeModal('modal-sim');
+            saveAllData(); // Auto save on edit
+        }
+
+        // --- WINNING PRODUCTS LOGIC ---
+        function renderWinning() {
+            const tbody = document.getElementById('winning-tbody');
+            tbody.innerHTML = '';
+            
+            if (appData.winning.length === 0) {
+                document.getElementById('winning-empty').style.display = 'block';
+            } else {
+                document.getElementById('winning-empty').style.display = 'none';
+                appData.winning.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    let badgeClass = item.status === 'Valid' ? 'badge-valid' : (item.status === 'Invalid' ? 'badge-invalid' : '');
+                    let badgeText = item.status || '-';
+                    
+                    tr.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>$${item.buy}</td>
+                        <td>$${item.sell}</td>
+                        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-sm" onclick="editWinning(${index})"><i class="ri-pencil-line"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteWinning(${index})"><i class="ri-delete-bin-line"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function openWinningModal() {
+            document.getElementById('winning-modal-title').innerText = "إضافة منتج فائز";
+            document.getElementById('winning-id').value = ""; // Empty ID for new
+            document.getElementById('winning-name').value = "";
+            document.getElementById('winning-buy').value = "";
+            document.getElementById('winning-sell').value = "";
+            document.getElementById('winning-status').value = "";
+            document.getElementById('modal-winning').classList.add('open');
+        }
+
+        function editWinning(index) {
+            const item = appData.winning[index];
+            document.getElementById('winning-modal-title').innerText = "تعديل المنتج";
+            document.getElementById('winning-id').value = index; // Store index to edit
+            document.getElementById('winning-name').value = item.name;
+            document.getElementById('winning-buy').value = item.buy;
+            document.getElementById('winning-sell').value = item.sell;
+            document.getElementById('winning-status').value = item.status;
+            document.getElementById('modal-winning').classList.add('open');
+        }
+
+        function saveWinningProduct() {
+            const id = document.getElementById('winning-id').value;
+            const newData = {
+                id: id !== "" ? appData.winning[id].id : Date.now(),
+                name: document.getElementById('winning-name').value,
+                buy: parseFloat(document.getElementById('winning-buy').value) || 0,
+                sell: parseFloat(document.getElementById('winning-sell').value) || 0,
+                status: document.getElementById('winning-status').value
+            };
+
+            if (id !== "") {
+                appData.winning[id] = newData;
+            } else {
+                appData.winning.push(newData);
+            }
+
+            renderWinning();
+            closeModal('modal-winning');
+            saveAllData();
+        }
+
+        function deleteWinning(index) {
+            if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                appData.winning.splice(index, 1);
+                renderWinning();
+                saveAllData();
+            }
+        }
+
+        // --- MY PRODUCT LOGIC ---
+        function renderMyProduct() {
+            const tbody = document.getElementById('myproduct-tbody');
+            tbody.innerHTML = '';
+            let totalProfit = 0;
+
+            appData.myProducts.forEach((item, index) => {
+                const profit = (item.sell - item.buy) * item.stock;
+                totalProfit += profit;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.sell}</td>
+                    <td>${item.buy}</td>
+                    <td>${item.stock}</td>
+                    <td style="font-weight:bold; color:${profit>=0?'var(--success)':'var(--danger)'}">${profit.toFixed(1)} DH</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-sm" onclick="editMyProduct(${index})"><i class="ri-pencil-line"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteMyProduct(${index})"><i class="ri-delete-bin-line"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('total-my-profit').innerText = totalProfit.toLocaleString() + ' DH';
+        }
+
+        function openMyProductModal() {
+            document.getElementById('myproduct-modal-title').innerText = "إضافة مخزون";
+            document.getElementById('myproduct-id').value = "";
+            document.getElementById('myproduct-name').value = "";
+            document.getElementById('myproduct-sell').value = "";
+            document.getElementById('myproduct-buy').value = "";
+            document.getElementById('myproduct-stock').value = "";
+            document.getElementById('modal-myproduct').classList.add('open');
+        }
+
+        function editMyProduct(index) {
+            const item = appData.myProducts[index];
+            document.getElementById('myproduct-modal-title').innerText = "تعديل المخزون";
+            document.getElementById('myproduct-id').value = index;
+            document.getElementById('myproduct-name').value = item.name;
+            document.getElementById('myproduct-sell').value = item.sell;
+            document.getElementById('myproduct-buy').value = item.buy;
+            document.getElementById('myproduct-stock').value = item.stock;
+            document.getElementById('modal-myproduct').classList.add('open');
+        }
+
+        function saveMyProduct() {
+            const id = document.getElementById('myproduct-id').value;
+            const newData = {
+                id: id !== "" ? appData.myProducts[id].id : Date.now(),
+                name: document.getElementById('myproduct-name').value,
+                sell: parseFloat(document.getElementById('myproduct-sell').value) || 0,
+                buy: parseFloat(document.getElementById('myproduct-buy').value) || 0,
+                stock: parseFloat(document.getElementById('myproduct-stock').value) || 0
+            };
+
+            if (id !== "") {
+                appData.myProducts[id] = newData;
+            } else {
+                appData.myProducts.push(newData);
+            }
+
+            renderMyProduct();
+            closeModal('modal-myproduct');
+            saveAllData();
+        }
+
+        function deleteMyProduct(index) {
+            if(confirm('هل أنت متأكد من حذف هذا المنتج من المخزون؟')) {
+                appData.myProducts.splice(index, 1);
+                renderMyProduct();
+                saveAllData();
+            }
+        }
+
+        // --- OBJECTIF LOGIC ---
+        function renderObjectif() {
+            const tbody = document.getElementById('objectif-tbody');
+            tbody.innerHTML = '';
+            let totalQty = 0;
+            let totalCost = 0;
+
+            appData.objectifs.forEach((item, index) => {
+                totalQty += parseInt(item.qty);
+                totalCost += parseFloat(item.cost);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.qty}</td>
+                    <td>$${item.cost}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-sm" onclick="editObjectif(${index})"><i class="ri-pencil-line"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteObjectif(${index})"><i class="ri-delete-bin-line"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('total-obj-qty').innerText = totalQty;
+            document.getElementById('total-obj-cost').innerText = '$' + totalCost.toLocaleString();
+        }
+
+        function openObjectifModal() {
+            document.getElementById('objectif-modal-title').innerText = "خطة استيراد جديدة";
+            document.getElementById('objectif-id').value = "";
+            document.getElementById('objectif-name').value = "";
+            document.getElementById('objectif-qty').value = "";
+            document.getElementById('objectif-cost').value = "";
+            document.getElementById('modal-objectif').classList.add('open');
+        }
+
+        function editObjectif(index) {
+            const item = appData.objectifs[index];
+            document.getElementById('objectif-modal-title').innerText = "تعديل الخطة";
+            document.getElementById('objectif-id').value = index;
+            document.getElementById('objectif-name').value = item.name;
+            document.getElementById('objectif-qty').value = item.qty;
+            document.getElementById('objectif-cost').value = item.cost;
+            document.getElementById('modal-objectif').classList.add('open');
+        }
+
+        function saveObjectif() {
+            const id = document.getElementById('objectif-id').value;
+            const newData = {
+                id: id !== "" ? appData.objectifs[id].id : Date.now(),
+                name: document.getElementById('objectif-name').value,
+                qty: parseInt(document.getElementById('objectif-qty').value) || 0,
+                cost: parseFloat(document.getElementById('objectif-cost').value) || 0
+            };
+
+            if (id !== "") {
+                appData.objectifs[id] = newData;
+            } else {
+                appData.objectifs.push(newData);
+            }
+
+            renderObjectif();
+            closeModal('modal-objectif');
+            saveAllData();
+        }
+
+        function deleteObjectif(index) {
+            if(confirm('هل أنت متأكد من حذف هذه الخطة؟')) {
+                appData.objectifs.splice(index, 1);
+                renderObjectif();
+                saveAllData();
+            }
+        }
+
+        // --- UTILS ---
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('open');
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.classList.remove('open');
+            }
+        }
+    </script>
 </body>
 </html>
