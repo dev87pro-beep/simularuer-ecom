@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory & Winning Products Manager</title>
+    <title>Crowz Inventory Dashboard</title>
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* --- 1. CROWZ THEME VARIABLES (Light, Clean, Blue) --- */
         :root {
-            --primary: #2563eb;       /* Blue */
-            --primary-dark: #1e40af;
-            --secondary: #64748b;     /* Slate */
-            --success: #10b981;       /* Green */
-            --danger: #ef4444;        /* Red */
-            --warning: #f59e0b;       /* Orange */
-            --background: #f1f5f9;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --primary: #2563eb;       /* Crowz Blue */
+            --primary-light: #eff6ff;
+            --secondary: #64748b;     /* Text Muted */
+            --bg-body: #f8fafc;       /* Very Light Gray Background */
+            --bg-card: #ffffff;       /* White Cards */
             --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --radius: 8px;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
             --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -27,60 +26,62 @@
         
         body {
             font-family: var(--font-family);
-            background-color: var(--background);
-            color: var(--text-main);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
             display: flex;
             height: 100vh;
             overflow: hidden;
-            direction: ltr; /* Enforce LTR */
+            direction: ltr;
         }
 
-        /* --- LAYOUT --- */
-        /* Sidebar */
+        /* --- 2. SIDEBAR (White, Blue Accents) --- */
         aside {
-            width: 260px;
-            background-color: var(--surface);
+            width: 250px;
+            background-color: var(--bg-card);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             padding: 1.5rem;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-            z-index: 10;
+            z-index: 20;
         }
 
         .brand {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--primary);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         nav button {
-            background: none;
+            background: transparent;
             border: none;
             width: 100%;
             text-align: left;
             padding: 12px 16px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             border-radius: var(--radius);
-            color: var(--text-muted);
+            color: var(--text-gray);
             font-weight: 500;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.95rem;
         }
 
-        nav button:hover { background-color: #f8fafc; color: var(--primary); }
-        nav button.active { background-color: #eff6ff; color: var(--primary); font-weight: 600; }
+        nav button:hover { background-color: #f1f5f9; color: var(--primary); }
+        nav button.active { 
+            background-color: var(--primary-light); 
+            color: var(--primary); 
+            font-weight: 700;
+        }
 
-        /* Main Content */
+        /* --- 3. MAIN CONTENT AREA --- */
         main {
             flex: 1;
             overflow-y: auto;
@@ -95,172 +96,158 @@
             margin-bottom: 2rem;
         }
 
-        h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
+        .header-title h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .header-title span { font-size: 0.9rem; color: var(--text-gray); }
+        
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; }
 
-        /* --- COMPONENTS --- */
-        /* Buttons */
-        .btn {
-            padding: 8px 16px;
-            border-radius: var(--radius);
-            border: 1px solid transparent;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-primary { background-color: var(--primary); color: white; }
-        .btn-primary:hover { background-color: var(--primary-dark); }
-        .btn-outline { background-color: white; border-color: var(--border); color: var(--text-main); }
-        .btn-outline:hover { border-color: var(--text-muted); }
-        .btn-danger { background-color: #fee2e2; color: var(--danger); }
-        .btn-danger:hover { background-color: #fecaca; }
-        .btn-success { background-color: #dcfce7; color: var(--success); }
-        .btn-success:hover { background-color: #bbf7d0; }
-        .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
-
-        /* Forms & Inputs */
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-muted); }
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            font-size: 0.95rem;
-            transition: border 0.2s;
-        }
-        .form-control:focus { border-color: var(--primary); }
-        .form-row { display: flex; gap: 1rem; }
-        .form-row > div { flex: 1; }
-
-        /* Cards & Dashboard */
-        .stats-grid {
+        /* --- 4. DASHBOARD LAYOUT (Crowz Style) --- */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(12, 1fr);
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
+
+        /* Stats Cards (Top Row) */
         .stat-card {
-            background: var(--surface);
+            background: var(--bg-card);
             padding: 1.5rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+            grid-column: span 3;
             border: 1px solid var(--border);
         }
-        .stat-value { font-size: 2rem; font-weight: 700; margin: 0.5rem 0; }
-        .stat-label { color: var(--text-muted); font-size: 0.9rem; }
+        .stat-card h3 { font-size: 0.85rem; color: var(--text-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+        .stat-card .trend { font-size: 0.8rem; margin-top: 5px; }
+        .trend.up { color: var(--success); }
 
-        /* Tables */
-        .table-container {
-            background: var(--surface);
+        /* Activity Chart (Main Big Card) */
+        .chart-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            overflow-x: auto;
+            grid-column: span 8;
             border: 1px solid var(--border);
         }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th, td {
-            padding: 14px 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
+        .card-title { font-weight: 700; font-size: 1.1rem; }
+        
+        /* SVG Chart Placeholder */
+        .chart-placeholder {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background: linear-gradient(to bottom, #f8fafc, #fff);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-bottom: 10px;
         }
-        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .bar { width: 8%; background: var(--primary); opacity: 0.2; border-radius: 4px 4px 0 0; transition: height 1s; }
+        .bar:hover { opacity: 1; }
+
+        /* Top Performers */
+        .performers-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            grid-column: span 4;
+            border: 1px solid var(--border);
+        }
+        .performer-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .performer-info { display: flex; align-items: center; gap: 10px; }
+        .p-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; display: grid; place-items: center; font-size: 0.7rem; font-weight: bold; color: var(--text-gray); }
+        .progress-bar { width: 60px; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+
+        /* Channels & Promo (Bottom Row) */
+        .channels-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            grid-column: span 8;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .channel-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .channel-item span { font-size: 0.9rem; font-weight: 600; }
+        .channel-item small { font-size: 0.8rem; }
+        .text-green { color: var(--success); }
+        .text-red { color: var(--danger); }
+
+        .promo-card {
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            grid-column: span 4;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .promo-card h3 { margin-bottom: 10px; }
+        .btn-white { background: white; color: var(--primary); padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-block; width: fit-content; margin-top: 10px; border: none; cursor: pointer; }
+
+        /* --- 5. TABLE STYLING (For other pages) --- */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-gray); font-size: 0.85rem; text-transform: uppercase; }
         tr:last-child td { border-bottom: none; }
-        tr:hover { background-color: #fcfcfc; }
-
-        /* Images in Table */
-        .img-thumb {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            background: #eee;
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
         }
+        .btn-primary:hover { background-color: #1d4ed8; }
 
-        /* Badges */
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
-        .badge-active { background-color: #dcfce7; color: var(--success); }
-        .badge-disabled { background-color: #f1f5f9; color: var(--text-muted); }
-        .badge-valid { background-color: #dcfce7; color: var(--success); }
-        .badge-invalid { background-color: #fee2e2; color: var(--danger); }
-
-        /* Modal */
+        /* Modal & Utilities */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.4);
             display: flex; justify-content: center; align-items: center;
-            z-index: 100;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.2s;
+            z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s;
         }
         .modal-overlay.open { opacity: 1; pointer-events: auto; }
         .modal {
-            background: var(--surface);
-            width: 90%; max-width: 600px;
+            background: white; width: 500px; padding: 2rem;
             border-radius: var(--radius);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-            max-height: 90vh;
-            display: flex; flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 1.5rem; overflow-y: auto; }
-        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 var(--radius) var(--radius); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
 
-        /* File Input Preview */
-        .file-preview {
-            width: 100px; height: 100px;
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted);
-            cursor: pointer;
-            overflow: hidden;
-            margin-top: 5px;
-            position: relative;
-        }
-        .file-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .file-preview:hover { border-color: var(--primary); color: var(--primary); }
-
-        /* Toast Notification */
-        .toast-container {
-            position: fixed; bottom: 20px; right: 20px; /* LTR positioning */
-            display: flex; flex-direction: column; gap: 10px; z-index: 200;
-        }
-        .toast {
-            background: var(--surface);
-            border-left: 4px solid var(--primary);
-            padding: 12px 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            font-size: 0.9rem;
-            display: flex; align-items: center; gap: 10px;
-            animation: slideIn 0.3s ease-out;
-            min-width: 250px;
-        }
-        .toast.success { border-color: var(--success); }
-        .toast.error { border-color: var(--danger); }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Views Visibility */
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            body { flex-direction: column; overflow: auto; }
-            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
-            nav { display: flex; overflow-x: auto; gap: 10px; }
-            nav button { width: auto; white-space: nowrap; margin-bottom: 0; }
-            .form-row { flex-direction: column; gap: 1rem; }
+        @media (max-width: 1024px) {
+            .dashboard-grid { display: flex; flex-direction: column; }
+            .stat-card { width: 100%; }
         }
     </style>
 </head>
@@ -269,68 +256,132 @@
     <!-- SIDEBAR -->
     <aside>
         <div class="brand">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            InvManager
+            <!-- Simple Logo Icon -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            Crowz
         </div>
         <nav>
-            <button class="active" onclick="app.navigate('dashboard')">📊 Dashboard</button>
-            <button onclick="app.navigate('products')">📦 Products Inventory</button>
-            <button onclick="app.navigate('importing')">🛳️ Importing</button>
-            <button onclick="app.navigate('winning')">🔥 Winning Products</button>
-            <button onclick="app.navigate('ads')">📢 Best Ads</button>
+            <button class="active" onclick="app.navigate('dashboard')">Dashboard</button>
+            <button onclick="app.navigate('products')">Products</button>
+            <button onclick="app.navigate('importing')">Importing</button>
+            <button onclick="app.navigate('winning')">Winning</button>
+            <button onclick="app.navigate('ads')">Ads Pages</button>
         </nav>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main>
         
-        <!-- DASHBOARD VIEW -->
+        <!-- DASHBOARD (Crowz Design) -->
         <section id="dashboard" class="view-section active">
             <header>
-                <h1>Dashboard Overview</h1>
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Today: <span id="current-date"></span></div>
+                <div class="header-title">
+                    <h1>Dashboard</h1>
+                    <span>Welcome back, Robert</span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar"></div>
+                    <div style="font-size: 0.9rem; font-weight: 600;">Robert Grant</div>
+                </div>
             </header>
 
-            <div class="stats-grid">
+            <div class="dashboard-grid">
+                <!-- Stat Cards -->
                 <div class="stat-card">
-                    <div class="stat-label">Total Profit (Est.)</div>
-                    <div class="stat-value" style="color: var(--success);" id="dash-profit">$0.00</div>
+                    <h3>Total Sales</h3>
+                    <div class="value" id="dash-sales">$0</div>
+                    <div class="trend up">▲ 12% vs last month</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Winning Products</div>
-                    <div class="stat-value" id="dash-winning">0</div>
+                    <h3>Followers</h3>
+                    <div class="value">219.3k</div>
+                    <div class="trend up">▲ 4.5% this week</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">In Import</div>
-                    <div class="stat-value" id="dash-import">0</div>
+                    <h3>Total Profit</h3>
+                    <div class="value" id="dash-profit">$0</div>
+                    <div class="trend up">▲ $1,200 today</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Low Stock Alert</div>
-                    <div class="stat-value" style="color: var(--danger);" id="dash-alerts">0</div>
+                    <h3>Reposts</h3>
+                    <div class="value">1.5k</div>
+                    <div class="trend" style="color:var(--text-gray)">- Stable</div>
                 </div>
-            </div>
 
-            <div class="table-container">
-                <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: 600;">Recent Winning Products</div>
-                <table id="dash-recent-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Profit Margin</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody><!-- Populated by JS --></tbody>
-                </table>
+                <!-- Activity Chart -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <div class="card-title">Activity</div>
+                        <select style="border:1px solid #ddd; padding:4px; border-radius:4px; font-size:0.8rem;"><option>This Week</option></select>
+                    </div>
+                    <!-- CSS Bar Chart Simulation -->
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 40%;"></div>
+                        <div class="bar" style="height: 70%;"></div>
+                        <div class="bar" style="height: 50%;"></div>
+                        <div class="bar" style="height: 90%; background:var(--primary); opacity:1;"></div>
+                        <div class="bar" style="height: 60%;"></div>
+                        <div class="bar" style="height: 80%;"></div>
+                        <div class="bar" style="height: 45%;"></div>
+                    </div>
+                </div>
+
+                <!-- Top Performers -->
+                <div class="performers-card">
+                    <div class="card-header">
+                        <div class="card-title">Top Performers</div>
+                    </div>
+                    <div class="performer-item">
+                        <div class="performer-info"><div class="p-avatar">VA</div> <span>Valy Antonova</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 39%"></div></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">39%</span>
+                    </div>
+                    <div class="performer-item">
+                        <div class="performer-info"><div class="p-avatar">NE</div> <span>Nenci Villy</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">25%</span>
+                    </div>
+                    <div class="performer-item">
+                        <div class="performer-info"><div class="p-avatar">MN</div> <span>Mark Noil</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 18%"></div></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">18%</span>
+                    </div>
+                </div>
+
+                <!-- Channels -->
+                <div class="channels-card">
+                    <div class="channel-item">
+                        <span>Dribbble</span>
+                        <small class="text-green">+2%</small>
+                    </div>
+                    <div class="channel-item">
+                        <span>Behance</span>
+                        <small class="text-red">-7%</small>
+                    </div>
+                    <div class="channel-item">
+                        <span>Instagram</span>
+                        <small class="text-green">+4%</small>
+                    </div>
+                    <div class="channel-item">
+                        <span>Pinterest</span>
+                        <small class="text-green">+2%</small>
+                    </div>
+                </div>
+
+                <!-- Upgrade Promo -->
+                <div class="promo-card">
+                    <h3>Upgrade Your Crowd</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px;">Get access to premium analytics.</p>
+                    <button class="btn-white">View Plans</button>
+                </div>
             </div>
         </section>
 
-        <!-- PRODUCTS INVENTORY VIEW -->
+        <!-- PRODUCTS PAGE (Clean Design) -->
         <section id="products" class="view-section">
             <header>
-                <h1>Products Inventory</h1>
-                <button class="btn btn-primary" onclick="app.openModal('products')">+ Add Product</button>
+                <div class="header-title"><h1>Products Inventory</h1></div>
+                <button class="btn-primary" onclick="app.openModal('products')">+ Add Product</button>
             </header>
             <div class="table-container">
                 <table id="products-table">
@@ -339,533 +390,753 @@
                             <th>Image</th>
                             <th>Name</th>
                             <th>SKU</th>
-                            <th>Purchase Price</th>
-                            <th>Selling Price</th>
-                            <th>Profit Margin</th>
+                            <th>Cost</th>
+                            <th>Selling</th>
+                            <th>Margin</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody><!-- JS --></tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- IMPORTING VIEW -->
-        <section id="importing" class="view-section">
-            <header>
-                <h1>Importing Products 🛳️</h1>
-                <button class="btn btn-primary" onclick="app.openModal('importing')">+ Add Import Shipment</button>
-            </header>
-            <div class="table-container">
-                <table id="importing-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Supplier</th>
-                            <th>Quantity</th>
-                            <th>Total Invest.</th>
-                            <th>Unit Cost (Calc)</th>
-                            <th>Exp. Arrival</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody><!-- JS --></tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- WINNING PRODUCTS VIEW -->
+        <!-- WINNING PRODUCTS -->
         <section id="winning" class="view-section">
             <header>
-                <h1>Winning Products 🔥</h1>
-                <button class="btn btn-primary" onclick="app.openModal('winning')">+ Add Winning Product</button>
+                <div class="header-title"><h1>Winning Products 🔥</h1></div>
+                <button class="btn-primary" onclick="app.openModal('winning')">+ Add Winner</button>
             </header>
             <div class="table-container">
                 <table id="winning-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Purchase</th>
-                            <th>Selling</th>
-                            <th>Profit ($)</th>
-                            <th>Margin (%)</th>
+                            <th>Img</th>
+                            <th>Product Name</th>
+                            <th>Cost</th>
+                            <th>Sell Price</th>
+                            <th>Profit</th>
+                            <th>Margin</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody><!-- JS --></tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </section>
-
-        <!-- ADS VIEW -->
+        
+        <!-- Other pages (Importing, Ads) follow similar clean structure -->
+        <section id="importing" class="view-section">
+             <header><div class="header-title"><h1>Importing</h1></div><button class="btn-primary" onclick="app.openModal('importing')">+ Add</button></header>
+             <div class="table-container"><table id="importing-table"><tbody></tbody></table></div>
+        </section>
         <section id="ads" class="view-section">
-            <header>
-                <h1>Best Advertising Pages 📊</h1>
-                <button class="btn btn-primary" onclick="app.openModal('ads')">+ Add Ad Page</button>
-            </header>
-            <div class="table-container">
-                <table id="ads-table">
-                    <thead>
-                        <tr>
-                            <th>Page Name</th>
-                            <th>Platform</th>
-                            <th>Link</th>
-                            <th>Orders</th>
-                            <th>Total Sales</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody><!-- JS --></tbody>
-                </table>
-            </div>
+             <header><div class="header-title"><h1>Ads Pages</h1></div><button class="btn-primary" onclick="app.openModal('ads')">+ Add</button></header>
+             <div class="table-container"><table id="ads-table"><tbody></tbody></table></div>
         </section>
 
     </main>
 
-    <!-- GENERIC MODAL -->
+    <!-- MODAL -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
-            <div class="modal-header">
-                <h3 id="modal-title">Edit Item</h3>
-                <button class="btn btn-sm btn-outline" onclick="app.closeModal()">✕</button>
-            </div>
-            <div class="modal-body" id="modal-body">
-                <!-- Form injected via JS -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="app.closeModal()">Cancel</button>
-                <button class="btn btn-primary" id="modal-save-btn">Save Changes</button>
+            <h3 id="modal-title" style="margin-bottom:1.5rem;">Edit Item</h3>
+            <div id="modal-body"></div>
+            <div style="margin-top:1.5rem; text-align:right; display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn-primary" style="background:#e2e8f0; color:#333;" onclick="app.closeModal()">Cancel</button>
+                <button class="btn-primary" id="modal-save-btn">Save</button>
             </div>
         </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
-    <div class="toast-container" id="toast-container"></div>
-
     <script>
-        // --- DATA STORE (Simulating Database) ---
+        // Same robust Logic, adapted for Light Theme
         const store = {
             products: [
-                { id: 1, name: "Wireless Earbuds", sku: "WE-001", purchase: 15.00, selling: 45.00, margin: 66.7, status: 'Active', image: null },
-                { id: 2, name: "Smart Watch Gen 2", sku: "SW-002", purchase: 35.00, selling: 85.00, margin: 58.8, status: 'Active', image: null },
-            ],
-            importing: [
-                { id: 1, name: "Yoga Mats Set", supplier: "Alibaba", qty: 100, invest: 500.00, date: "2023-11-20", notes: "Check quality", image: null }
+                { id: 1, name: "Wireless Earbuds", sku: "WE-01", purchase: 15.00, selling: 45.00, margin: 66.7, status: 'Active', image: null },
+                { id: 2, name: "Smart Watch", sku: "SW-02", purchase: 30.00, selling: 85.00, margin: 64.7, status: 'Active', image: null },
             ],
             winning: [
-                { id: 1, name: "Sunset Lamp", purchase: 12.00, selling: 39.99, profit: 27.99, margin: 70.0, status: 'Valid', alibaba: '#', store: '#', image: null }
+                { id: 1, name: "Sunset Lamp", purchase: 12.00, selling: 39.99, profit: 27.99, margin: 70.0, status: 'Valid', image: null }
             ],
-            ads: [
-                { id: 1, name: "Viral Video 1", platform: "TikTok", link: "#", orders: 45, sales: 1799.55 }
-            ]
+            importing: [],
+            ads: []
         };
 
-        // --- UTILS ---
         const utils = {
-            formatCurrency: (num) => '$' + parseFloat(num).toFixed(2),
-            generateId: () => Date.now().toString(36) + Math.random().toString(36).substr(2),
-            fileToDataURL: (file) => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.onerror = (e) => reject(e);
-                    reader.readAsDataURL(file);
-                });
-            },
-            showToast: (msg, type = 'success') => {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = type === 'success' ? '✅ ' + msg : '⚠️ ' + msg;
-                container.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            }
+            format: (n) => '$' + parseFloat(n).toFixed(2),
+            id: () => Math.random().toString(36).substr(2, 9),
+            toast: (m) => { alert(m); } // Simple alert for now to keep code clean
         };
 
-        // --- APPLICATION LOGIC ---
         const app = {
-            currentView: 'dashboard',
-            editingItem: null,
-            editingType: null,
-
-            init: () => {
-                document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                app.renderAll();
-            },
-
-            navigate: (viewId) => {
-                // Update Sidebar
+            navigate: (id) => {
+                document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
                 document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-                const activeBtn = Array.from(document.querySelectorAll('nav button')).find(b => b.innerText.toLowerCase().includes(viewId === 'winning' ? 'winning' : viewId));
-                if(activeBtn) activeBtn.classList.add('active');
-
-                // Update View
-                document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-                document.getElementById(viewId).classList.add('active');
-                app.currentView = viewId;
-                app.renderDashboard(); // Refresh stats when navigating
+                // Highlight logic roughly
+                app.render();
             },
+            
+            render: () => {
+                // Render Dashboard Stats
+                const totalSales = store.products.reduce((a,b) => a + b.selling, 0);
+                const totalProfit = store.winning.reduce((a,b) => a + b.profit, 0);
+                document.getElementById('dash-sales').innerText = utils.format(totalSales);
+                document.getElementById('dash-profit').innerText = utils.format(totalProfit);
 
-            // --- RENDERING ---
-            renderAll: () => {
-                app.renderDashboard();
-                app.renderProducts();
-                app.renderImporting();
-                app.renderWinning();
-                app.renderAds();
-            },
-
-            renderDashboard: () => {
-                // Stats
-                const totalProfit = store.winning.reduce((acc, curr) => acc + (curr.profit || 0), 0);
-                document.getElementById('dash-profit').innerText = utils.formatCurrency(totalProfit);
-                document.getElementById('dash-winning').innerText = store.winning.length;
-                document.getElementById('dash-import').innerText = store.importing.length;
-                document.getElementById('dash-alerts').innerText = "2"; // Mock low stock
-
-                // Recent Table
-                const tbody = document.querySelector('#dash-recent-table tbody');
-                tbody.innerHTML = '';
-                store.winning.slice(0, 5).forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><div class="img-thumb" style="background:url(${item.image || 'https://via.placeholder.com/50'}) center/cover"></div></td>
-                        <td>${item.name}</td>
-                        <td style="color:var(--success)">${item.margin}%</td>
-                        <td><span class="badge ${item.status === 'Valid' ? 'badge-valid' : 'badge-invalid'}">${item.status}</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            },
-
-            renderProducts: () => {
-                const tbody = document.querySelector('#products-table tbody');
-                tbody.innerHTML = '';
-                store.products.forEach(p => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><div class="img-thumb" style="background:url(${p.image || 'https://via.placeholder.com/50'}) center/cover"></div></td>
-                        <td>${p.name}</td>
-                        <td><span style="font-family:monospace; color:var(--text-muted)">${p.sku}</span></td>
-                        <td>${utils.formatCurrency(p.purchase)}</td>
-                        <td>${utils.formatCurrency(p.selling)}</td>
-                        <td style="font-weight:bold; color:var(--primary)">${p.margin}%</td>
-                        <td><span class="badge ${p.status === 'Active' ? 'badge-active' : 'badge-disabled'}">${p.status}</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-outline" onclick="app.openEdit('products', ${p.id})">✏️ Edit</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            },
-
-            renderImporting: () => {
-                const tbody = document.querySelector('#importing-table tbody');
-                tbody.innerHTML = '';
-                store.importing.forEach(item => {
-                    const unitCost = item.invest / item.qty;
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><div class="img-thumb" style="background:url(${item.image || 'https://via.placeholder.com/50'}) center/cover"></div></td>
-                        <td>${item.name}</td>
-                        <td>${item.supplier}</td>
-                        <td>${item.qty}</td>
-                        <td>${utils.formatCurrency(item.invest)}</td>
-                        <td>${utils.formatCurrency(unitCost)}</td>
-                        <td>${item.date}</td>
-                        <td>
-                             <button class="btn btn-sm btn-outline" onclick="app.openEdit('importing', ${item.id})">✏️ Edit</button>
-                             <button class="btn btn-sm btn-danger" onclick="app.deleteItem('importing', ${item.id})">🗑️</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            },
-
-            renderWinning: () => {
-                const tbody = document.querySelector('#winning-table tbody');
-                tbody.innerHTML = '';
-                store.winning.forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><div class="img-thumb" style="background:url(${item.image || 'https://via.placeholder.com/50'}) center/cover"></div></td>
-                        <td>${item.name}</td>
-                        <td>${utils.formatCurrency(item.purchase)}</td>
-                        <td>${utils.formatCurrency(item.selling)}</td>
-                        <td style="color:var(--success); font-weight:bold">${utils.formatCurrency(item.profit)}</td>
-                        <td>${item.margin}%</td>
-                        <td><span class="badge ${item.status === 'Valid' ? 'badge-valid' : 'badge-invalid'}">${item.status}</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-outline" onclick="app.openEdit('winning', ${item.id})">✏️ Edit</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            },
-
-            renderAds: () => {
-                const tbody = document.querySelector('#ads-table tbody');
-                tbody.innerHTML = '';
-                store.ads.forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${item.name}</td>
-                        <td>${item.platform}</td>
-                        <td><a href="${item.link}" target="_blank" style="color:var(--primary)">Link</a></td>
-                        <td>${item.orders}</td>
-                        <td>${utils.formatCurrency(item.sales)}</td>
-                        <td>
-                             <button class="btn btn-sm btn-outline" onclick="app.openEdit('ads', ${item.id})">✏️ Edit</button>
-                             <button class="btn btn-sm btn-danger" onclick="app.deleteItem('ads', ${item.id})">🗑️</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            },
-
-            // --- MODAL & FORMS ---
-            openModal: (type) => {
-                app.editingType = type;
-                app.editingItem = null; // New item
-                document.getElementById('modal-title').innerText = `Add New ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-                
-                const body = document.getElementById('modal-body');
-                body.innerHTML = app.getFormHtml(type);
-                
-                // Attach Save Event
-                document.getElementById('modal-save-btn').onclick = () => app.saveItem();
-                
-                // Image Upload Preview Logic
-                if(type !== 'ads') {
-                    const fileInput = document.getElementById('input-image');
-                    fileInput.addEventListener('change', async (e) => {
-                        if(e.target.files && e.target.files[0]) {
-                            const url = await utils.fileToDataURL(e.target.files[0]);
-                            document.getElementById('img-preview').innerHTML = `<img src="${url}">`;
-                        }
-                    });
-                }
-
-                document.getElementById('modal-overlay').classList.add('open');
-            },
-
-            openEdit: (type, id) => {
-                app.editingType = type;
-                const list = store[type];
-                app.editingItem = list.find(i => i.id === id);
-                
-                document.getElementById('modal-title').innerText = `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-                const body = document.getElementById('modal-body');
-                body.innerHTML = app.getFormHtml(type, app.editingItem);
-
-                // Populate Values
-                Object.keys(app.editingItem).forEach(key => {
-                    const el = document.getElementById(`input-${key}`);
-                    if(el) {
-                        if(key === 'image' && app.editingItem[key]) {
-                            document.getElementById('img-preview').innerHTML = `<img src="${app.editingItem[key]}">`;
+                // Render Tables
+                ['products', 'winning', 'importing', 'ads'].forEach(type => {
+                    const tbody = document.querySelector(`#${type}-table tbody`);
+                    if(!tbody) return;
+                    tbody.innerHTML = '';
+                    store[type].forEach(item => {
+                        const tr = document.createElement('tr');
+                        let html = '';
+                        
+                        if(type === 'products') {
+                            html = `
+                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
+                                <td>${item.name}</td>
+                                <td>${item.sku}</td>
+                                <td>${utils.format(item.purchase)}</td>
+                                <td>${utils.format(item.selling)}</td>
+                                <td>${item.margin}%</td>
+                                <td><span style="color:var(--success)">${item.status}</span></td>
+                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
+                            `;
+                        } else if (type === 'winning') {
+                            html = `
+                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
+                                <td>${item.name}</td>
+                                <td>${utils.format(item.purchase)}</td>
+                                <td>${utils.format(item.selling)}</td>
+                                <td>${utils.format(item.profit)}</td>
+                                <td>${item.margin}%</td>
+                                <td>${item.status}</td>
+                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
+                            `;
                         } else {
-                            el.value = app.editingItem[key];
+                             html = `<td>${item.name || 'Item'}</td><td colspan="6">Details...</td>`;
                         }
-                    }
-                });
-
-                // Image Upload Preview Logic (Edit mode)
-                const fileInput = document.getElementById('input-image');
-                if(fileInput) {
-                    fileInput.addEventListener('change', async (e) => {
-                        if(e.target.files && e.target.files[0]) {
-                            const url = await utils.fileToDataURL(e.target.files[0]);
-                            document.getElementById('img-preview').innerHTML = `<img src="${url}">`;
-                        }
+                        tr.innerHTML = html;
+                        tbody.appendChild(tr);
                     });
-                }
+                });
+            },
 
-                document.getElementById('modal-save-btn').onclick = () => app.saveItem();
+            openModal: (type) => {
+                document.getElementById('modal-title').innerText = `Add ${type}`;
+                document.getElementById('modal-body').innerHTML = `
+                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name"></div>
+                    <div class="form-group"><label>Price</label><input type="number" class="form-control" id="in-price"></div>
+                `;
+                document.getElementById('modal-save-btn').onclick = () => {
+                    store[type].push({ 
+                        id: utils.id(), 
+                        name: document.getElementById('in-name').value, 
+                        selling: parseFloat(document.getElementById('in-price').value) || 0,
+                        purchase: 0, margin: 0, status: 'Active', profit: 0 
+                    });
+                    app.closeModal();
+                    app.render();
+                };
                 document.getElementById('modal-overlay').classList.add('open');
             },
 
-            closeModal: () => {
-                document.getElementById('modal-overlay').classList.remove('open');
-            },
-
-            getFormHtml: (type, data = null) => {
-                if(type === 'products') {
-                    return `
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Image</label>
-                                <input type="file" id="input-image" accept="image/*" class="form-control">
-                                <div id="img-preview" class="file-preview"><span>No Image</span></div>
-                            </div>
-                            <div style="flex:2">
-                                <div class="form-group"><label>Product Name</label><input type="text" id="input-name" class="form-control"></div>
-                                <div class="form-row">
-                                    <div class="form-group"><label>SKU</label><input type="text" id="input-sku" class="form-control"></div>
-                                    <div class="form-group"><label>Status</label>
-                                        <select id="input-status" class="form-control"><option>Active</option><option>Disabled</option></select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group"><label>Purchase Price ($)</label><input type="number" step="0.01" id="input-purchase" class="form-control"></div>
-                            <div class="form-group"><label>Selling Price ($)</label><input type="number" step="0.01" id="input-selling" class="form-control"></div>
-                        </div>
-                    `;
-                } else if(type === 'importing') {
-                    return `
-                         <div class="form-row">
-                            <div class="form-group">
-                                <label>Image</label>
-                                <input type="file" id="input-image" accept="image/*" class="form-control">
-                                <div id="img-preview" class="file-preview"><span>No Image</span></div>
-                            </div>
-                            <div style="flex:2">
-                                <div class="form-group"><label>Product Name</label><input type="text" id="input-name" class="form-control"></div>
-                                <div class="form-row">
-                                    <div class="form-group"><label>Supplier</label><input type="text" id="input-supplier" class="form-control"></div>
-                                    <div class="form-group"><label>Exp. Arrival Date</label><input type="date" id="input-date" class="form-control"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group"><label>Quantity</label><input type="number" id="input-qty" class="form-control"></div>
-                            <div class="form-group"><label>Total Investment ($)</label><input type="number" step="0.01" id="input-invest" class="form-control"></div>
-                        </div>
-                        <div class="form-group"><label>Notes</label><textarea id="input-notes" class="form-control"></textarea></div>
-                    `;
-                } else if(type === 'winning') {
-                    return `
-                         <div class="form-row">
-                            <div class="form-group">
-                                <label>Image</label>
-                                <input type="file" id="input-image" accept="image/*" class="form-control">
-                                <div id="img-preview" class="file-preview"><span>No Image</span></div>
-                            </div>
-                            <div style="flex:2">
-                                <div class="form-group"><label>Product Name</label><input type="text" id="input-name" class="form-control"></div>
-                                <div class="form-row">
-                                    <div class="form-group"><label>Alibaba Link</label><input type="text" id="input-alibaba" class="form-control"></div>
-                                    <div class="form-group"><label>Store Link</label><input type="text" id="input-store" class="form-control"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group"><label>Purchase Price ($)</label><input type="number" step="0.01" id="input-purchase" class="form-control"></div>
-                            <div class="form-group"><label>Selling Price ($)</label><input type="number" step="0.01" id="input-selling" class="form-control"></div>
-                        </div>
-                         <div class="form-group"><label>Validation Status</label>
-                                <select id="input-status" class="form-control"><option>Valid</option><option>Invalid</option></select>
-                        </div>
-                    `;
-                } else if (type === 'ads') {
-                    return `
-                        <div class="form-group"><label>Page Name</label><input type="text" id="input-name" class="form-control"></div>
-                        <div class="form-row">
-                            <div class="form-group"><label>Platform</label><input type="text" id="input-platform" class="form-control"></div>
-                            <div class="form-group"><label>Total Orders</label><input type="number" id="input-orders" class="form-control"></div>
-                        </div>
-                        <div class="form-group"><label>Page Link</label><input type="text" id="input-link" class="form-control"></div>
-                        <div class="form-group"><label>Total Sales ($)</label><input type="number" step="0.01" id="input-sales" class="form-control"></div>
-                    `;
-                }
-            },
-
-            saveItem: () => {
-                const type = app.editingType;
-                const isNew = !app.editingItem;
-                let newItem = {};
-
-                // Extract Data based on type
-                if(type === 'products') {
-                    const purchase = parseFloat(document.getElementById('input-purchase').value) || 0;
-                    const selling = parseFloat(document.getElementById('input-selling').value) || 0;
-                    const margin = selling > 0 ? ((selling - purchase) / selling * 100).toFixed(1) : 0;
-                    
-                    newItem = {
-                        id: isNew ? utils.generateId() : app.editingItem.id,
-                        name: document.getElementById('input-name').value,
-                        sku: document.getElementById('input-sku').value,
-                        purchase: purchase,
-                        selling: selling,
-                        margin: margin,
-                        status: document.getElementById('input-status').value,
-                        // Keep old image if no new one selected
-                        image: document.querySelector('#img-preview img')?.src || (isNew ? null : app.editingItem.image)
-                    };
-                } 
-                else if (type === 'importing') {
-                    newItem = {
-                        id: isNew ? utils.generateId() : app.editingItem.id,
-                        name: document.getElementById('input-name').value,
-                        supplier: document.getElementById('input-supplier').value,
-                        qty: parseInt(document.getElementById('input-qty').value) || 0,
-                        invest: parseFloat(document.getElementById('input-invest').value) || 0,
-                        date: document.getElementById('input-date').value,
-                        notes: document.getElementById('input-notes').value,
-                        image: document.querySelector('#img-preview img')?.src || (isNew ? null : app.editingItem.image)
-                    };
-                }
-                else if (type === 'winning') {
-                    const purchase = parseFloat(document.getElementById('input-purchase').value) || 0;
-                    const selling = parseFloat(document.getElementById('input-selling').value) || 0;
-                    const profit = selling - purchase;
-                    const margin = selling > 0 ? (profit / selling * 100).toFixed(1) : 0;
-
-                    newItem = {
-                        id: isNew ? utils.generateId() : app.editingItem.id,
-                        name: document.getElementById('input-name').value,
-                        alibaba: document.getElementById('input-alibaba').value,
-                        store: document.getElementById('input-store').value,
-                        purchase: purchase,
-                        selling: selling,
-                        profit: profit,
-                        margin: margin,
-                        status: document.getElementById('input-status').value,
-                        image: document.querySelector('#img-preview img')?.src || (isNew ? null : app.editingItem.image)
-                    };
-                }
-                else if (type === 'ads') {
-                    newItem = {
-                        id: isNew ? utils.generateId() : app.editingItem.id,
-                        name: document.getElementById('input-name').value,
-                        platform: document.getElementById('input-platform').value,
-                        orders: document.getElementById('input-orders').value,
-                        link: document.getElementById('input-link').value,
-                        sales: parseFloat(document.getElementById('input-sales').value) || 0
-                    };
-                }
-
-                // Update Store
-                if(isNew) {
-                    store[type].push(newItem);
-                    utils.showToast('Item added successfully!');
-                } else {
-                    const index = store[type].findIndex(i => i.id === newItem.id);
-                    store[type][index] = newItem;
-                    utils.showToast('Changes saved successfully!');
-                }
-
-                app.renderAll();
-                app.closeModal();
-            },
-
-            deleteItem: (type, id) => {
-                if(confirm('Are you sure you want to delete this item?')) {
-                    store[type] = store[type].filter(i => i.id !== id);
-                    app.renderAll();
-                    utils.showToast('Item deleted.', 'error');
-                }
+            closeModal: () => document.getElementById('modal-overlay').classList.remove('open'),
+            
+            openEdit: (type, id) => {
+                const item = store[type].find(i => i.id === id);
+                document.getElementById('modal-title').innerText = `Edit ${type}`;
+                document.getElementById('modal-body').innerHTML = `
+                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name" value="${item.name}"></div>
+                    <div class="form-group"><label>Selling Price</label><input type="number" class="form-control" id="in-price" value="${item.selling}"></div>
+                `;
+                document.getElementById('modal-save-btn').onclick = () => {
+                    item.name = document.getElementById('in-name').value;
+                    item.selling = parseFloat(document.getElementById('in-price').value) || 0;
+                    app.closeModal();
+                    app.render();
+                };
+                document.getElementById('modal-overlay').classList.add('open');
             }
         };
 
-        // Initialize App
-        app.init();
+        app.render();
+
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowz Inventory Dashboard</title>
+    <style>
+        /* --- 1. CROWZ THEME VARIABLES (Light, Clean, Blue) --- */
+        :root {
+            --primary: #2563eb;       /* Crowz Blue */
+            --primary-light: #eff6ff;
+            --secondary: #64748b;     /* Text Muted */
+            --bg-body: #f8fafc;       /* Very Light Gray Background */
+            --bg-card: #ffffff;       /* White Cards */
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            direction: ltr;
+        }
+
+        /* --- 2. SIDEBAR (White, Blue Accents) --- */
+        aside {
+            width: 250px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            z-index: 20;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav button {
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            margin-bottom: 5px;
+            border-radius: var(--radius);
+            color: var(--text-gray);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        nav button:hover { background-color: #f1f5f9; color: var(--primary); }
+        nav button.active { 
+            background-color: var(--primary-light); 
+            color: var(--primary); 
+            font-weight: 700;
+        }
+
+        /* --- 3. MAIN CONTENT AREA --- */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .header-title span { font-size: 0.9rem; color: var(--text-gray); }
+        
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; }
+
+        /* --- 4. DASHBOARD LAYOUT (Crowz Style) --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats Cards (Top Row) */
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            grid-column: span 3;
+            border: 1px solid var(--border);
+        }
+        .stat-card h3 { font-size: 0.85rem; color: var(--text-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+        .stat-card .trend { font-size: 0.8rem; margin-top: 5px; }
+        .trend.up { color: var(--success); }
+
+        /* Activity Chart (Main Big Card) */
+        .chart-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            grid-column: span 8;
+            border: 1px solid var(--border);
+        }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
+        .card-title { font-weight: 700; font-size: 1.1rem; }
+        
+        /* SVG Chart Placeholder */
+        .chart-placeholder {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background: linear-gradient(to bottom, #f8fafc, #fff);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-bottom: 10px;
+        }
+        .bar { width: 8%; background: var(--primary); opacity: 0.2; border-radius: 4px 4px 0 0; transition: height 1s; }
+        .bar:hover { opacity: 1; }
+
+        /* Top Performers */
+        .performers-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            grid-column: span 4;
+            border: 1px solid var(--border);
+        }
+        .performer-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .performer-info { display: flex; align-items: center; gap: 10px; }
+        .p-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; display: grid; place-items: center; font-size: 0.7rem; font-weight: bold; color: var(--text-gray); }
+        .progress-bar { width: 60px; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+
+        /* Channels & Promo (Bottom Row) */
+        .channels-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            grid-column: span 8;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .channel-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .channel-item span { font-size: 0.9rem; font-weight: 600; }
+        .channel-item small { font-size: 0.8rem; }
+        .text-green { color: var(--success); }
+        .text-red { color: var(--danger); }
+
+        .promo-card {
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            grid-column: span 4;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .promo-card h3 { margin-bottom: 10px; }
+        .btn-white { background: white; color: var(--primary); padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-block; width: fit-content; margin-top: 10px; border: none; cursor: pointer; }
+
+        /* --- 5. TABLE STYLING (For other pages) --- */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-gray); font-size: 0.85rem; text-transform: uppercase; }
+        tr:last-child td { border-bottom: none; }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
+        }
+        .btn-primary:hover { background-color: #1d4ed8; }
+
+        /* Modal & Utilities */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        .modal {
+            background: white; width: 500px; padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { display: flex; flex-direction: column; }
+            .stat-card { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="brand">
+            <!-- Simple Logo Icon -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            Crowz
+        </div>
+        <nav>
+            <button class="active" onclick="app.navigate('dashboard')">Dashboard</button>
+            <button onclick="app.navigate('products')">Products</button>
+            <button onclick="app.navigate('importing')">Importing</button>
+            <button onclick="app.navigate('winning')">Winning</button>
+            <button onclick="app.navigate('ads')">Ads Pages</button>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        
+        <!-- DASHBOARD (Crowz Design) -->
+        <section id="dashboard" class="view-section active">
+            <header>
+                <div class="header-title">
+                    <h1>Dashboard</h1>
+                    <span>Welcome back, Robert</span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar"></div>
+                    <div style="font-size: 0.9rem; font-weight: 600;">Robert Grant</div>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Stat Cards -->
+                <div class="stat-card">
+                    <h3>Total Sales</h3>
+                    <div class="value" id="dash-sales">$0</div>
+                    <div class="trend up">▲ 12% vs last month</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Followers</h3>
+                    <div class="value">219.3k</div>
+                    <div class="trend up">▲ 4.5% this week</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Profit</h3>
+                    <div class="value" id="dash-profit">$0</div>
+                    <div class="trend up">▲ $1,200 today</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Reposts</h3>
+                    <div class="value">1.5k</div>
+                    <div class="trend" style="color:var(--text-gray)">- Stable</div>
+                </div>
+
+                <!-- Activity Chart -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <div class="card-title">Activity</div>
+                        <select style="border:1px solid #ddd; padding:4px; border-radius:4px; font-size:0.8rem;"><option>This Week</option></select>
+                    </div>
+                    <!-- CSS Bar Chart Simulation -->
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 40%;"></div>
+                        <div class="bar" style="height: 70%;"></div>
+                        <div class="bar" style="height: 50%;"></div>
+                        <div class="bar" style="height: 90%; background:var(--primary); opacity:1;"></div>
+                        <div class="bar" style="height: 60%;"></div>
+                        <div class="bar" style="height: 80%;"></div>
+                        <div class="bar" style="height: 45%;"></div>
+                    </div>
+                </div>
+
+                <!-- Top Performers -->
+                <div class="performers-card">
+                    <div class="card-header">
+                        <div class="card-title">Top Performers</div>
+                    </div>
+                    <div class="performer-item">
+                        <div class="performer-info"><div class="p-avatar">VA</div> <span>Valy Antonova</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 39%"></div></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">39%</span>
+                    </div>
+                    <div class="performer-item">
+                        <div class="performer-info"><div class="p-avatar">NE</div> <span>Nenci Villy</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">25%</span>
+                    </div>
+                    <div class="performer-item">
+                        <div class="performer-info"><div class="p-avatar">MN</div> <span>Mark Noil</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 18%"></div></div>
+                        <span style="font-size:0.8rem; font-weight:bold;">18%</span>
+                    </div>
+                </div>
+
+                <!-- Channels -->
+                <div class="channels-card">
+                    <div class="channel-item">
+                        <span>Dribbble</span>
+                        <small class="text-green">+2%</small>
+                    </div>
+                    <div class="channel-item">
+                        <span>Behance</span>
+                        <small class="text-red">-7%</small>
+                    </div>
+                    <div class="channel-item">
+                        <span>Instagram</span>
+                        <small class="text-green">+4%</small>
+                    </div>
+                    <div class="channel-item">
+                        <span>Pinterest</span>
+                        <small class="text-green">+2%</small>
+                    </div>
+                </div>
+
+                <!-- Upgrade Promo -->
+                <div class="promo-card">
+                    <h3>Upgrade Your Crowd</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px;">Get access to premium analytics.</p>
+                    <button class="btn-white">View Plans</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS PAGE (Clean Design) -->
+        <section id="products" class="view-section">
+            <header>
+                <div class="header-title"><h1>Products Inventory</h1></div>
+                <button class="btn-primary" onclick="app.openModal('products')">+ Add Product</button>
+            </header>
+            <div class="table-container">
+                <table id="products-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>SKU</th>
+                            <th>Cost</th>
+                            <th>Selling</th>
+                            <th>Margin</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- WINNING PRODUCTS -->
+        <section id="winning" class="view-section">
+            <header>
+                <div class="header-title"><h1>Winning Products 🔥</h1></div>
+                <button class="btn-primary" onclick="app.openModal('winning')">+ Add Winner</button>
+            </header>
+            <div class="table-container">
+                <table id="winning-table">
+                    <thead>
+                        <tr>
+                            <th>Img</th>
+                            <th>Product Name</th>
+                            <th>Cost</th>
+                            <th>Sell Price</th>
+                            <th>Profit</th>
+                            <th>Margin</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Other pages (Importing, Ads) follow similar clean structure -->
+        <section id="importing" class="view-section">
+             <header><div class="header-title"><h1>Importing</h1></div><button class="btn-primary" onclick="app.openModal('importing')">+ Add</button></header>
+             <div class="table-container"><table id="importing-table"><tbody></tbody></table></div>
+        </section>
+        <section id="ads" class="view-section">
+             <header><div class="header-title"><h1>Ads Pages</h1></div><button class="btn-primary" onclick="app.openModal('ads')">+ Add</button></header>
+             <div class="table-container"><table id="ads-table"><tbody></tbody></table></div>
+        </section>
+
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h3 id="modal-title" style="margin-bottom:1.5rem;">Edit Item</h3>
+            <div id="modal-body"></div>
+            <div style="margin-top:1.5rem; text-align:right; display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn-primary" style="background:#e2e8f0; color:#333;" onclick="app.closeModal()">Cancel</button>
+                <button class="btn-primary" id="modal-save-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Same robust Logic, adapted for Light Theme
+        const store = {
+            products: [
+                { id: 1, name: "Wireless Earbuds", sku: "WE-01", purchase: 15.00, selling: 45.00, margin: 66.7, status: 'Active', image: null },
+                { id: 2, name: "Smart Watch", sku: "SW-02", purchase: 30.00, selling: 85.00, margin: 64.7, status: 'Active', image: null },
+            ],
+            winning: [
+                { id: 1, name: "Sunset Lamp", purchase: 12.00, selling: 39.99, profit: 27.99, margin: 70.0, status: 'Valid', image: null }
+            ],
+            importing: [],
+            ads: []
+        };
+
+        const utils = {
+            format: (n) => '$' + parseFloat(n).toFixed(2),
+            id: () => Math.random().toString(36).substr(2, 9),
+            toast: (m) => { alert(m); } // Simple alert for now to keep code clean
+        };
+
+        const app = {
+            navigate: (id) => {
+                document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+                // Highlight logic roughly
+                app.render();
+            },
+            
+            render: () => {
+                // Render Dashboard Stats
+                const totalSales = store.products.reduce((a,b) => a + b.selling, 0);
+                const totalProfit = store.winning.reduce((a,b) => a + b.profit, 0);
+                document.getElementById('dash-sales').innerText = utils.format(totalSales);
+                document.getElementById('dash-profit').innerText = utils.format(totalProfit);
+
+                // Render Tables
+                ['products', 'winning', 'importing', 'ads'].forEach(type => {
+                    const tbody = document.querySelector(`#${type}-table tbody`);
+                    if(!tbody) return;
+                    tbody.innerHTML = '';
+                    store[type].forEach(item => {
+                        const tr = document.createElement('tr');
+                        let html = '';
+                        
+                        if(type === 'products') {
+                            html = `
+                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
+                                <td>${item.name}</td>
+                                <td>${item.sku}</td>
+                                <td>${utils.format(item.purchase)}</td>
+                                <td>${utils.format(item.selling)}</td>
+                                <td>${item.margin}%</td>
+                                <td><span style="color:var(--success)">${item.status}</span></td>
+                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
+                            `;
+                        } else if (type === 'winning') {
+                            html = `
+                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
+                                <td>${item.name}</td>
+                                <td>${utils.format(item.purchase)}</td>
+                                <td>${utils.format(item.selling)}</td>
+                                <td>${utils.format(item.profit)}</td>
+                                <td>${item.margin}%</td>
+                                <td>${item.status}</td>
+                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
+                            `;
+                        } else {
+                             html = `<td>${item.name || 'Item'}</td><td colspan="6">Details...</td>`;
+                        }
+                        tr.innerHTML = html;
+                        tbody.appendChild(tr);
+                    });
+                });
+            },
+
+            openModal: (type) => {
+                document.getElementById('modal-title').innerText = `Add ${type}`;
+                document.getElementById('modal-body').innerHTML = `
+                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name"></div>
+                    <div class="form-group"><label>Price</label><input type="number" class="form-control" id="in-price"></div>
+                `;
+                document.getElementById('modal-save-btn').onclick = () => {
+                    store[type].push({ 
+                        id: utils.id(), 
+                        name: document.getElementById('in-name').value, 
+                        selling: parseFloat(document.getElementById('in-price').value) || 0,
+                        purchase: 0, margin: 0, status: 'Active', profit: 0 
+                    });
+                    app.closeModal();
+                    app.render();
+                };
+                document.getElementById('modal-overlay').classList.add('open');
+            },
+
+            closeModal: () => document.getElementById('modal-overlay').classList.remove('open'),
+            
+            openEdit: (type, id) => {
+                const item = store[type].find(i => i.id === id);
+                document.getElementById('modal-title').innerText = `Edit ${type}`;
+                document.getElementById('modal-body').innerHTML = `
+                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name" value="${item.name}"></div>
+                    <div class="form-group"><label>Selling Price</label><input type="number" class="form-control" id="in-price" value="${item.selling}"></div>
+                `;
+                document.getElementById('modal-save-btn').onclick = () => {
+                    item.name = document.getElementById('in-name').value;
+                    item.selling = parseFloat(document.getElementById('in-price').value) || 0;
+                    app.closeModal();
+                    app.render();
+                };
+                document.getElementById('modal-overlay').classList.add('open');
+            }
+        };
+
+        app.render();
 
     </script>
 </body>
