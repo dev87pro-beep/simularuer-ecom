@@ -3,783 +3,636 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاكي التجارة الإلكترونية - لبنان</title>
-    <!-- خط تجوال لدعم العربية بشكل جميل -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>E-Commerce Pro - Fully Editable</title>
+    <!-- خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- أيقونات RemixIcon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #2563eb;
-            --secondary: #475569;
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text: #1e293b;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
             --success: #10b981;
+            --warning: #f59e0b;
             --danger: #ef4444;
-            --accent: #f59e0b;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --radius: 12px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-body);
+            color: var(--text-main);
             line-height: 1.6;
-        }
-
-        /* Header */
-        header {
-            background: var(--surface);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--border);
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-direction: column;
         }
 
-        h1 {
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-
-        /* Navigation */
-        nav {
+        /* --- Layout --- */
+        .app-container { display: flex; height: 100vh; overflow: hidden; }
+        
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
             display: flex;
-            gap: 1rem;
-            background: var(--surface);
-            padding: 0.5rem 1rem;
-            overflow-x: auto;
-            border-bottom: 1px solid var(--border);
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
         }
 
-        .nav-btn {
-            background: none;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-family: inherit;
-            font-weight: 500;
-            color: var(--secondary);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
+        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2.5rem; padding: 0 0.5rem; }
+        .brand i { font-size: 1.5rem; color: var(--primary); }
+        .brand h1 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); line-height: 1.2; }
+        .brand span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
 
-        .nav-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
+        .nav-links { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
 
-        .nav-btn:hover {
-            background-color: #f1f5f9;
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 0.85rem 1rem; border-radius: var(--radius);
+            color: var(--text-muted); text-decoration: none; font-weight: 500;
+            transition: all 0.2s ease; cursor: pointer;
         }
+        .nav-item i { font-size: 1.25rem; }
+        .nav-item:hover { background-color: #f8fafc; color: var(--primary); }
+        .nav-item.active { background-color: #eff6ff; color: var(--primary); font-weight: 700; }
 
-        /* Main Layout */
-        main {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
 
-        section {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards & Containers */
+        /* --- Components --- */
         .card {
-            background: var(--surface);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
+            background: var(--bg-card); border-radius: var(--radius);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+            padding: 1.5rem; margin-bottom: 1.5rem;
+        }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+        /* Inputs */
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        
+        .input-wrapper { position: relative; }
+        .input-wrapper input {
+            width: 100%; padding: 0.75rem 1rem; padding-left: 2.5rem;
+            border: 1px solid var(--border); border-radius: 8px;
+            font-family: inherit; font-size: 0.95rem; background: #f8fafc;
+            transition: all 0.2s;
+        }
+        .input-wrapper .suffix {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 0.85rem; font-weight: 600;
+        }
+        .input-wrapper input:focus {
+            border-color: var(--primary); background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.5rem;
+        /* Table Inputs (Seamless Editing) */
+        .table-input {
+            width: 100%; border: 1px solid transparent; background: transparent;
+            font-family: inherit; font-size: inherit; color: inherit;
+            padding: 4px; border-radius: 4px; transition: all 0.2s;
         }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--secondary);
-        }
-
-        input[type="number"], input[type="text"] {
-            width: 100%;
-            padding: 0.6rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-family: inherit;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-        }
-
-        .currency-input {
-            position: relative;
-        }
-        .currency-input::after {
-            content: attr(data-symbol);
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
-            font-size: 0.85rem;
-        }
-        .currency-input input {
-            padding-left: 35px;
-        }
-
+        .table-input:hover { background: #f1f5f9; border-color: #e2e8f0; }
+        .table-input:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+        
         /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
+        .table-container { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        thead { background: #f8fafc; }
+        th { padding: 1rem; text-align: right; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; }
+        td { padding: 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem; border-radius: 8px; border: none;
+            font-family: inherit; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
         }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-danger { background: #fee2e2; color: #991b1b; }
+        .btn-danger:hover { background: #fecaca; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
 
-        th, td {
-            padding: 0.75rem;
-            text-align: right;
-            border-bottom: 1px solid var(--border);
-        }
+        .btn-icon { padding: 0.4rem; border-radius: 6px; color: var(--secondary); background: transparent; cursor: pointer; border: 1px solid transparent; }
+        .btn-icon:hover { color: var(--danger); background: #fee2e2; }
 
-        th {
-            background-color: #f1f5f9;
-            color: var(--secondary);
-            font-weight: 600;
-        }
+        /* Stats */
+        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0.25rem 0; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+        
+        /* Sections */
+        section { display: none; animation: fadeIn 0.4s ease; }
+        section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        tr:hover {
-            background-color: #f8fafc;
-        }
+        /* Status Indicators */
+        #save-status { position: fixed; bottom: 20px; right: 20px; background: #333; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100; }
+        #save-status.show { opacity: 1; }
 
-        /* Status Badges */
-        .badge {
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .badge.valid { background: #dcfce7; color: #166534; }
-        .badge.invalid { background: #fee2e2; color: #991b1b; }
-
-        /* Links */
-        .link-btn {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .link-btn:hover { text-decoration: underline; }
-
-        /* Summary Boxes */
-        .summary-box {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .summary-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: block;
-            margin-top: 0.5rem;
-        }
-        .summary-label {
-            font-size: 0.85rem;
-            color: var(--secondary);
-        }
-
-        /* Toast Notification */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 4px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Specific Styles for Simulator Range */
-        .range-container {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 6px;
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .app-container { flex-direction: column; height: auto; }
+            .sidebar { width: 100%; border-bottom: 1px solid var(--border); border-left: none; }
+            .nav-links { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
+            .nav-item { white-space: nowrap; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>📊 Ecommerce Simulator Liban</h1>
-        <div style="font-size: 0.9rem; color: var(--secondary);">
-            Exchange Rate: <span id="exchange-rate-display">9.00</span> DH/$         </div>
-    </header>
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="ri-edit-box-line"></i>
+            <div>
+                <h1>E-Com Editor</h1>
+                <span>نسخة قابلة للتعديل</span>
+            </div>
+        </div>
 
-    <nav>
-        <button class="nav-btn active" onclick="showSection('simulator')">المحاكاة (Simulateur)</button>
-        <button class="nav-btn" onclick="showSection('winning')">المنتجات الفائزة (Winning)</button>
-        <button class="nav-btn" onclick="showSection('myproduct')">منتجاتي (My Product)</button>
-        <button class="nav-btn" onclick="showSection('objectif')">الأهداف (Objectif)</button>
-    </nav>
+        <nav class="nav-links">
+            <a class="nav-item active" onclick="showSection('simulator')">
+                <i class="ri-calculator-line"></i> المحاكاة
+            </a>
+            <a class="nav-item" onclick="showSection('winning')">
+                <i class="ri-list-check"></i> المنتجات الفائزة
+            </a>
+            <a class="nav-item" onclick="showSection('myproduct')">
+                <i class="ri-store-3-line"></i> منتجاتي
+            </a>
+            <a class="nav-item" onclick="showSection('objectif')">
+                <i class="ri-flag-2-line"></i> الأهداف
+            </a>
+        </nav>
+        <div style="margin-top:auto; text-align:center;">
+            <button onclick="resetData()" class="btn btn-sm" style="width:100%; justify-content:center; background:#f1f5f9; color:var(--danger);">إعادة ضبط المصنع</button>
+        </div>
+    </aside>
 
-    <main>
-        <!-- SECTION 1: SIMULATEUR -->
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Simulator -->
         <section id="simulator" class="active">
-            <div class="grid-2">
-                <!-- Cost Inputs -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">تكاليف المنتج (CHARGE)</span>
-                    </div>
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label>سعر الشراء (DH)</label>
-                            <input type="number" id="buy-price" value="50" oninput="calculateSimulation()">
-                        </div>
-                        <div class="form-group">
-                            <label>مصاريف الاستيراد (DH)</label>
-                            <input type="number" id="import-fees" value="10" oninput="calculateSimulation()">
-                        </div>
-                        <div class="form-group">
-                            <label>التوصيل المحلي/الشحن (DH)</label>
-                            <input type="number" id="delivery-fees" value="80" oninput="calculateSimulation()">
-                        </div>
-                        <div class="form-group">
-                            <label>العمولات (Comissions) (DH)</label>
-                            <input type="number" id="commission-fees" value="0" oninput="calculateSimulation()">
-                        </div>
-                        <div class="form-group">
-                            <label>إعلانات (Ads) (DH)</label>
-                            <input type="number" id="ads-fees" value="50" oninput="calculateSimulation()">
-                        </div>
-                        <div class="form-group">
-                            <label>رسوم إعلانات تجريبية (DH)</label>
-                            <input type="number" id="test-ads-fees" value="0" oninput="calculateSimulation()">
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 1rem; padding-top:1rem; border-top:1px dashed var(--border);">
-                        <div class="form-group">
-                            <label>سعر البيع المقترح (Prix en DH)</label>
-                            <input type="number" id="selling-price-dh" value="190" oninput="calculateSimulation()">
-                        </div>
-                        <div class="summary-box">
-                            <span class="summary-label">سعر البيع بالدولار (Est)</span>
-                            <span class="summary-value" id="selling-price-usd">$21.11</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Shipping & Logistics -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">اللوجستيك (Shipping)</span>
-                    </div>
-                    <div class="grid-2">
-                        <!-- Air Freight -->
-                        <div style="background:#f0f9ff; padding:1rem; border-radius:6px;">
-                            <h4 style="margin-bottom:0.5rem; color:#0369a1;">✈️ Air Freight</h4>
-                            <div class="form-group currency-input" data-symbol="$">
-                                <label>السعر لكل كيلو ($/Kg)</label>
-                                <input type="number" id="air-price-kg" value="100" oninput="calculateSimulation()">
-                            </div>
-                            <div class="form-group currency-input" data-symbol="kg">
-                                <label>الوزن (Kg)</label>
-                                <input type="number" id="air-weight" value="100" oninput="calculateSimulation()">
-                            </div>
-                             <div class="form-group">
-                                <label>عدد القطع لكل كيلو</label>
-                                <input type="number" id="air-pcs-kg" value="10" oninput="calculateSimulation()">
-                            </div>
-                            <div class="summary-value" style="font-size:1.1rem; text-align:right;">Total: $<span id="air-total">1000</span></div>
-                        </div>
-
-                        <!-- Ocean Freight -->
-                        <div style="background:#f0fdf4; padding:1rem; border-radius:6px;">
-                            <h4 style="margin-bottom:0.5rem; color:#15803d;">🚢 Ocean Freight</h4>
-                            <div class="form-group currency-input" data-symbol="$">
-                                <label>السعر لكل قطعة ($/PCS)</label>
-                                <input type="number" id="ocean-price-pcs" value="3" oninput="calculateSimulation()">
-                            </div>
-                            <div class="form-group currency-input" data-symbol="pcs">
-                                <label>الكمية (Quantité)</label>
-                                <input type="number" id="ocean-qty" value="200" oninput="calculateSimulation()">
-                            </div>
-                             <div class="form-group currency-input" data-symbol="$">
-                                <label>مصاريف الاستيراد البحري</label>
-                                <input type="number" id="ocean-import" value="600" oninput="calculateSimulation()">
-                            </div>
-                            <div class="summary-value" style="font-size:1.1rem; text-align:right;">Total: $<span id="ocean-total">1200</span></div>
-                        </div>
-                    </div>
+            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
+                <div class="page-title">
+                    <h2>المحاكاة المالية</h2>
+                    <p>قم بتعديل القيم لرؤية التغييرات فوراً.</p>
                 </div>
             </div>
 
-            <!-- Projection Scenarios -->
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><div class="card-title">التكاليف</div></div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>سعر الشراء</label><div class="input-wrapper"><input type="number" id="buy-price" oninput="updateSimState('buyPrice', this.value)"><span class="suffix">DH</span></div></div>
+                        <div class="form-group"><label>الاستيراد</label><div class="input-wrapper"><input type="number" id="import-fees" oninput="updateSimState('importFees', this.value)"><span class="suffix">DH</span></div></div>
+                        <div class="form-group"><label>التوصيل</label><div class="input-wrapper"><input type="number" id="delivery-fees" oninput="updateSimState('deliveryFees', this.value)"><span class="suffix">DH</span></div></div>
+                        <div class="form-group"><label>العمولات</label><div class="input-wrapper"><input type="number" id="commission-fees" oninput="updateSimState('commissionFees', this.value)"><span class="suffix">DH</span></div></div>
+                        <div class="form-group"><label>إعلانات</label><div class="input-wrapper"><input type="number" id="ads-fees" oninput="updateSimState('adsFees', this.value)"><span class="suffix">DH</span></div></div>
+                        <div class="form-group"><label>إعلانات تجريبية</label><div class="input-wrapper"><input type="number" id="test-ads-fees" oninput="updateSimState('testAdsFees', this.value)"><span class="suffix">DH</span></div></div>
+                    </div>
+                    <div style="margin-top:1rem; border-top:1px solid var(--border); padding-top:1rem;">
+                        <div class="form-group"><label>سعر البيع</label><div class="input-wrapper"><input type="number" id="selling-price-dh" oninput="updateSimState('sellingPriceDh', this.value)" style="font-weight:700; color:var(--primary);"><span class="suffix">DH</span></div></div>
+                        <div class="grid-2">
+                            <div style="background:#f8fafc; padding:10px; border-radius:8px; text-align:center;"><div class="stat-label">هامش الربح</div><div class="stat-value" id="unit-profit">0 DH</div></div>
+                            <div style="background:#f8fafc; padding:10px; border-radius:8px; text-align:center;"><div class="stat-label">نسبة الربح</div><div class="stat-value" id="profit-margin">0%</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><div class="card-title">الشحن</div></div>
+                    <div style="background:#f0f9ff; padding:1rem; border-radius:8px; margin-bottom:1rem;">
+                        <h4 style="color:#0369a1; margin-bottom:0.5rem;">شحن جوي</h4>
+                        <div class="grid-3">
+                            <input type="number" id="air-price-kg" class="table-input" placeholder="$ / Kg" oninput="updateSimState('airPriceKg', this.value)">
+                            <input type="number" id="air-weight" class="table-input" placeholder="Kg" oninput="updateSimState('airWeight', this.value)">
+                            <input type="number" id="air-pcs-kg" class="table-input" placeholder="Qty / Kg" oninput="updateSimState('airPcsKg', this.value)">
+                        </div>
+                        <div style="text-align:left; font-weight:bold; margin-top:0.5rem;">Total: $<span id="air-total">0</span></div>
+                    </div>
+                    <div style="background:#f0fdf4; padding:1rem; border-radius:8px;">
+                        <h4 style="color:#15803d; margin-bottom:0.5rem;">شحن بحري</h4>
+                        <div class="grid-3">
+                            <input type="number" id="ocean-price-pcs" class="table-input" placeholder="$ / Pcs" oninput="updateSimState('oceanPricePcs', this.value)">
+                            <input type="number" id="ocean-qty" class="table-input" placeholder="Qty" oninput="updateSimState('oceanQty', this.value)">
+                            <input type="number" id="ocean-import" class="table-input" placeholder="Import $" oninput="updateSimState('oceanImport', this.value)">
+                        </div>
+                        <div style="text-align:left; font-weight:bold; margin-top:0.5rem;">Total: $<span id="ocean-total">0</span></div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card">
-                <div class="card-header">
-                    <span class="card-title">توقعات المبيعات والأرباح (Projections)</span>
-                    <span style="font-size:0.85rem; color:var(--secondary);">هذه القيم يتم تحديثها تلقائياً بناءً على المدخلات</span>
-                </div>
-                <div class="range-container">
-                    <label>محاكاة الكمية المباعة يومياً: <span id="daily-qty-display" style="font-weight:bold; color:var(--primary);">1</span> قطعة</label>
-                    <input type="range" id="daily-qty-range" min="1" max="50" value="1" step="1" style="width:100%; margin-top:0.5rem;" oninput="updateProjections()">
-                </div>
-                
-                <div class="grid-4" style="margin-top: 1.5rem; text-align: center;">
-                    <div class="summary-box" style="background:#fff7ed; border-color:#fed7aa;">
-                        <span class="summary-label">مبيعات يومية (DH)</span>
-                        <span class="summary-value" id="proj-revenue-day">190</span>
-                    </div>
-                    <div class="summary-box" style="background:#fff7ed; border-color:#fed7aa;">
-                        <span class="summary-label">مبيعات شهرية (DH)</span>
-                        <span class="summary-value" id="proj-revenue-month">3,800</span>
-                    </div>
-                    <div class="summary-box" style="background:#f0fdf4; border-color:#86efac;">
-                        <span class="summary-label">صافي الربح اليومي (DH)</span>
-                        <span class="summary-value" id="proj-profit-day">0</span>
-                    </div>
-                    <div class="summary-box" style="background:#f0fdf4; border-color:#86efac;">
-                        <span class="summary-label">صافي الربح الشهري (DH)</span>
-                        <span class="summary-value" id="proj-profit-month">0</span>
-                    </div>
+                <div class="card-header"><div class="card-title">توقعات الأداء (الشهر = 20 يوم)</div></div>
+                <input type="range" id="daily-qty-range" min="1" max="50" value="1" style="width:100%" oninput="updateSimState('dailyQty', this.value); calcSim();">
+                <div class="grid-4" style="margin-top:1rem;">
+                    <div class="stat-block" style="text-align:center;"><div class="stat-label">إيراد يومي</div><div class="stat-value" id="rev-day">0</div></div>
+                    <div class="stat-block" style="text-align:center;"><div class="stat-label">إيراد شهري</div><div class="stat-value" id="rev-month">0</div></div>
+                    <div class="stat-block" style="text-align:center;"><div class="stat-label">ربح يومي</div><div class="stat-value" id="prof-day" style="color:var(--success)">0</div></div>
+                    <div class="stat-block" style="text-align:center;"><div class="stat-label">ربح شهري</div><div class="stat-value" id="prof-month" style="color:var(--success)">0</div></div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 2: WINNING PRODUCT -->
+        <!-- Winning Products (Editable) -->
         <section id="winning">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">قائمة المنتجات الفائزة (Winning Product)</span>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="search-winning" placeholder="بحث عن منتج..." onkeyup="filterWinning()" style="padding:0.4rem; border:1px solid var(--border); border-radius:4px;">
-                    </div>
-                </div>
+            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
+                <h2>المنتجات الفائزة</h2>
+                <button class="btn btn-primary" onclick="addWinningProduct()"><i class="ri-add-line"></i> إضافة منتج</button>
+            </div>
+            <div class="card" style="padding:0;">
                 <div class="table-container">
-                    <table id="winning-table">
+                    <table>
                         <thead>
                             <tr>
-                                <th>№</th>
-                                <th>صورة (Picture)</th>
-                                <th>اسم المنتج (Product Name)</th>
-                                <th>سعر الشراء</th>
-                                <th>سعر البيع</th>
-                                <th>الحالة (Status)</th>
-                                <th>روابط (Links)</th>
+                                <th>اسم المنتج</th>
+                                <th>شراء ($)</th>
+                                <th>بيع ($)</th>
+                                <th>الحالة</th>
+                                <th style="width:50px;"></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Rows injected by JS -->
-                        </tbody>
+                        <tbody id="winning-tbody"></tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 3: MY PRODUCT -->
+        <!-- My Product (Editable) -->
         <section id="myproduct">
+            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
+                <h2>مخزون منتجاتي</h2>
+                <button class="btn btn-primary" onclick="addMyProduct()"><i class="ri-add-line"></i> إضافة منتج</button>
+            </div>
+            <div class="card" style="padding:0;">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المنتج</th>
+                                <th>بيع (DH)</th>
+                                <th>شراء (DH)</th>
+                                <th>مخزون</th>
+                                <th>ربح/وحدة (DH)</th>
+                                <th>إجمالي الربح</th>
+                                <th style="width:50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="myproduct-tbody"></tbody>
+                        <tfoot>
+                            <tr style="background:#f8fafc; font-weight:bold;">
+                                <td colspan="3">الإجمالي</td>
+                                <td id="total-stock">0</td>
+                                <td>-</td>
+                                <td id="total-profit" style="color:var(--success)">0 DH</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Objectif (Editable) -->
+        <section id="objectif">
+            <div class="page-header" style="display:flex; justify-content:space-between; margin-bottom:2rem;">
+                <h2>خطة الاستيراد</h2>
+                <button class="btn btn-primary" onclick="addObjectif()"><i class="ri-add-line"></i> إضافة خطة</button>
+            </div>
             <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">مخزون منتجاتي الحالي</span>
-                    </div>
+                <div class="card" style="padding:0;">
                     <div class="table-container">
-                        <table id="myproduct-table">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>المنتج</th>
-                                    <th>سعر البيع</th>
-                                    <th>سعر الشراء</th>
-                                    <th>المخزون</th>
-                                    <th>الربح (Unit)</th>
+                                    <th>كمية</th>
+                                    <th>تكلفة ($)</th>
+                                    <th style="width:50px;"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Rows injected by JS -->
-                            </tbody>
-                            <tfoot>
-                                <tr style="background:#f1f5f9; font-weight:bold;">
-                                    <td colspan="3">الإجمالي</td>
-                                    <td id="total-stock">267</td>
-                                    <td id="total-profit-dh">0 DH</td>
-                                </tr>
-                            </tfoot>
+                            <tbody id="objectif-tbody"></tbody>
                         </table>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">ملخص الأداء المالي</span>
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:1rem;">
-                        <div class="summary-box">
-                            <span class="summary-label">إجمالي القيمة المباعة (Total)</span>
-                            <span class="summary-value">3,196.7 DH</span>
-                        </div>
-                        <div class="summary-box" style="background:#f0fdf4; border-color:#86efac;">
-                            <span class="summary-label">صافي الربح الكلي (Total Profits)</span>
-                            <span class="summary-value">485 $</span>
-                        </div>
-                        <div style="font-size:0.9rem; color:var(--secondary); margin-top:0.5rem;">
-                            * البيانات مستندة على ملف My Product في الإكسل.
-                        </div>
-                    </div>
+                <div class="card" style="text-align:center; display:flex; flex-direction:column; justify-content:center;">
+                    <div class="stat-label">إجمالي الاستثمار المطلوب</div>
+                    <div class="stat-value" id="total-invest" style="color:var(--primary); font-size:3rem;">$0</div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 4: OBJECTIF -->
-        <section id="objectif">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">خطة الاستيراد (Import Plan) - 2026</span>
-                    <span class="badge valid">مستهدف: 2000 قطعة</span>
-                </div>
-                <div class="grid-2">
-                    <div>
-                        <h3 style="margin-bottom:1rem;">تفاصيل الشحنة</h3>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>المنتج</th>
-                                        <th>الكمية</th>
-                                        <th>التكلفة ($)</th>
-                                        <th>الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="objectif-table">
-                                    <!-- Injected via JS -->
-                                </tbody>
-                                <tfoot>
-                                    <tr style="font-weight:bold; background:#f8fafc;">
-                                        <td>الإجمالي</td>
-                                        <td>1,650</td>
-                                        <td>$11,004</td>
-                                        <td>-</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="summary-box" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
-                            <span class="summary-label">إجمالي الاستثمار المطلوب</span>
-                            <span class="summary-value">$11,004</span>
-                            <p style="margin-top:1rem; color:var(--secondary); font-size:0.9rem;">
-                                تشمل هذه الخطة استيراد 7 منتجات رئيسية بناءً على تحليل السوق في الـ Winning Product.
-                            </p>
-                            <button onclick="showToast('تم تحديث الخطة بنجاح!')" style="margin-top:2rem; background:var(--primary); color:white; border:none; padding:0.8rem; border-radius:6px; cursor:pointer; width:100%;">اعتماد الخطة</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
+</div>
 
-    <div id="toast">تم الحفظ بنجاح!</div>
+<div id="save-status">تم الحفظ تلقائياً</div>
 
-    <script>
-        // Data from Excel
-        const winningProducts = [
-            { id: 1, name: "USB Plug Kitchen Electric Double Sided Knife Sharpener", buy: 9, sell: 30, status: "", link: "https://www.alibaba.com/product-detail/Wholesale-JJ-1-USB-Plug-Kitchen_1601173490122.html" },
-            { id: 2, name: "Portable HD 2K Infrared Night Vision Body Camera", buy: 14, sell: 35, status: "", link: "https://www.alibaba.com/product-detail/Portable-HD-2K-Infrared-Night-Vision_1601567931753.html" },
-            { id: 3, name: "HomeLead Smart GPS Tracker Key Finder Locator", buy: 9, sell: 30, status: "", link: "https://www.alibaba.com/product-detail/HomeLead-Smart-GPS-Tracker-Key-Finder_1600605768003.html" },
-            { id: 4, name: "Protective Compression Knit Warmer Arthritic Knee Sleeve", buy: 3, sell: 24, status: "", link: "https://www.alibaba.com/product-detail/Protective-Compression-Knit-Warmer-Arthritic-Stretchy_1600412641438.html" },
-            { id: 5, name: "Smart Glasses Polarized Sunglasses with Bluetooth", buy: 7.5, sell: 28, status: "", link: "https://www.alibaba.com/product-detail/Smart-Glasses-Polarized-Sunglasses-with-Bluetooth_1601218777133.html" },
-            { id: 6, name: "Console Blanche de jeu rétro 20 000 jeux", buy: 15, sell: 37, status: "Valid", link: "https://www.alibaba.com/product-detail/Wholesale-M15-Retro-Classic-Game-Console_1601603689729.html" },
-            { id: 7, name: "2025 New Portable Sleep Aid and Anxiety Relief Device", buy: 5.5, sell: 27, status: "Invalid", link: "https://www.alibaba.com/product-detail/2025-New-Portable-Sleep-Aid-and_1601513075914.html" },
-            { id: 8, name: "Anti-blue light glasses", buy: 2.5, sell: 23, status: "Valid", link: "https://www.alibaba.com/product-detail/Custom-Women-Blue-Light-Glasses-Blue_1601607639527.html" },
-            { id: 9, name: "Automatic Choking Rescue Device", buy: 55, sell: 80, status: "", link: "https://www.alibaba.com/product-detail/Automatic-Choking-Rescue-Device-for-Kids_1601275295860.html" },
-            { id: 10, name: "Anti-Choking Device", buy: 7, sell: 28, status: "Invalid", link: "https://www.alibaba.com/product-detail/Top-Quality-Anti-Choking-Device-Easy_1601370343985.html" },
-            { id: 11, name: "Energy Saving Device", buy: 2.2, sell: 25, status: "Invalid", link: "https://www.alibaba.com/product-detail/1-2-4-6-Pack-Energy_1601227703413.html" },
-            { id: 12, name: "Multifunctional Beauty Face Lifting Device", buy: 9.5, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/Mini-Electric-V-shape-Home-Use_1601273829195.html" },
-            { id: 13, name: "Private Label Custom Professional Pure Vegan Hair Dye", buy: 2.5, sell: 28, status: "", link: "https://www.alibaba.com/product-detail/Private-Label-Custom-Professional-Pure-Vegan_1601331645984.html" },
-            { id: 14, name: "Easy inflatable neck pain relief device", buy: 3, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/FSPG-Cervical-Neck-Traction-Device-for_1601171783152.html" },
-            { id: 15, name: "Electric pepper and salt grinder", buy: 10, sell: 35, status: "", link: "https://www.alibaba.com/product-detail/2-Pcs-Battery-Operated-Electric-Spice_1601220563178.html" },
-            { id: 16, name: "UNIEAN F03-C Finder Mini Anti Alarme Locator", buy: 0, sell: 0, status: "Valid", link: "https://www.alibaba.com/product-detail/UNIEAN-F03-C-Finder-Mini-Anti_1601455419050.html" },
-            { id: 17, name: "Kids Cartoon U Shaped Sonic Automatic Electric Toothbrush", buy: 0, sell: 0, status: "Invalid", link: "https://www.alibaba.com/product-detail/Kids-Cartoon-U-Shaped-Sonic-Automatic_1601569256458.html" },
-            { id: 18, name: "Professional Manufacturer Punch Free Invisible Cabinet Lock", buy: 6.5, sell: 29, status: "Invalid", link: "https://www.alibaba.com/product-detail/Professional-Manufacturer-Punch-Free-Invisible-Cabinet_1601582254165.html" },
-            { id: 19, name: "Super ultrasonic dog chaser", buy: 3.5, sell: 30, status: "Valid", link: "https://www.alibaba.com/product-detail/Ultra-Sonido-Para-Repeler-Perros-Anti_1600593295406.html" },
-            { id: 20, name: "Custom Ultra Thin CNC Slide Pop Minimalist Aluminum RFID", buy: 6, sell: 30, status: "", link: "https://www.alibaba.com/product-detail/Custom-Ultra-Thin-CNC-Slide-Pop_1601362660119.html" },
-            { id: 21, name: "Portable 300Lumen Rechargeable EDC Keychain Torch LED", buy: 0, sell: 0, status: "", link: "https://www.alibaba.com/product-detail/Portable-300Lumen-Rechargeable-EDC-Keychain-Torch_1601539324986.html" },
-            { id: 22, name: "Relax Circuit™ Shiatsu Smart Neck Massager", buy: 0, sell: 0, status: "", link: "https://www.alibaba.com/product-detail/Master-Hand-Ultra-Quiet-New-Generation_1601608529552.html" },
-            { id: 23, name: "Dash Cam HD 1080P Car DVR Camera", buy: 13, sell: 40, status: "Valid", link: "https://www.alibaba.com/product-detail/New-3-16-Dash-Cam-1080P_1601628123334.html" },
-            { id: 24, name: "U Shaped Type Toothbrush 360 Degrees Ultrasonic", buy: 0, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/3-0-Version-4-Modes-Whitening_1601580342079.html" },
-            { id: 25, name: "Multifunctional storage bag", buy: 6, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/Custom-Logo-PVC-Cable-Management-Accessory_1601193138689.html" },
-            { id: 26, name: "C801 Bone Conduction BT Vibration Stereo Audio", buy: 5, sell: 27, status: "Valid", link: "https://www.alibaba.com/product-detail/C801-Bone-Conduction-BT-Vibration-Stereo_1601408801623.html" },
-            { id: 27, name: "Cheap Price Table Tennis Sets 2 Rackets with 4 Balls", buy: 0, sell: 5, status: "Invalid", link: "https://www.alibaba.com/product-detail/Cheap-Price-Table-Tennis-Sets-2_1600263742333.html" },
-            { id: 28, name: "Adjustable Tint Sunglasses", buy: 6, sell: 30, status: "Valid", link: "https://www.alibaba.com/product-detail/Wholesale-Polarized-UV400-Sunglasses-Men-s_1601613842385.html" },
-            { id: 29, name: "360° Multi-Cereal Dispenser", buy: 8, sell: 33, status: "Invalid", link: "https://www.alibaba.com/product-detail/L-Round-Household-Airtight-Grain-Dispenser_1601298703279.html" },
-            { id: 30, name: "Mini Camera Wifi", buy: 4, sell: 28, status: "", link: "https://www.alibaba.com/product-detail/Wide-Angle-HD-X5-Factory-Price_1601648942255.html" }
-        ];
+<script>
+    // --- DATA MANAGEMENT ---
+    const STORAGE_KEY = 'ecommerce_pro_v1';
+    
+    // Default Initial Data
+    const defaultData = {
+        sim: {
+            buyPrice: 50, importFees: 10, deliveryFees: 80, commissionFees: 0, adsFees: 50, testAdsFees: 0, sellingPriceDh: 190,
+            airPriceKg: 100, airWeight: 100, airPcsKg: 10,
+            oceanPricePcs: 3, oceanQty: 200, oceanImport: 600,
+            dailyQty: 1
+        },
+        winning: [
+            { id: 1, name: "USB Plug Kitchen Electric Double Sided Knife Sharpener", buy: 9, sell: 30, status: "Valid" },
+            { id: 2, name: "Portable HD 2K Infrared Night Vision Body Camera", buy: 14, sell: 35, status: "" },
+            { id: 6, name: "Console Blanche de jeu rétro 20 000 jeux", buy: 15, sell: 37, status: "Valid" },
+            { id: 23, name: "Dash Cam HD 1080P Car DVR Camera", buy: 13, sell: 40, status: "Valid" }
+        ],
+        myProducts: [
+            { id: 101, name: "خيمة شاطئية وحمام سباحة للأطفال", sell: 28, buy: 11, stock: 100 },
+            { id: 102, name: "محول شاشة السيارة إلى كار بلاي", sell: 28, buy: 9.5, stock: 47 },
+            { id: 103, name: "مجموعة مفكات براغي صغيرة 46 في 1", sell: 25, buy: 9.71, stock: 120 }
+        ],
+        objectifs: [
+            { id: 201, name: "جهاز طارد الكلاب", qty: 200, cost: 600 },
+            { id: 202, name: "نظارات مضادة للضوء الأزرق", qty: 350, cost: 770 },
+            { id: 203, name: "كاميرا السيارة ب 4 كاميرات", qty: 200, cost: 3110 }
+        ]
+    };
 
-        const myProducts = [
-            { name: "خيمة شاطئية وحمام سباحة للأطفال", sell: 28, buy: 11, stock: 100, profit: 2.5 },
-            { name: "محول شاشة السيارة إلى كار بلاي", sell: 28, buy: 9.5, stock: 47, profit: 5 },
-            { name: "مجموعة مفكات براغي صغيرة 46 في 1", sell: 25, buy: 9.71, stock: 120, profit: 0 }
-        ];
+    // State Container
+    let appData = {};
 
-        const objectifProducts = [
-            { name: "جهاز طارد الكلاب", qty: 200, cost: 600, status: "Valid" },
-            { name: "نظارات شمسية قابلة لتعديل اللون", qty: 250, cost: 1275, status: "" },
-            { name: "نظارات مضادة للضوء الأزرق", qty: 350, cost: 770, status: "" },
-            { name: "كاميرا السيارة ب 4 كاميرات", qty: 200, cost: 3110, status: "" },
-            { name: "مكبر صوت لاسلكي يحول أي شيء إلى مكبر صوت", qty: 200, cost: 1112, status: "" },
-            { name: "جهاز ألعاب فيديو مع 20000 لعبة", qty: 250, cost: 3037, status: "" },
-            { name: "جهاز تتبع الاغراض GPS", qty: 200, cost: 1100, status: "Valid" }
-        ];
-
-        // --- Core Functions ---
-
-        function init() {
-            calculateSimulation();
-            renderWinningTable(winningProducts);
-            renderMyProductTable();
-            renderObjectifTable();
+    // Load or Init
+    function loadData() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            appData = JSON.parse(stored);
+        } else {
+            appData = JSON.parse(JSON.stringify(defaultData)); // Deep copy
         }
+    }
 
-        function showSection(id) {
-            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        const status = document.getElementById('save-status');
+        status.classList.add('show');
+        setTimeout(() => status.classList.remove('show'), 2000);
+    }
+
+    function resetData() {
+        if(confirm("هل أنت متأكد من مسح جميع البيانات والعودة للوضع الافتراضي؟")) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
+    }
+
+    // --- RENDER FUNCTIONS ---
+
+    function renderAll() {
+        renderSim();
+        renderWinning();
+        renderMyProduct();
+        renderObjectif();
+    }
+
+    // 1. Simulator Renderer
+    function renderSim() {
+        const s = appData.sim;
+        document.getElementById('buy-price').value = s.buyPrice;
+        document.getElementById('import-fees').value = s.importFees;
+        document.getElementById('delivery-fees').value = s.deliveryFees;
+        document.getElementById('commission-fees').value = s.commissionFees;
+        document.getElementById('ads-fees').value = s.adsFees;
+        document.getElementById('test-ads-fees').value = s.testAdsFees;
+        document.getElementById('selling-price-dh').value = s.sellingPriceDh;
+        
+        document.getElementById('air-price-kg').value = s.airPriceKg;
+        document.getElementById('air-weight').value = s.airWeight;
+        document.getElementById('air-pcs-kg').value = s.airPcsKg;
+        
+        document.getElementById('ocean-price-pcs').value = s.oceanPricePcs;
+        document.getElementById('ocean-qty').value = s.oceanQty;
+        document.getElementById('ocean-import').value = s.oceanImport;
+        
+        document.getElementById('daily-qty-range').value = s.dailyQty;
+
+        calcSim(); // Run calc logic
+    }
+
+    function updateSimState(key, val) {
+        appData.sim[key] = parseFloat(val) || 0;
+        calcSim();
+        saveData();
+    }
+
+    function calcSim() {
+        const s = appData.sim;
+        const daysPerMonth = 20;
+        
+        // Costs
+        const totalCost = s.buyPrice + s.importFees + s.deliveryFees + s.commissionFees + s.adsFees + s.testAdsFees;
+        const profit = s.sellingPriceDh - totalCost;
+        const margin = s.sellingPriceDh > 0 ? ((profit / s.sellingPriceDh) * 100).toFixed(1) : 0;
+
+        // UI Updates
+        document.getElementById('unit-profit').innerText = profit.toLocaleString() + ' DH';
+        document.getElementById('unit-profit').style.color = profit >= 0 ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('profit-margin').innerText = margin + '%';
+
+        // Shipping
+        document.getElementById('air-total').innerText = (s.airPriceKg * s.airWeight).toLocaleString();
+        document.getElementById('ocean-total').innerText = ((s.oceanPricePcs * s.oceanQty) + s.oceanImport).toLocaleString();
+
+        // Projections
+        const revDay = s.dailyQty * s.sellingPriceDh;
+        const revMonth = revDay * daysPerMonth;
+        const profDay = s.dailyQty * profit;
+        const profMonth = profDay * daysPerMonth;
+
+        document.getElementById('rev-day').innerText = revDay.toLocaleString();
+        document.getElementById('rev-month').innerText = revMonth.toLocaleString();
+        
+        document.getElementById('prof-day').innerText = profDay.toLocaleString();
+        document.getElementById('prof-day').style.color = profDay >= 0 ? 'var(--success)' : 'var(--danger)';
+        
+        document.getElementById('prof-month').innerText = profMonth.toLocaleString();
+        document.getElementById('prof-month').style.color = profMonth >= 0 ? 'var(--success)' : 'var(--danger)';
+    }
+
+    // 2. Winning Products Renderer
+    function renderWinning() {
+        const tbody = document.getElementById('winning-tbody');
+        tbody.innerHTML = '';
+        appData.winning.forEach((p, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input class="table-input" value="${p.name}" oninput="updateWinning(${index}, 'name', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.buy}" oninput="updateWinning(${index}, 'buy', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.sell}" oninput="updateWinning(${index}, 'sell', this.value)"></td>
+                <td>
+                    <select class="table-input" onchange="updateWinning(${index}, 'status', this.value)">
+                        <option value="" ${p.status==''?'selected':''}>-</option>
+                        <option value="Valid" ${p.status=='Valid'?'selected':''}>Valid</option>
+                        <option value="Invalid" ${p.status=='Invalid'?'selected':''}>Invalid</option>
+                    </select>
+                </td>
+                <td style="text-align:center;"><button class="btn-icon" onclick="deleteWinning(${index})"><i class="ri-delete-bin-line"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function updateWinning(index, field, val) {
+        appData.winning[index][field] = val;
+        saveData();
+    }
+    
+    function addWinningProduct() {
+        appData.winning.push({ id: Date.now(), name: "منتج جديد", buy: 0, sell: 0, status: "" });
+        renderWinning();
+        saveData();
+    }
+    
+    function deleteWinning(index) {
+        if(confirm('حذف هذا المنتج؟')) {
+            appData.winning.splice(index, 1);
+            renderWinning();
+            saveData();
+        }
+    }
+
+    // 3. My Product Renderer
+    function renderMyProduct() {
+        const tbody = document.getElementById('myproduct-tbody');
+        tbody.innerHTML = '';
+        let totalStock = 0;
+        let totalProfit = 0;
+
+        appData.myProducts.forEach((p, index) => {
+            const unitProfit = p.sell - p.buy;
+            const totalItemProfit = unitProfit * p.stock;
             
-            document.getElementById(id).classList.add('active');
-            document.querySelector(`button[onclick="showSection('${id}')"]`).classList.add('active');
+            totalStock += parseInt(p.stock);
+            totalProfit += totalItemProfit;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input class="table-input" value="${p.name}" oninput="updateMyProduct(${index}, 'name', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.sell}" oninput="updateMyProduct(${index}, 'sell', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.buy}" oninput="updateMyProduct(${index}, 'buy', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.stock}" oninput="updateMyProduct(${index}, 'stock', this.value)"></td>
+                <td style="text-align:center; font-weight:bold; color:${unitProfit>0?'var(--success)':'var(--danger)'}">${unitProfit}</td>
+                <td style="text-align:center; font-weight:bold;">${totalItemProfit.toFixed(1)}</td>
+                <td style="text-align:center;"><button class="btn-icon" onclick="deleteMyProduct(${index})"><i class="ri-delete-bin-line"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('total-stock').innerText = totalStock;
+        document.getElementById('total-profit').innerText = totalProfit.toLocaleString() + ' DH';
+    }
+
+    function updateMyProduct(index, field, val) {
+        appData.myProducts[index][field] = parseFloat(val) || 0;
+        if(field === 'name') appData.myProducts[index][field] = val;
+        renderMyProduct(); // Re-calc totals
+        saveData();
+    }
+
+    function addMyProduct() {
+        appData.myProducts.push({ id: Date.now(), name: "منتج جديد", sell: 0, buy: 0, stock: 0 });
+        renderMyProduct();
+        saveData();
+    }
+
+    function deleteMyProduct(index) {
+        if(confirm('حذف هذا المنتج؟')) {
+            appData.myProducts.splice(index, 1);
+            renderMyProduct();
+            saveData();
         }
+    }
 
-        function getVal(id) {
-            return parseFloat(document.getElementById(id).value) || 0;
+    // 4. Objectif Renderer
+    function renderObjectif() {
+        const tbody = document.getElementById('objectif-tbody');
+        tbody.innerHTML = '';
+        let totalInvest = 0;
+
+        appData.objectifs.forEach((p, index) => {
+            totalInvest += p.cost;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input class="table-input" value="${p.name}" oninput="updateObjectif(${index}, 'name', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.qty}" oninput="updateObjectif(${index}, 'qty', this.value)"></td>
+                <td><input type="number" class="table-input" value="${p.cost}" oninput="updateObjectif(${index}, 'cost', this.value)"></td>
+                <td style="text-align:center;"><button class="btn-icon" onclick="deleteObjectif(${index})"><i class="ri-delete-bin-line"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('total-invest').innerText = '$' + totalInvest.toLocaleString();
+    }
+
+    function updateObjectif(index, field, val) {
+        appData.objectifs[index][field] = parseFloat(val) || 0;
+        if(field === 'name') appData.objectifs[index][field] = val;
+        renderObjectif(); // Re-calc total
+        saveData();
+    }
+
+    function addObjectif() {
+        appData.objectifs.push({ id: Date.now(), name: "منتج جديد", qty: 100, cost: 500 });
+        renderObjectif();
+        saveData();
+    }
+
+    function deleteObjectif(index) {
+        if(confirm('حذف هذه الخطة؟')) {
+            appData.objectifs.splice(index, 1);
+            renderObjectif();
+            saveData();
         }
+    }
 
-        function setHtml(id, val) {
-            document.getElementById(id).innerText = val;
-        }
+    // --- GLOBAL NAVIGATION ---
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelector(`.nav-item[onclick="showSection('${id}')"]`).classList.add('active');
+    }
 
-        // --- Simulator Logic ---
-        function calculateSimulation() {
-            // Inputs
-            const buyPrice = getVal('buy-price');
-            const importFees = getVal('import-fees');
-            const deliveryFees = getVal('delivery-fees');
-            const commissionFees = getVal('commission-fees');
-            const adsFees = getVal('ads-fees');
-            const testAdsFees = getVal('test-ads-fees');
-            const sellingPriceDh = getVal('selling-price-dh');
+    // --- INIT ---
+    window.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        renderAll();
+    });
 
-            const exchangeRate = 9.0; // Fixed based on Excel logic ~21.11 * 9 = 190
+</script>
 
-            // Calculate Total Cost per Unit (DH)
-            // Note: In Excel logic, some costs might be bulk, but we distribute for simulation logic here
-            // Or we keep them as fixed overhead. Let's assume per unit calc based on standard ecom logic
-            // The Excel structure implies "Bénéfice" column was 0 or formula based. 
-            // Let's implement: (Selling - (Buy + Import + Delivery + Comm + Ads + TestAds))
-            
-            const totalCostPerUnit = buyPrice + importFees + deliveryFees + commissionFees + adsFees + testAdsFees;
-            const profitPerUnit = sellingPriceDh - totalCostPerUnit;
-
-            // Update Selling Price in USD
-            const sellingPriceUsd = (sellingPriceDh / exchangeRate).toFixed(2);
-            setHtml('selling-price-usd', `$${sellingPriceUsd}`);
-
-            // Shipping Calculations
-            // Air
-            const airPriceKg = getVal('air-price-kg');
-            const airWeight = getVal('air-weight');
-            const airTotal = airPriceKg * airWeight;
-            setHtml('air-total', airTotal.toLocaleString());
-
-            // Ocean
-            const oceanPricePcs = getVal('ocean-price-pcs');
-            const oceanQty = getVal('ocean-qty');
-            const oceanImport = getVal('ocean-import');
-            const oceanTotal = (oceanPricePcs * oceanQty) + oceanImport;
-            setHtml('ocean-total', oceanTotal.toLocaleString());
-
-            // Store unit profit for projections
-            window.currentUnitProfit = profitPerUnit;
-            window.currentRevenuePerUnit = sellingPriceDh;
-            
-            updateProjections();
-        }
-
-        function updateProjections() {
-            const dailyQty = parseInt(document.getElementById('daily-qty-range').value);
-            setHtml('daily-qty-display', dailyQty);
-
-            const daysPerMonth = 20; // Based on Excel assumption "Quantité Produit/mois" col 4 usually ~20x daily
-            
-            // Revenue
-            const dailyRev = dailyQty * window.currentRevenuePerUnit;
-            const monthlyRev = dailyRev * daysPerMonth;
-
-            // Profit
-            const dailyProfit = dailyQty * window.currentUnitProfit;
-            const monthlyProfit = dailyProfit * daysPerMonth;
-
-            setHtml('proj-revenue-day', dailyRev.toLocaleString());
-            setHtml('proj-revenue-month', monthlyRev.toLocaleString());
-            setHtml('proj-profit-day', dailyProfit.toLocaleString());
-            setHtml('proj-profit-month', monthlyProfit.toLocaleString());
-        }
-
-        // --- Winning Product Logic ---
-        function renderWinningTable(data) {
-            const tbody = document.querySelector('#winning-table tbody');
-            tbody.innerHTML = '';
-            
-            data.forEach(p => {
-                const tr = document.createElement('tr');
-                const statusHtml = p.status ? 
-                    `<span class="badge ${p.status.toLowerCase()}">${p.status}</span>` : 
-                    '<span style="color:#ccc">-</span>';
-                
-                tr.innerHTML = `
-                    <td>${p.id}</td>
-                    <td><div style="width:40px; height:40px; background:#eee; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#999;">📷</div></td>
-                    <td style="max-width:300px;">${p.name}</td>
-                    <td>${p.buy > 0 ? '$'+p.buy : '-'}</td>
-                    <td>${p.sell > 0 ? '$'+p.sell : '-'}</td>
-                    <td>${statusHtml}</td>
-                    <td>
-                        ${p.link ? `<a href="${p.link}" target="_blank" class="link-btn">عرض Alibaba ↗</a>` : ''}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filterWinning() {
-            const term = document.getElementById('search-winning').value.toLowerCase();
-            const filtered = winningProducts.filter(p => p.name.toLowerCase().includes(term));
-            renderWinningTable(filtered);
-        }
-
-        // --- My Product Logic ---
-        function renderMyProductTable() {
-            const tbody = document.querySelector('#myproduct-table tbody');
-            let totalStock = 0;
-            let totalProfit = 0;
-
-            myProducts.forEach(p => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${p.name}</td>
-                    <td>${p.sell} DH</td>
-                    <td>${p.buy} DH</td>
-                    <td>${p.stock}</td>
-                    <td style="color:${p.profit > 0 ? 'var(--success)' : 'var(--danger)'}">${p.profit} DH</td>
-                `;
-                tbody.appendChild(tr);
-                totalStock += p.stock;
-                totalProfit += (p.profit * p.stock); // Assuming profit in table is unit profit * stock? No, table says "Profits" column 5. Row 1: 2.5, Total: 250. Stock 100. 2.5*100 = 250. Correct.
-            });
-
-            setHtml('total-stock', totalStock);
-            setHtml('total-profit-dh', totalProfit.toLocaleString() + ' DH');
-        }
-
-        // --- Objectif Logic ---
-        function renderObjectifTable() {
-            const tbody = document.querySelector('#objectif-table tbody');
-            objectifProducts.forEach(p => {
-                const tr = document.createElement('tr');
-                const statusHtml = p.status ? 
-                    `<span class="badge ${p.status.toLowerCase()}">${p.status}</span>` : 
-                    '<span style="color:#ccc">-</span>';
-                
-                tr.innerHTML = `
-                    <td>${p.name}</td>
-                    <td>${p.qty}</td>
-                    <td>$${p.cost.toLocaleString()}</td>
-                    <td>${statusHtml}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.innerText = message;
-            toast.className = "show";
-            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        // Run on load
-        window.addEventListener('DOMContentLoaded', init);
-
-    </script>
 </body>
 </html>
