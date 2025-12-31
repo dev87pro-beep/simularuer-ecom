@@ -1,1142 +1,1237 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crowz Inventory Dashboard</title>
+    <title>ProDash | نظام إدارة المتجر المتطور</title>
+    
+    <!-- خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- أيقونات RemixIcon (أكثر حداثة) -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- مكتبة الرسوم البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        /* --- 1. CROWZ THEME VARIABLES (Light, Clean, Blue) --- */
         :root {
-            --primary: #2563eb;       /* Crowz Blue */
-            --primary-light: #eff6ff;
-            --secondary: #64748b;     /* Text Muted */
-            --bg-body: #f8fafc;       /* Very Light Gray Background */
-            --bg-card: #ffffff;       /* White Cards */
+            /* الألوان الأساسية - الوضع النهار */
+            --primary: #4F46E5;
+            --primary-dark: #3730a3;
+            --secondary: #64748b;
+            --bg-body: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
             --border: #e2e8f0;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
             --success: #10b981;
+            --warning: #f59e0b;
             --danger: #ef4444;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --radius: 12px;
-            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #4F46E5 0%, #818cf8 100%);
+            --radius: 16px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        
+        [data-theme="dark"] {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #94a3b8;
+            --bg-body: #0f172a;
+            --bg-sidebar: #1e293b;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow-sm: none;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
         body {
-            font-family: var(--font-family);
             background-color: var(--bg-body);
-            color: var(--text-dark);
-            display: flex;
+            color: var(--text-main);
             height: 100vh;
             overflow: hidden;
-            direction: ltr;
+            display: flex;
         }
 
-        /* --- 2. SIDEBAR (White, Blue Accents) --- */
+        /* --- Scrollbar Styling --- */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
+
+        /* --- Layout --- */
         aside {
-            width: 250px;
-            background-color: var(--bg-card);
-            border-right: 1px solid var(--border);
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-inline-end: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            padding: 1.5rem;
-            z-index: 20;
+            padding: 1.5rem 1rem;
+            z-index: 10;
         }
 
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 2.5rem;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        nav button {
-            background: transparent;
-            border: none;
-            width: 100%;
-            text-align: left;
-            padding: 12px 16px;
-            margin-bottom: 5px;
-            border-radius: var(--radius);
-            color: var(--text-gray);
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
+        .logo-area {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 2.5rem;
+            padding: 0 0.5rem;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        nav button:hover { background-color: #f1f5f9; color: var(--primary); }
-        nav button.active { 
-            background-color: var(--primary-light); 
-            color: var(--primary); 
-            font-weight: 700;
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
         }
 
-        /* --- 3. MAIN CONTENT AREA --- */
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
+        .nav-item {
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-body);
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .nav-item i { font-size: 1.2rem; }
+
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             position: relative;
         }
 
         header {
+            height: 70px;
+            background-color: var(--bg-sidebar); /* ليتطابق مع السايد بار */
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .header-title h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .icon-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-body);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            cursor: pointer;
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+        }
+        .user-name { font-weight: 700; color: var(--text-main); }
+        .user-role { color: var(--text-muted); }
+
+        main {
+            padding: 2rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- Cards & Dashboard --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .header-title h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
-        .header-title span { font-size: 0.9rem; color: var(--text-gray); }
-        
-        .user-profile { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; }
-
-        /* --- 4. DASHBOARD LAYOUT (Crowz Style) --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Stats Cards (Top Row) */
         .stat-card {
             background: var(--bg-card);
-            padding: 1.5rem;
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 3;
-            border: 1px solid var(--border);
-        }
-        .stat-card h3 { font-size: 0.85rem; color: var(--text-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
-        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
-        .stat-card .trend { font-size: 0.8rem; margin-top: 5px; }
-        .trend.up { color: var(--success); }
-
-        /* Activity Chart (Main Big Card) */
-        .chart-card {
-            background: var(--bg-card);
             padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 8;
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
-        }
-        .card-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
-        .card-title { font-weight: 700; font-size: 1.1rem; }
-        
-        /* SVG Chart Placeholder */
-        .chart-placeholder {
-            width: 100%;
-            height: 200px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
             position: relative;
-            background: linear-gradient(to bottom, #f8fafc, #fff);
-            border-radius: 8px;
-            border: 1px dashed var(--border);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding-bottom: 10px;
+            overflow: hidden;
         }
-        .bar { width: 8%; background: var(--primary); opacity: 0.2; border-radius: 4px 4px 0 0; transition: height 1s; }
-        .bar:hover { opacity: 1; }
 
-        /* Top Performers */
-        .performers-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 4;
-            border: 1px solid var(--border);
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05));
+            border-radius: 50%;
+            transform: translate(30%, -30%);
         }
-        .performer-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .performer-info { display: flex; align-items: center; gap: 10px; }
-        .p-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; display: grid; place-items: center; font-size: 0.7rem; font-weight: bold; color: var(--text-gray); }
-        .progress-bar { width: 60px; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; }
 
-        /* Channels & Promo (Bottom Row) */
-        .channels-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 8;
-            border: 1px solid var(--border);
+        .stat-content h4 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .stat-content .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .stat-trend {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
             display: flex;
-            justify-content: space-around;
+            align-items: center;
+            gap: 4px;
+        }
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .bg-indigo { background: #e0e7ff; color: #4338ca; }
+        .bg-emerald { background: #d1fae5; color: #047857; }
+        .bg-amber { background: #fef3c7; color: #b45309; }
+        .bg-rose { background: #ffe4e6; color: #be123c; }
+
+        [data-theme="dark"] .bg-indigo { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        [data-theme="dark"] .bg-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        [data-theme="dark"] .bg-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        [data-theme="dark"] .bg-rose { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 1024px) { .charts-section { grid-template-columns: 1fr; } }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            height: 350px;
+        }
+
+        /* --- Tables --- */
+        .table-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .channel-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .channel-item span { font-size: 0.9rem; font-weight: 600; }
-        .channel-item small { font-size: 0.8rem; }
-        .text-green { color: var(--success); }
-        .text-red { color: var(--danger); }
 
-        .promo-card {
-            background: linear-gradient(135deg, var(--primary), #1d4ed8);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            grid-column: span 4;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .search-box {
+            position: relative;
         }
-        .promo-card h3 { margin-bottom: 10px; }
-        .btn-white { background: white; color: var(--primary); padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-block; width: fit-content; margin-top: 10px; border: none; cursor: pointer; }
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        .search-input {
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-main);
+            outline: none;
+            width: 250px;
+        }
 
-        /* --- 5. TABLE STYLING (For other pages) --- */
-        .table-container {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        thead {
+            background-color: var(--bg-body);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        th {
+            padding: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: rgba(0,0,0,0.02); }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .product-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
             border: 1px solid var(--border);
         }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background-color: #f8fafc; font-weight: 600; color: var(--text-gray); font-size: 0.85rem; text-transform: uppercase; }
-        tr:last-child td { border-bottom: none; }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-active { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .status-inactive { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
             border: none;
-            padding: 10px 20px;
-            border-radius: var(--radius);
-            font-weight: 500;
             cursor: pointer;
+            font-weight: 600;
             font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.1s;
         }
-        .btn-primary:hover { background-color: #1d4ed8; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+        .btn-icon { padding: 6px; border-radius: 6px; color: var(--text-muted); background: transparent; }
+        .btn-icon:hover { background: var(--bg-body); color: var(--text-main); }
+        .btn-delete:hover { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
 
-        /* Modal & Utilities */
+        /* --- Modal --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            inset: 0;
             background: rgba(0,0,0,0.4);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        
         .modal {
-            background: white; width: 500px; padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            overflow: hidden;
         }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 5px; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+        .modal-overlay.open .modal { transform: translateY(0); }
 
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body { padding: 1.5rem; }
+        
+        .form-group { margin-bottom: 1.2rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main); }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-body);
+            color: var(--text-main);
+            outline: none;
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--bg-body);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* --- Toast --- */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem; /* LTR Layout so left is start */
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            border-inline-start: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Helper for view toggling */
         .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .view-section.active { display: block; animation: fadeView 0.3s ease; }
+        @keyframes fadeView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (max-width: 1024px) {
-            .dashboard-grid { display: flex; flex-direction: column; }
-            .stat-card { width: 100%; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <aside>
-        <div class="brand">
-            <!-- Simple Logo Icon -->
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            Crowz
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ri-dashboard-3-line"></i></div>
+            <div class="logo-text">ProDash</div>
         </div>
-        <nav>
-            <button class="active" onclick="app.navigate('dashboard')">Dashboard</button>
-            <button onclick="app.navigate('products')">Products</button>
-            <button onclick="app.navigate('importing')">Importing</button>
-            <button onclick="app.navigate('winning')">Winning</button>
-            <button onclick="app.navigate('ads')">Ads Pages</button>
-        </nav>
+        
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchView('dashboard', this)">
+                <i class="ri-home-4-line"></i> لوحة التحكم
+            </li>
+            <li class="nav-item" onclick="switchView('products', this)">
+                <i class="ri-store-2-line"></i> المنتجات
+            </li>
+            <li class="nav-item" onclick="switchView('import', this)">
+                <i class="ri-ship-line"></i> الشحن والاستيراد
+            </li>
+            <li class="nav-item" onclick="switchView('winning', this)">
+                <i class="ri-fire-line"></i> المنتجات الرابحة
+            </li>
+            <li class="nav-item" onclick="switchView('ads', this)">
+                <i class="ri-advertisement-line"></i> الحملات الإعلانية
+            </li>
+        </ul>
+
+        <div class="nav-item" style="margin-top: auto; color: var(--secondary);">
+            <i class="ri-settings-4-line"></i> الإعدادات
+        </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main>
-        
-        <!-- DASHBOARD (Crowz Design) -->
-        <section id="dashboard" class="view-section active">
-            <header>
-                <div class="header-title">
-                    <h1>Dashboard</h1>
-                    <span>Welcome back, Robert</span>
-                </div>
+    <div class="main-wrapper">
+        <header>
+            <div class="header-title">
+                <h2 id="pageTitle">نظرة عامة</h2>
+            </div>
+            
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                    <i class="ri-moon-line" id="themeIcon"></i>
+                </button>
+                <button class="icon-btn">
+                    <i class="ri-notification-3-line"></i>
+                </button>
                 <div class="user-profile">
-                    <div class="avatar"></div>
-                    <div style="font-size: 0.9rem; font-weight: 600;">Robert Grant</div>
-                </div>
-            </header>
-
-            <div class="dashboard-grid">
-                <!-- Stat Cards -->
-                <div class="stat-card">
-                    <h3>Total Sales</h3>
-                    <div class="value" id="dash-sales">$0</div>
-                    <div class="trend up">▲ 12% vs last month</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Followers</h3>
-                    <div class="value">219.3k</div>
-                    <div class="trend up">▲ 4.5% this week</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Profit</h3>
-                    <div class="value" id="dash-profit">$0</div>
-                    <div class="trend up">▲ $1,200 today</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Reposts</h3>
-                    <div class="value">1.5k</div>
-                    <div class="trend" style="color:var(--text-gray)">- Stable</div>
-                </div>
-
-                <!-- Activity Chart -->
-                <div class="chart-card">
-                    <div class="card-header">
-                        <div class="card-title">Activity</div>
-                        <select style="border:1px solid #ddd; padding:4px; border-radius:4px; font-size:0.8rem;"><option>This Week</option></select>
+                    <img src="https://picsum.photos/seed/admin/64/64" class="user-avatar" alt="Admin">
+                    <div class="user-info">
+                        <span class="user-name">أحمد محمد</span>
+                        <span class="user-role">مدير النظام</span>
                     </div>
-                    <!-- CSS Bar Chart Simulation -->
-                    <div class="chart-placeholder">
-                        <div class="bar" style="height: 40%;"></div>
-                        <div class="bar" style="height: 70%;"></div>
-                        <div class="bar" style="height: 50%;"></div>
-                        <div class="bar" style="height: 90%; background:var(--primary); opacity:1;"></div>
-                        <div class="bar" style="height: 60%;"></div>
-                        <div class="bar" style="height: 80%;"></div>
-                        <div class="bar" style="height: 45%;"></div>
-                    </div>
-                </div>
-
-                <!-- Top Performers -->
-                <div class="performers-card">
-                    <div class="card-header">
-                        <div class="card-title">Top Performers</div>
-                    </div>
-                    <div class="performer-item">
-                        <div class="performer-info"><div class="p-avatar">VA</div> <span>Valy Antonova</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 39%"></div></div>
-                        <span style="font-size:0.8rem; font-weight:bold;">39%</span>
-                    </div>
-                    <div class="performer-item">
-                        <div class="performer-info"><div class="p-avatar">NE</div> <span>Nenci Villy</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
-                        <span style="font-size:0.8rem; font-weight:bold;">25%</span>
-                    </div>
-                    <div class="performer-item">
-                        <div class="performer-info"><div class="p-avatar">MN</div> <span>Mark Noil</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 18%"></div></div>
-                        <span style="font-size:0.8rem; font-weight:bold;">18%</span>
-                    </div>
-                </div>
-
-                <!-- Channels -->
-                <div class="channels-card">
-                    <div class="channel-item">
-                        <span>Dribbble</span>
-                        <small class="text-green">+2%</small>
-                    </div>
-                    <div class="channel-item">
-                        <span>Behance</span>
-                        <small class="text-red">-7%</small>
-                    </div>
-                    <div class="channel-item">
-                        <span>Instagram</span>
-                        <small class="text-green">+4%</small>
-                    </div>
-                    <div class="channel-item">
-                        <span>Pinterest</span>
-                        <small class="text-green">+2%</small>
-                    </div>
-                </div>
-
-                <!-- Upgrade Promo -->
-                <div class="promo-card">
-                    <h3>Upgrade Your Crowd</h3>
-                    <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px;">Get access to premium analytics.</p>
-                    <button class="btn-white">View Plans</button>
+                    <i class="ri-arrow-down-s-line" style="margin-right: 5px; color: var(--text-muted)"></i>
                 </div>
             </div>
-        </section>
+        </header>
 
-        <!-- PRODUCTS PAGE (Clean Design) -->
-        <section id="products" class="view-section">
-            <header>
-                <div class="header-title"><h1>Products Inventory</h1></div>
-                <button class="btn-primary" onclick="app.openModal('products')">+ Add Product</button>
-            </header>
-            <div class="table-container">
-                <table id="products-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>SKU</th>
-                            <th>Cost</th>
-                            <th>Selling</th>
-                            <th>Margin</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
+        <main>
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <h4>إجمالي الأرباح</h4>
+                            <div class="value" id="totalProfit">$0.00</div>
+                            <div class="stat-trend trend-up"><i class="ri-arrow-up-line"></i> +12.5% من الشهر الماضي</div>
+                        </div>
+                        <div class="stat-icon bg-emerald"><i class="ri-money-dollar-circle-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <h4>إجمالي الطلبات</h4>
+                            <div class="value">1,240</div>
+                            <div class="stat-trend trend-up"><i class="ri-arrow-up-line"></i> +5.2%</div>
+                        </div>
+                        <div class="stat-icon bg-indigo"><i class="ri-shopping-bag-3-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <h4>المنتجات الرابحة</h4>
+                            <div class="value" id="winningCount">0</div>
+                            <div class="stat-trend trend-down"><i class="ri-arrow-down-line"></i> -2 منتجات</div>
+                        </div>
+                        <div class="stat-icon bg-amber"><i class="ri-trophy-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <h4>قيد الاستيراد</h4>
+                            <div class="value" id="importCount">0</div>
+                            <div class="stat-trend"><i class="ri-subtract-line"></i> ثابت</div>
+                        </div>
+                        <div class="stat-icon bg-rose"><i class="ri-ship-2-line"></i></div>
+                    </div>
+                </div>
 
-        <!-- WINNING PRODUCTS -->
-        <section id="winning" class="view-section">
-            <header>
-                <div class="header-title"><h1>Winning Products 🔥</h1></div>
-                <button class="btn-primary" onclick="app.openModal('winning')">+ Add Winner</button>
-            </header>
-            <div class="table-container">
-                <table id="winning-table">
-                    <thead>
-                        <tr>
-                            <th>Img</th>
-                            <th>Product Name</th>
-                            <th>Cost</th>
-                            <th>Sell Price</th>
-                            <th>Profit</th>
-                            <th>Margin</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-        
-        <!-- Other pages (Importing, Ads) follow similar clean structure -->
-        <section id="importing" class="view-section">
-             <header><div class="header-title"><h1>Importing</h1></div><button class="btn-primary" onclick="app.openModal('importing')">+ Add</button></header>
-             <div class="table-container"><table id="importing-table"><tbody></tbody></table></div>
-        </section>
-        <section id="ads" class="view-section">
-             <header><div class="header-title"><h1>Ads Pages</h1></div><button class="btn-primary" onclick="app.openModal('ads')">+ Add</button></header>
-             <div class="table-container"><table id="ads-table"><tbody></tbody></table></div>
-        </section>
+                <div class="charts-section">
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
 
-    </main>
+                <div class="table-wrapper">
+                    <div class="table-header">
+                        <h3>أحدث المنتجات المضافة</h3>
+                        <button class="btn btn-primary" onclick="openModal('productModal')">إضافة منتج جديد</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="dashProductTable">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>السعر</th>
+                                    <th>الربح</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modal-overlay">
+            <!-- Products View -->
+            <section id="products" class="view-section">
+                <div class="table-wrapper">
+                    <div class="table-header">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" class="search-input" placeholder="بحث..." onkeyup="filterTable('productsTableBody', this.value)">
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('productModal')"><i class="ri-add-line"></i> إضافة منتج</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>صورة</th>
+                                    <th>اسم المنتج</th>
+                                    <th>SKU</th>
+                                    <th>تكلفة</th>
+                                    <th>سعر البيع</th>
+                                    <th>الربح</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Import View -->
+            <section id="import" class="view-section">
+                <div class="table-wrapper">
+                    <div class="table-header">
+                        <h3>طلبات الاستيراد</h3>
+                        <button class="btn btn-primary" onclick="openModal('importModal')"><i class="ri-add-line"></i> طلب جديد</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="importTable">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>المورد</th>
+                                    <th>الكمية</th>
+                                    <th>إجمالي التكلفة</th>
+                                    <th>تاريخ الوصول</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="importTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Winning View -->
+            <section id="winning" class="view-section">
+                <div class="table-wrapper">
+                    <div class="table-header">
+                        <h3>قائمة المنتجات الرابحة</h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="winningTable">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>الربح</th>
+                                    <th>هامش الربح</th>
+                                    <th>الحالة</th>
+                                    <th>التحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="winningTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ads View -->
+            <section id="ads" class="view-section">
+                <div class="table-wrapper">
+                    <div class="table-header">
+                        <h3>أداء الصفحات الإعلانية</h3>
+                        <button class="btn btn-primary" onclick="openModal('adModal')"><i class="ri-add-line"></i> إضافة صفحة</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="adsTable">
+                            <thead>
+                                <tr>
+                                    <th>اسم الصفحة</th>
+                                    <th>المنصة</th>
+                                    <th>المبيعات</th>
+                                    <th>الطلبات</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
         <div class="modal">
-            <h3 id="modal-title" style="margin-bottom:1.5rem;">Edit Item</h3>
-            <div id="modal-body"></div>
-            <div style="margin-top:1.5rem; text-align:right; display:flex; gap:10px; justify-content:flex-end;">
-                <button class="btn-primary" style="background:#e2e8f0; color:#333;" onclick="app.closeModal()">Cancel</button>
-                <button class="btn-primary" id="modal-save-btn">Save</button>
+            <div class="modal-header">
+                <h3>بيانات المنتج</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem" onclick="closeModal('productModal')"></i>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="p_id">
+                    <div class="form-group">
+                        <label class="form-label">اسم المنتج</label>
+                        <input type="text" id="p_name" class="form-control" required>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
+                        <div class="form-group">
+                            <label class="form-label">سعر الشراء ($)</label>
+                            <input type="number" id="p_cost" class="form-control" required step="0.01" oninput="calcProfit()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">سعر البيع ($)</label>
+                            <input type="number" id="p_price" class="form-control" required step="0.01" oninput="calcProfit()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">SKU</label>
+                        <input type="text" id="p_sku" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem">
+                            <span class="form-label">صورة</span>
+                            <span id="p_profit_preview" style="color:var(--success-color); font-weight:bold">الربح: $0.00</span>
+                        </div>
+                        <input type="file" class="form-control" id="p_image">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:transparent; color:var(--text-muted)" onclick="closeModal('productModal')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveProduct()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>طلب استيراد</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem" onclick="closeModal('importModal')"></i>
+            </div>
+            <div class="modal-body">
+                <form id="importForm">
+                    <div class="form-group">
+                        <label class="form-label">اسم المنتج</label>
+                        <input type="text" id="i_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">المورد</label>
+                        <input type="text" id="i_supplier" class="form-control" required>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
+                        <div class="form-group">
+                            <label class="form-label">الكمية</label>
+                            <input type="number" id="i_qty" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">التكلفة الإجمالية ($)</label>
+                            <input type="number" id="i_total" class="form-control" required step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">تاريخ الوصول المتوقع</label>
+                        <input type="date" id="i_date" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:transparent; color:var(--text-muted)" onclick="closeModal('importModal')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveImport()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Modal -->
+    <div class="modal-overlay" id="adModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>صفحة إعلانية جديدة</h3>
+                <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem" onclick="closeModal('adModal')"></i>
+            </div>
+            <div class="modal-body">
+                <form id="adForm">
+                    <div class="form-group">
+                        <label class="form-label">اسم الصفحة</label>
+                        <input type="text" id="a_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">المنصة</label>
+                        <select id="a_platform" class="form-control">
+                            <option value="Facebook">Facebook Ads</option>
+                            <option value="TikTok">TikTok Ads</option>
+                            <option value="Google">Google Ads</option>
+                        </select>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
+                        <div class="form-group">
+                            <label class="form-label">عدد الطلبات</label>
+                            <input type="number" id="a_orders" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">المبيعات ($)</label>
+                            <input type="number" id="a_sales" class="form-control" value="0">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:transparent; color:var(--text-muted)" onclick="closeModal('adModal')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveAd()">حفظ</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Same robust Logic, adapted for Light Theme
-        const store = {
+        // --- 1. State Management ---
+        const db = {
             products: [
-                { id: 1, name: "Wireless Earbuds", sku: "WE-01", purchase: 15.00, selling: 45.00, margin: 66.7, status: 'Active', image: null },
-                { id: 2, name: "Smart Watch", sku: "SW-02", purchase: 30.00, selling: 85.00, margin: 64.7, status: 'Active', image: null },
+                { id: 1, name: "ساعة ذكية رياضية Pro", sku: "SP-001", cost: 18.50, price: 49.99, status: "active", img: "https://picsum.photos/seed/p1/40/40" },
+                { id: 2, name: "سماعات لاسلكية NoiseCancel", sku: "AU-002", cost: 12.00, price: 35.00, status: "active", img: "https://picsum.photos/seed/p2/40/40" },
+                { id: 3, name: "حقيبة ظهر للسفر", sku: "BG-003", cost: 8.00, price: 24.50, status: "low_stock", img: "https://picsum.photos/seed/p3/40/40" }
+            ],
+            imports: [
+                { id: 1, name: "شواحن سريعة 20W", supplier: "Shenzhen Tech", qty: 500, total: 1000, date: "2023-12-01" }
             ],
             winning: [
-                { id: 1, name: "Sunset Lamp", purchase: 12.00, selling: 39.99, profit: 27.99, margin: 70.0, status: 'Valid', image: null }
+                { id: 1, name: "مصباح مكتب LED", img: "https://picsum.photos/seed/w1/40/40", cost: 5.50, price: 19.99, status: "valid" }
             ],
-            importing: [],
-            ads: []
+            ads: [
+                { id: 1, name: "Winter Sale", platform: "Facebook", orders: 120, sales: 3400 }
+            ]
         };
 
-        const utils = {
-            format: (n) => '$' + parseFloat(n).toFixed(2),
-            id: () => Math.random().toString(36).substr(2, 9),
-            toast: (m) => { alert(m); } // Simple alert for now to keep code clean
-        };
+        // --- 2. Utility Functions ---
+        const $ = (s) => document.querySelector(s);
+        const formatMoney = (n) => '$' + parseFloat(n).toFixed(2);
+        
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.style.borderInlineStartColor = type === 'error' ? 'var(--danger)' : 'var(--success)';
+            el.innerHTML = `
+                <i class="${type === 'error' ? 'ri-error-warning-line' : 'ri-checkbox-circle-line'}" 
+                   style="color: ${type === 'error' ? 'var(--danger)' : 'var(--success)'}; font-size: 1.2rem"></i>
+                <span>${msg}</span>
+            `;
+            container.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(-100%)';
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
 
-        const app = {
-            navigate: (id) => {
-                document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
-                document.getElementById(id).classList.add('active');
-                document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-                // Highlight logic roughly
-                app.render();
-            },
-            
-            render: () => {
-                // Render Dashboard Stats
-                const totalSales = store.products.reduce((a,b) => a + b.selling, 0);
-                const totalProfit = store.winning.reduce((a,b) => a + b.profit, 0);
-                document.getElementById('dash-sales').innerText = utils.format(totalSales);
-                document.getElementById('dash-profit').innerText = utils.format(totalProfit);
+        // --- 3. Rendering ---
+        function renderAll() {
+            renderStats();
+            renderProducts();
+            renderImports();
+            renderWinning();
+            renderAds();
+            initCharts();
+        }
 
-                // Render Tables
-                ['products', 'winning', 'importing', 'ads'].forEach(type => {
-                    const tbody = document.querySelector(`#${type}-table tbody`);
-                    if(!tbody) return;
-                    tbody.innerHTML = '';
-                    store[type].forEach(item => {
-                        const tr = document.createElement('tr');
-                        let html = '';
-                        
-                        if(type === 'products') {
-                            html = `
-                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
-                                <td>${item.name}</td>
-                                <td>${item.sku}</td>
-                                <td>${utils.format(item.purchase)}</td>
-                                <td>${utils.format(item.selling)}</td>
-                                <td>${item.margin}%</td>
-                                <td><span style="color:var(--success)">${item.status}</span></td>
-                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
-                            `;
-                        } else if (type === 'winning') {
-                            html = `
-                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
-                                <td>${item.name}</td>
-                                <td>${utils.format(item.purchase)}</td>
-                                <td>${utils.format(item.selling)}</td>
-                                <td>${utils.format(item.profit)}</td>
-                                <td>${item.margin}%</td>
-                                <td>${item.status}</td>
-                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
-                            `;
-                        } else {
-                             html = `<td>${item.name || 'Item'}</td><td colspan="6">Details...</td>`;
-                        }
-                        tr.innerHTML = html;
-                        tbody.appendChild(tr);
-                    });
-                });
-            },
+        function renderStats() {
+            let total = 0;
+            db.products.forEach(p => total += (p.price - p.cost));
+            $('#totalProfit').innerText = formatMoney(total);
+            $('#winningCount').innerText = db.winning.filter(w => w.status === 'valid').length;
+            $('#importCount').innerText = db.imports.length;
 
-            openModal: (type) => {
-                document.getElementById('modal-title').innerText = `Add ${type}`;
-                document.getElementById('modal-body').innerHTML = `
-                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name"></div>
-                    <div class="form-group"><label>Price</label><input type="number" class="form-control" id="in-price"></div>
+            // Mini table for dashboard
+            const tbody = $('#dashProductTable tbody');
+            tbody.innerHTML = '';
+            db.products.slice(0, 3).forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <img src="${p.img}" class="product-img">
+                                <span>${p.name}</span>
+                            </div>
+                        </td>
+                        <td>${formatMoney(p.price)}</td>
+                        <td style="color: var(--success-color); font-weight:600">${formatMoney(p.price - p.cost)}</td>
+                        <td><span class="status-badge ${p.status === 'active' ? 'status-active' : 'status-inactive'}">${p.status === 'active' ? 'نشط' : 'منخفض'}</span></td>
+                    </tr>
                 `;
-                document.getElementById('modal-save-btn').onclick = () => {
-                    store[type].push({ 
-                        id: utils.id(), 
-                        name: document.getElementById('in-name').value, 
-                        selling: parseFloat(document.getElementById('in-price').value) || 0,
-                        purchase: 0, margin: 0, status: 'Active', profit: 0 
-                    });
-                    app.closeModal();
-                    app.render();
-                };
-                document.getElementById('modal-overlay').classList.add('open');
-            },
+            });
+        }
 
-            closeModal: () => document.getElementById('modal-overlay').classList.remove('open'),
-            
-            openEdit: (type, id) => {
-                const item = store[type].find(i => i.id === id);
-                document.getElementById('modal-title').innerText = `Edit ${type}`;
-                document.getElementById('modal-body').innerHTML = `
-                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name" value="${item.name}"></div>
-                    <div class="form-group"><label>Selling Price</label><input type="number" class="form-control" id="in-price" value="${item.selling}"></div>
+        function renderProducts() {
+            const tbody = $('#productsTableBody');
+            tbody.innerHTML = '';
+            db.products.forEach(p => {
+                const profit = (p.price - p.cost).toFixed(2);
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${p.img}" class="product-img"></td>
+                        <td>${p.name}</td>
+                        <td>${p.sku}</td>
+                        <td>${formatMoney(p.cost)}</td>
+                        <td>${formatMoney(p.price)}</td>
+                        <td style="color: var(--success-color)">${formatMoney(profit)}</td>
+                        <td><span class="status-badge ${p.status === 'active' ? 'status-active' : 'status-inactive'}">${p.status === 'active' ? 'نشط' : 'منخفض'}</span></td>
+                        <td>
+                            <button class="btn btn-icon" onclick="editProduct(${p.id})"><i class="ri-pencil-line"></i></button>
+                            <button class="btn btn-icon btn-delete" onclick="deleteItem('products', ${p.id})"><i class="ri-delete-bin-line"></i></button>
+                        </td>
+                    </tr>
                 `;
-                document.getElementById('modal-save-btn').onclick = () => {
-                    item.name = document.getElementById('in-name').value;
-                    item.selling = parseFloat(document.getElementById('in-price').value) || 0;
-                    app.closeModal();
-                    app.render();
-                };
-                document.getElementById('modal-overlay').classList.add('open');
+            });
+        }
+
+        function renderImports() {
+            const tbody = $('#importTableBody');
+            tbody.innerHTML = '';
+            db.imports.forEach(i => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${i.name}</td>
+                        <td>${i.supplier}</td>
+                        <td>${i.qty}</td>
+                        <td>${formatMoney(i.total)}</td>
+                        <td>${i.date}</td>
+                        <td><button class="btn btn-icon btn-delete" onclick="deleteItem('imports', ${i.id})"><i class="ri-delete-bin-line"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderWinning() {
+            const tbody = $('#winningTableBody');
+            tbody.innerHTML = '';
+            db.winning.forEach(w => {
+                const profit = (w.price - w.cost).toFixed(2);
+                const margin = ((profit / w.price) * 100).toFixed(1);
+                const is_valid = w.status === 'valid';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <img src="${w.img}" class="product-img">
+                                <span>${w.name}</span>
+                            </div>
+                        </td>
+                        <td style="color: var(--success-color); font-weight:bold">${formatMoney(profit)}</td>
+                        <td>${margin}%</td>
+                        <td>
+                            <button class="btn ${is_valid ? 'btn-primary' : ''}" style="padding: 4px 12px; font-size: 0.8rem; border: 1px solid var(--border); background: ${is_valid ? 'var(--success)' : 'transparent'}; color: ${is_valid ? '#fff' : 'var(--text-muted)'}" onclick="toggleWinning(${w.id})">
+                                ${is_valid ? 'صالح' : 'غير صالح'}
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-icon btn-delete" onclick="deleteItem('winning', ${w.id})"><i class="ri-delete-bin-line"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderAds() {
+            const tbody = $('#adsTableBody');
+            tbody.innerHTML = '';
+            db.ads.forEach(a => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${a.name}</td>
+                        <td><span class="status-badge status-pending">${a.platform}</span></td>
+                        <td style="font-weight:bold">${formatMoney(a.sales)}</td>
+                        <td>${a.orders}</td>
+                        <td><button class="btn btn-icon btn-delete" onclick="deleteItem('ads', ${a.id})"><i class="ri-delete-bin-line"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- 4. Logic & Actions ---
+        
+        function switchView(viewId, navItem) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(navItem) navItem.classList.add('active');
+
+            // Update Title
+            const titles = { 'dashboard': 'نظرة عامة', 'products': 'إدارة المنتجات', 'import': 'الشحن والاستيراد', 'winning': 'المنتجات الرابحة', 'ads': 'الحملات الإعلانية' };
+            $('#pageTitle').innerText = titles[viewId];
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = $('#themeIcon');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.className = 'ri-moon-line';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'ri-sun-line';
             }
-        };
-
-        app.render();
-
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crowz Inventory Dashboard</title>
-    <style>
-        /* --- 1. CROWZ THEME VARIABLES (Light, Clean, Blue) --- */
-        :root {
-            --primary: #2563eb;       /* Crowz Blue */
-            --primary-light: #eff6ff;
-            --secondary: #64748b;     /* Text Muted */
-            --bg-body: #f8fafc;       /* Very Light Gray Background */
-            --bg-card: #ffffff;       /* White Cards */
-            --border: #e2e8f0;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --radius: 12px;
-            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            // Update charts colors
+            updateChartTheme();
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            direction: ltr;
+        // Modal Handling
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.querySelector('form')?.reset();
+            // Reset hidden IDs for edit mode
+            if(id === 'productModal') { $('#p_id').value = ''; $('#p_profit_preview').innerText = 'الربح: $0.00'; }
+            modal.classList.add('open');
         }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-        /* --- 2. SIDEBAR (White, Blue Accents) --- */
-        aside {
-            width: 250px;
-            background-color: var(--bg-card);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
-            z-index: 20;
+        // Product Actions
+        function calcProfit() {
+            const cost = parseFloat($('#p_cost').value) || 0;
+            const price = parseFloat($('#p_price').value) || 0;
+            $('#p_profit_preview').innerText = `الربح: ${formatMoney(price - cost)}`;
         }
+        function saveProduct() {
+            const id = $('#p_id').value;
+            const name = $('#p_name').value;
+            const cost = parseFloat($('#p_cost').value);
+            const price = parseFloat($('#p_price').value);
+            const sku = $('#p_sku').value;
+            // In a real app, handle image upload here. Using random seed for demo.
+            const img = `https://picsum.photos/seed/${Date.now()}/40/40`;
 
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 2.5rem;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        nav button {
-            background: transparent;
-            border: none;
-            width: 100%;
-            text-align: left;
-            padding: 12px 16px;
-            margin-bottom: 5px;
-            border-radius: var(--radius);
-            color: var(--text-gray);
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        nav button:hover { background-color: #f1f5f9; color: var(--primary); }
-        nav button.active { 
-            background-color: var(--primary-light); 
-            color: var(--primary); 
-            font-weight: 700;
-        }
-
-        /* --- 3. MAIN CONTENT AREA --- */
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
-            position: relative;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .header-title h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
-        .header-title span { font-size: 0.9rem; color: var(--text-gray); }
-        
-        .user-profile { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; }
-
-        /* --- 4. DASHBOARD LAYOUT (Crowz Style) --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Stats Cards (Top Row) */
-        .stat-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 3;
-            border: 1px solid var(--border);
-        }
-        .stat-card h3 { font-size: 0.85rem; color: var(--text-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
-        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
-        .stat-card .trend { font-size: 0.8rem; margin-top: 5px; }
-        .trend.up { color: var(--success); }
-
-        /* Activity Chart (Main Big Card) */
-        .chart-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 8;
-            border: 1px solid var(--border);
-        }
-        .card-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
-        .card-title { font-weight: 700; font-size: 1.1rem; }
-        
-        /* SVG Chart Placeholder */
-        .chart-placeholder {
-            width: 100%;
-            height: 200px;
-            position: relative;
-            background: linear-gradient(to bottom, #f8fafc, #fff);
-            border-radius: 8px;
-            border: 1px dashed var(--border);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding-bottom: 10px;
-        }
-        .bar { width: 8%; background: var(--primary); opacity: 0.2; border-radius: 4px 4px 0 0; transition: height 1s; }
-        .bar:hover { opacity: 1; }
-
-        /* Top Performers */
-        .performers-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 4;
-            border: 1px solid var(--border);
-        }
-        .performer-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .performer-info { display: flex; align-items: center; gap: 10px; }
-        .p-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; display: grid; place-items: center; font-size: 0.7rem; font-weight: bold; color: var(--text-gray); }
-        .progress-bar { width: 60px; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; }
-
-        /* Channels & Promo (Bottom Row) */
-        .channels-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            grid-column: span 8;
-            border: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        .channel-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .channel-item span { font-size: 0.9rem; font-weight: 600; }
-        .channel-item small { font-size: 0.8rem; }
-        .text-green { color: var(--success); }
-        .text-red { color: var(--danger); }
-
-        .promo-card {
-            background: linear-gradient(135deg, var(--primary), #1d4ed8);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            grid-column: span 4;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .promo-card h3 { margin-bottom: 10px; }
-        .btn-white { background: white; color: var(--primary); padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-block; width: fit-content; margin-top: 10px; border: none; cursor: pointer; }
-
-        /* --- 5. TABLE STYLING (For other pages) --- */
-        .table-container {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background-color: #f8fafc; font-weight: 600; color: var(--text-gray); font-size: 0.85rem; text-transform: uppercase; }
-        tr:last-child td { border-bottom: none; }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: var(--radius);
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
-        }
-        .btn-primary:hover { background-color: #1d4ed8; }
-
-        /* Modal & Utilities */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s;
-        }
-        .modal-overlay.open { opacity: 1; pointer-events: auto; }
-        .modal {
-            background: white; width: 500px; padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 5px; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
-
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        @media (max-width: 1024px) {
-            .dashboard-grid { display: flex; flex-direction: column; }
-            .stat-card { width: 100%; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- SIDEBAR -->
-    <aside>
-        <div class="brand">
-            <!-- Simple Logo Icon -->
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            Crowz
-        </div>
-        <nav>
-            <button class="active" onclick="app.navigate('dashboard')">Dashboard</button>
-            <button onclick="app.navigate('products')">Products</button>
-            <button onclick="app.navigate('importing')">Importing</button>
-            <button onclick="app.navigate('winning')">Winning</button>
-            <button onclick="app.navigate('ads')">Ads Pages</button>
-        </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main>
-        
-        <!-- DASHBOARD (Crowz Design) -->
-        <section id="dashboard" class="view-section active">
-            <header>
-                <div class="header-title">
-                    <h1>Dashboard</h1>
-                    <span>Welcome back, Robert</span>
-                </div>
-                <div class="user-profile">
-                    <div class="avatar"></div>
-                    <div style="font-size: 0.9rem; font-weight: 600;">Robert Grant</div>
-                </div>
-            </header>
-
-            <div class="dashboard-grid">
-                <!-- Stat Cards -->
-                <div class="stat-card">
-                    <h3>Total Sales</h3>
-                    <div class="value" id="dash-sales">$0</div>
-                    <div class="trend up">▲ 12% vs last month</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Followers</h3>
-                    <div class="value">219.3k</div>
-                    <div class="trend up">▲ 4.5% this week</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Profit</h3>
-                    <div class="value" id="dash-profit">$0</div>
-                    <div class="trend up">▲ $1,200 today</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Reposts</h3>
-                    <div class="value">1.5k</div>
-                    <div class="trend" style="color:var(--text-gray)">- Stable</div>
-                </div>
-
-                <!-- Activity Chart -->
-                <div class="chart-card">
-                    <div class="card-header">
-                        <div class="card-title">Activity</div>
-                        <select style="border:1px solid #ddd; padding:4px; border-radius:4px; font-size:0.8rem;"><option>This Week</option></select>
-                    </div>
-                    <!-- CSS Bar Chart Simulation -->
-                    <div class="chart-placeholder">
-                        <div class="bar" style="height: 40%;"></div>
-                        <div class="bar" style="height: 70%;"></div>
-                        <div class="bar" style="height: 50%;"></div>
-                        <div class="bar" style="height: 90%; background:var(--primary); opacity:1;"></div>
-                        <div class="bar" style="height: 60%;"></div>
-                        <div class="bar" style="height: 80%;"></div>
-                        <div class="bar" style="height: 45%;"></div>
-                    </div>
-                </div>
-
-                <!-- Top Performers -->
-                <div class="performers-card">
-                    <div class="card-header">
-                        <div class="card-title">Top Performers</div>
-                    </div>
-                    <div class="performer-item">
-                        <div class="performer-info"><div class="p-avatar">VA</div> <span>Valy Antonova</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 39%"></div></div>
-                        <span style="font-size:0.8rem; font-weight:bold;">39%</span>
-                    </div>
-                    <div class="performer-item">
-                        <div class="performer-info"><div class="p-avatar">NE</div> <span>Nenci Villy</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
-                        <span style="font-size:0.8rem; font-weight:bold;">25%</span>
-                    </div>
-                    <div class="performer-item">
-                        <div class="performer-info"><div class="p-avatar">MN</div> <span>Mark Noil</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: 18%"></div></div>
-                        <span style="font-size:0.8rem; font-weight:bold;">18%</span>
-                    </div>
-                </div>
-
-                <!-- Channels -->
-                <div class="channels-card">
-                    <div class="channel-item">
-                        <span>Dribbble</span>
-                        <small class="text-green">+2%</small>
-                    </div>
-                    <div class="channel-item">
-                        <span>Behance</span>
-                        <small class="text-red">-7%</small>
-                    </div>
-                    <div class="channel-item">
-                        <span>Instagram</span>
-                        <small class="text-green">+4%</small>
-                    </div>
-                    <div class="channel-item">
-                        <span>Pinterest</span>
-                        <small class="text-green">+2%</small>
-                    </div>
-                </div>
-
-                <!-- Upgrade Promo -->
-                <div class="promo-card">
-                    <h3>Upgrade Your Crowd</h3>
-                    <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px;">Get access to premium analytics.</p>
-                    <button class="btn-white">View Plans</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- PRODUCTS PAGE (Clean Design) -->
-        <section id="products" class="view-section">
-            <header>
-                <div class="header-title"><h1>Products Inventory</h1></div>
-                <button class="btn-primary" onclick="app.openModal('products')">+ Add Product</button>
-            </header>
-            <div class="table-container">
-                <table id="products-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>SKU</th>
-                            <th>Cost</th>
-                            <th>Selling</th>
-                            <th>Margin</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- WINNING PRODUCTS -->
-        <section id="winning" class="view-section">
-            <header>
-                <div class="header-title"><h1>Winning Products 🔥</h1></div>
-                <button class="btn-primary" onclick="app.openModal('winning')">+ Add Winner</button>
-            </header>
-            <div class="table-container">
-                <table id="winning-table">
-                    <thead>
-                        <tr>
-                            <th>Img</th>
-                            <th>Product Name</th>
-                            <th>Cost</th>
-                            <th>Sell Price</th>
-                            <th>Profit</th>
-                            <th>Margin</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-        
-        <!-- Other pages (Importing, Ads) follow similar clean structure -->
-        <section id="importing" class="view-section">
-             <header><div class="header-title"><h1>Importing</h1></div><button class="btn-primary" onclick="app.openModal('importing')">+ Add</button></header>
-             <div class="table-container"><table id="importing-table"><tbody></tbody></table></div>
-        </section>
-        <section id="ads" class="view-section">
-             <header><div class="header-title"><h1>Ads Pages</h1></div><button class="btn-primary" onclick="app.openModal('ads')">+ Add</button></header>
-             <div class="table-container"><table id="ads-table"><tbody></tbody></table></div>
-        </section>
-
-    </main>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal">
-            <h3 id="modal-title" style="margin-bottom:1.5rem;">Edit Item</h3>
-            <div id="modal-body"></div>
-            <div style="margin-top:1.5rem; text-align:right; display:flex; gap:10px; justify-content:flex-end;">
-                <button class="btn-primary" style="background:#e2e8f0; color:#333;" onclick="app.closeModal()">Cancel</button>
-                <button class="btn-primary" id="modal-save-btn">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Same robust Logic, adapted for Light Theme
-        const store = {
-            products: [
-                { id: 1, name: "Wireless Earbuds", sku: "WE-01", purchase: 15.00, selling: 45.00, margin: 66.7, status: 'Active', image: null },
-                { id: 2, name: "Smart Watch", sku: "SW-02", purchase: 30.00, selling: 85.00, margin: 64.7, status: 'Active', image: null },
-            ],
-            winning: [
-                { id: 1, name: "Sunset Lamp", purchase: 12.00, selling: 39.99, profit: 27.99, margin: 70.0, status: 'Valid', image: null }
-            ],
-            importing: [],
-            ads: []
-        };
-
-        const utils = {
-            format: (n) => '$' + parseFloat(n).toFixed(2),
-            id: () => Math.random().toString(36).substr(2, 9),
-            toast: (m) => { alert(m); } // Simple alert for now to keep code clean
-        };
-
-        const app = {
-            navigate: (id) => {
-                document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
-                document.getElementById(id).classList.add('active');
-                document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-                // Highlight logic roughly
-                app.render();
-            },
-            
-            render: () => {
-                // Render Dashboard Stats
-                const totalSales = store.products.reduce((a,b) => a + b.selling, 0);
-                const totalProfit = store.winning.reduce((a,b) => a + b.profit, 0);
-                document.getElementById('dash-sales').innerText = utils.format(totalSales);
-                document.getElementById('dash-profit').innerText = utils.format(totalProfit);
-
-                // Render Tables
-                ['products', 'winning', 'importing', 'ads'].forEach(type => {
-                    const tbody = document.querySelector(`#${type}-table tbody`);
-                    if(!tbody) return;
-                    tbody.innerHTML = '';
-                    store[type].forEach(item => {
-                        const tr = document.createElement('tr');
-                        let html = '';
-                        
-                        if(type === 'products') {
-                            html = `
-                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
-                                <td>${item.name}</td>
-                                <td>${item.sku}</td>
-                                <td>${utils.format(item.purchase)}</td>
-                                <td>${utils.format(item.selling)}</td>
-                                <td>${item.margin}%</td>
-                                <td><span style="color:var(--success)">${item.status}</span></td>
-                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
-                            `;
-                        } else if (type === 'winning') {
-                            html = `
-                                <td><div style="width:30px;height:30px;background:#eee;border-radius:4px;"></div></td>
-                                <td>${item.name}</td>
-                                <td>${utils.format(item.purchase)}</td>
-                                <td>${utils.format(item.selling)}</td>
-                                <td>${utils.format(item.profit)}</td>
-                                <td>${item.margin}%</td>
-                                <td>${item.status}</td>
-                                <td><button class="btn-primary" style="padding:4px 8px;font-size:0.8rem" onclick="app.openEdit('${type}', ${item.id})">Edit</button></td>
-                            `;
-                        } else {
-                             html = `<td>${item.name || 'Item'}</td><td colspan="6">Details...</td>`;
-                        }
-                        tr.innerHTML = html;
-                        tbody.appendChild(tr);
-                    });
-                });
-            },
-
-            openModal: (type) => {
-                document.getElementById('modal-title').innerText = `Add ${type}`;
-                document.getElementById('modal-body').innerHTML = `
-                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name"></div>
-                    <div class="form-group"><label>Price</label><input type="number" class="form-control" id="in-price"></div>
-                `;
-                document.getElementById('modal-save-btn').onclick = () => {
-                    store[type].push({ 
-                        id: utils.id(), 
-                        name: document.getElementById('in-name').value, 
-                        selling: parseFloat(document.getElementById('in-price').value) || 0,
-                        purchase: 0, margin: 0, status: 'Active', profit: 0 
-                    });
-                    app.closeModal();
-                    app.render();
-                };
-                document.getElementById('modal-overlay').classList.add('open');
-            },
-
-            closeModal: () => document.getElementById('modal-overlay').classList.remove('open'),
-            
-            openEdit: (type, id) => {
-                const item = store[type].find(i => i.id === id);
-                document.getElementById('modal-title').innerText = `Edit ${type}`;
-                document.getElementById('modal-body').innerHTML = `
-                    <div class="form-group"><label>Name</label><input class="form-control" id="in-name" value="${item.name}"></div>
-                    <div class="form-group"><label>Selling Price</label><input type="number" class="form-control" id="in-price" value="${item.selling}"></div>
-                `;
-                document.getElementById('modal-save-btn').onclick = () => {
-                    item.name = document.getElementById('in-name').value;
-                    item.selling = parseFloat(document.getElementById('in-price').value) || 0;
-                    app.closeModal();
-                    app.render();
-                };
-                document.getElementById('modal-overlay').classList.add('open');
+            if(id) {
+                // Edit logic
+                const idx = db.products.findIndex(p => p.id == id);
+                db.products[idx] = { ...db.products[idx], name, cost, price, sku };
+                showToast('تم تحديث المنتج');
+            } else {
+                // Add logic
+                const newId = db.products.length ? Math.max(...db.products.map(p=>p.id)) + 1 : 1;
+                db.products.push({ id: newId, name, cost, price, sku, status: 'active', img });
+                showToast('تمت إضافة المنتج');
             }
-        };
+            closeModal('productModal');
+            renderAll();
+        }
+        function editProduct(id) {
+            const p = db.products.find(x => x.id === id);
+            $('#p_id').val(p.id);
+            $('#p_name').val(p.name);
+            $('#p_cost').val(p.cost);
+            $('#p_price').val(p.price);
+            $('#p_sku').val(p.sku);
+            calcProfit();
+            openModal('productModal');
+        }
 
-        app.render();
+        // Import Actions
+        function saveImport() {
+            const name = $('#i_name').value;
+            const supplier = $('#i_supplier').value;
+            const qty = $('#i_qty').value;
+            const total = $('#i_total').value;
+            const date = $('#i_date').value;
+
+            const newId = db.imports.length + 1;
+            db.imports.push({ id: newId, name, supplier, qty, total, date });
+            closeModal('importModal');
+            renderAll();
+            showToast('تم إضافة طلب الاستيراد');
+        }
+
+        // Winning Actions
+        function toggleWinning(id) {
+            const idx = db.winning.findIndex(w => w.id === id);
+            db.winning[idx].status = db.winning[idx].status === 'valid' ? 'invalid' : 'valid';
+            renderAll();
+        }
+
+        // Ad Actions
+        function saveAd() {
+            const name = $('#a_name').value;
+            const platform = $('#a_platform').value;
+            const orders = $('#a_orders').value;
+            const sales = $('#a_sales').value;
+            
+            db.ads.push({ id: Date.now(), name, platform, orders, sales });
+            closeModal('adModal');
+            renderAll();
+            showToast('تم إضافة الصفحة الإعلانية');
+        }
+
+        // Generic Delete
+        function deleteItem(table, id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) {
+                db[table] = db[table].filter(item => item.id !== id);
+                renderAll();
+                showToast('تم الحذف بنجاح', 'error');
+            }
+        }
+
+        // Search Filter
+        function filterTable(tbodyId, query) {
+            const rows = document.querySelectorAll(`#${tbodyId} tr`);
+            query = query.toLowerCase();
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // --- 5. Charts (Chart.js) ---
+        let revenueChartInst = null;
+        let categoryChartInst = null;
+
+        function initCharts() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+            // Revenue Chart
+            const ctx1 = document.getElementById('revenueChart').getContext('2d');
+            if(revenueChartInst) revenueChartInst.destroy();
+            
+            revenueChartInst = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                    datasets: [{
+                        label: 'الأرباح الشهرية ($)',
+                        data: [1200, 1900, 3000, 2500, 4200, 5100],
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: textColor, font: {family: 'Tajawal'} } },
+                        title: { display: true, text: 'تحليل الأرباح (6 أشهر)', color: textColor, font: {family: 'Tajawal', size: 16} }
+                    },
+                    scales: {
+                        y: { grid: { color: gridColor }, ticks: { color: textColor } },
+                        x: { grid: { display: false }, ticks: { color: textColor } }
+                    }
+                }
+            });
+
+            // Category Chart
+            const ctx2 = document.getElementById('categoryChart').getContext('2d');
+            if(categoryChartInst) categoryChartInst.destroy();
+
+            categoryChartInst = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['إلكترونيات', 'أزياء', 'منزل', 'أخرى'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: ['#4F46E5', '#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor, font: {family: 'Tajawal'} } },
+                        title: { display: true, text: 'توزيع الفئات', color: textColor, font: {family: 'Tajawal', size: 16} }
+                    }
+                }
+            });
+        }
+
+        function updateChartTheme() {
+            initCharts();
+        }
+
+        // Initial Load
+        window.addEventListener('load', renderAll);
 
     </script>
 </body>
