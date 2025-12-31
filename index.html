@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكي التجارة الإلكترونية - لبنان</title>
+    <!-- خط تجوال لدعم العربية بشكل جميل -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --accent: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            gap: 1rem;
+            background: var(--surface);
+            padding: 0.5rem 1rem;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: inherit;
+            font-weight: 500;
+            color: var(--secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .nav-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Main Layout */
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards & Containers */
+        .card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .currency-input {
+            position: relative;
+        }
+        .currency-input::after {
+            content: attr(data-symbol);
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            font-size: 0.85rem;
+        }
+        .currency-input input {
+            padding-left: 35px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge.valid { background: #dcfce7; color: #166534; }
+        .badge.invalid { background: #fee2e2; color: #991b1b; }
+
+        /* Links */
+        .link-btn {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .link-btn:hover { text-decoration: underline; }
+
+        /* Summary Boxes */
+        .summary-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            margin-top: 0.5rem;
+        }
+        .summary-label {
+            font-size: 0.85rem;
+            color: var(--secondary);
+        }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Specific Styles for Simulator Range */
+        .range-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📊 Ecommerce Simulator Liban</h1>
+        <div style="font-size: 0.9rem; color: var(--secondary);">
+            Exchange Rate: <span id="exchange-rate-display">9.00</span> DH/$         </div>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="showSection('simulator')">المحاكاة (Simulateur)</button>
+        <button class="nav-btn" onclick="showSection('winning')">المنتجات الفائزة (Winning)</button>
+        <button class="nav-btn" onclick="showSection('myproduct')">منتجاتي (My Product)</button>
+        <button class="nav-btn" onclick="showSection('objectif')">الأهداف (Objectif)</button>
+    </nav>
+
+    <main>
+        <!-- SECTION 1: SIMULATEUR -->
+        <section id="simulator" class="active">
+            <div class="grid-2">
+                <!-- Cost Inputs -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">تكاليف المنتج (CHARGE)</span>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>سعر الشراء (DH)</label>
+                            <input type="number" id="buy-price" value="50" oninput="calculateSimulation()">
+                        </div>
+                        <div class="form-group">
+                            <label>مصاريف الاستيراد (DH)</label>
+                            <input type="number" id="import-fees" value="10" oninput="calculateSimulation()">
+                        </div>
+                        <div class="form-group">
+                            <label>التوصيل المحلي/الشحن (DH)</label>
+                            <input type="number" id="delivery-fees" value="80" oninput="calculateSimulation()">
+                        </div>
+                        <div class="form-group">
+                            <label>العمولات (Comissions) (DH)</label>
+                            <input type="number" id="commission-fees" value="0" oninput="calculateSimulation()">
+                        </div>
+                        <div class="form-group">
+                            <label>إعلانات (Ads) (DH)</label>
+                            <input type="number" id="ads-fees" value="50" oninput="calculateSimulation()">
+                        </div>
+                        <div class="form-group">
+                            <label>رسوم إعلانات تجريبية (DH)</label>
+                            <input type="number" id="test-ads-fees" value="0" oninput="calculateSimulation()">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; padding-top:1rem; border-top:1px dashed var(--border);">
+                        <div class="form-group">
+                            <label>سعر البيع المقترح (Prix en DH)</label>
+                            <input type="number" id="selling-price-dh" value="190" oninput="calculateSimulation()">
+                        </div>
+                        <div class="summary-box">
+                            <span class="summary-label">سعر البيع بالدولار (Est)</span>
+                            <span class="summary-value" id="selling-price-usd">$21.11</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping & Logistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">اللوجستيك (Shipping)</span>
+                    </div>
+                    <div class="grid-2">
+                        <!-- Air Freight -->
+                        <div style="background:#f0f9ff; padding:1rem; border-radius:6px;">
+                            <h4 style="margin-bottom:0.5rem; color:#0369a1;">✈️ Air Freight</h4>
+                            <div class="form-group currency-input" data-symbol="$">
+                                <label>السعر لكل كيلو ($/Kg)</label>
+                                <input type="number" id="air-price-kg" value="100" oninput="calculateSimulation()">
+                            </div>
+                            <div class="form-group currency-input" data-symbol="kg">
+                                <label>الوزن (Kg)</label>
+                                <input type="number" id="air-weight" value="100" oninput="calculateSimulation()">
+                            </div>
+                             <div class="form-group">
+                                <label>عدد القطع لكل كيلو</label>
+                                <input type="number" id="air-pcs-kg" value="10" oninput="calculateSimulation()">
+                            </div>
+                            <div class="summary-value" style="font-size:1.1rem; text-align:right;">Total: $<span id="air-total">1000</span></div>
+                        </div>
+
+                        <!-- Ocean Freight -->
+                        <div style="background:#f0fdf4; padding:1rem; border-radius:6px;">
+                            <h4 style="margin-bottom:0.5rem; color:#15803d;">🚢 Ocean Freight</h4>
+                            <div class="form-group currency-input" data-symbol="$">
+                                <label>السعر لكل قطعة ($/PCS)</label>
+                                <input type="number" id="ocean-price-pcs" value="3" oninput="calculateSimulation()">
+                            </div>
+                            <div class="form-group currency-input" data-symbol="pcs">
+                                <label>الكمية (Quantité)</label>
+                                <input type="number" id="ocean-qty" value="200" oninput="calculateSimulation()">
+                            </div>
+                             <div class="form-group currency-input" data-symbol="$">
+                                <label>مصاريف الاستيراد البحري</label>
+                                <input type="number" id="ocean-import" value="600" oninput="calculateSimulation()">
+                            </div>
+                            <div class="summary-value" style="font-size:1.1rem; text-align:right;">Total: $<span id="ocean-total">1200</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projection Scenarios -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">توقعات المبيعات والأرباح (Projections)</span>
+                    <span style="font-size:0.85rem; color:var(--secondary);">هذه القيم يتم تحديثها تلقائياً بناءً على المدخلات</span>
+                </div>
+                <div class="range-container">
+                    <label>محاكاة الكمية المباعة يومياً: <span id="daily-qty-display" style="font-weight:bold; color:var(--primary);">1</span> قطعة</label>
+                    <input type="range" id="daily-qty-range" min="1" max="50" value="1" step="1" style="width:100%; margin-top:0.5rem;" oninput="updateProjections()">
+                </div>
+                
+                <div class="grid-4" style="margin-top: 1.5rem; text-align: center;">
+                    <div class="summary-box" style="background:#fff7ed; border-color:#fed7aa;">
+                        <span class="summary-label">مبيعات يومية (DH)</span>
+                        <span class="summary-value" id="proj-revenue-day">190</span>
+                    </div>
+                    <div class="summary-box" style="background:#fff7ed; border-color:#fed7aa;">
+                        <span class="summary-label">مبيعات شهرية (DH)</span>
+                        <span class="summary-value" id="proj-revenue-month">3,800</span>
+                    </div>
+                    <div class="summary-box" style="background:#f0fdf4; border-color:#86efac;">
+                        <span class="summary-label">صافي الربح اليومي (DH)</span>
+                        <span class="summary-value" id="proj-profit-day">0</span>
+                    </div>
+                    <div class="summary-box" style="background:#f0fdf4; border-color:#86efac;">
+                        <span class="summary-label">صافي الربح الشهري (DH)</span>
+                        <span class="summary-value" id="proj-profit-month">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: WINNING PRODUCT -->
+        <section id="winning">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">قائمة المنتجات الفائزة (Winning Product)</span>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="search-winning" placeholder="بحث عن منتج..." onkeyup="filterWinning()" style="padding:0.4rem; border:1px solid var(--border); border-radius:4px;">
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="winning-table">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>صورة (Picture)</th>
+                                <th>اسم المنتج (Product Name)</th>
+                                <th>سعر الشراء</th>
+                                <th>سعر البيع</th>
+                                <th>الحالة (Status)</th>
+                                <th>روابط (Links)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: MY PRODUCT -->
+        <section id="myproduct">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">مخزون منتجاتي الحالي</span>
+                    </div>
+                    <div class="table-container">
+                        <table id="myproduct-table">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>سعر البيع</th>
+                                    <th>سعر الشراء</th>
+                                    <th>المخزون</th>
+                                    <th>الربح (Unit)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                            <tfoot>
+                                <tr style="background:#f1f5f9; font-weight:bold;">
+                                    <td colspan="3">الإجمالي</td>
+                                    <td id="total-stock">267</td>
+                                    <td id="total-profit-dh">0 DH</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">ملخص الأداء المالي</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                        <div class="summary-box">
+                            <span class="summary-label">إجمالي القيمة المباعة (Total)</span>
+                            <span class="summary-value">3,196.7 DH</span>
+                        </div>
+                        <div class="summary-box" style="background:#f0fdf4; border-color:#86efac;">
+                            <span class="summary-label">صافي الربح الكلي (Total Profits)</span>
+                            <span class="summary-value">485 $</span>
+                        </div>
+                        <div style="font-size:0.9rem; color:var(--secondary); margin-top:0.5rem;">
+                            * البيانات مستندة على ملف My Product في الإكسل.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: OBJECTIF -->
+        <section id="objectif">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">خطة الاستيراد (Import Plan) - 2026</span>
+                    <span class="badge valid">مستهدف: 2000 قطعة</span>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <h3 style="margin-bottom:1rem;">تفاصيل الشحنة</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>المنتج</th>
+                                        <th>الكمية</th>
+                                        <th>التكلفة ($)</th>
+                                        <th>الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="objectif-table">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                                <tfoot>
+                                    <tr style="font-weight:bold; background:#f8fafc;">
+                                        <td>الإجمالي</td>
+                                        <td>1,650</td>
+                                        <td>$11,004</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="summary-box" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+                            <span class="summary-label">إجمالي الاستثمار المطلوب</span>
+                            <span class="summary-value">$11,004</span>
+                            <p style="margin-top:1rem; color:var(--secondary); font-size:0.9rem;">
+                                تشمل هذه الخطة استيراد 7 منتجات رئيسية بناءً على تحليل السوق في الـ Winning Product.
+                            </p>
+                            <button onclick="showToast('تم تحديث الخطة بنجاح!')" style="margin-top:2rem; background:var(--primary); color:white; border:none; padding:0.8rem; border-radius:6px; cursor:pointer; width:100%;">اعتماد الخطة</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast">تم الحفظ بنجاح!</div>
+
+    <script>
+        // Data from Excel
+        const winningProducts = [
+            { id: 1, name: "USB Plug Kitchen Electric Double Sided Knife Sharpener", buy: 9, sell: 30, status: "", link: "https://www.alibaba.com/product-detail/Wholesale-JJ-1-USB-Plug-Kitchen_1601173490122.html" },
+            { id: 2, name: "Portable HD 2K Infrared Night Vision Body Camera", buy: 14, sell: 35, status: "", link: "https://www.alibaba.com/product-detail/Portable-HD-2K-Infrared-Night-Vision_1601567931753.html" },
+            { id: 3, name: "HomeLead Smart GPS Tracker Key Finder Locator", buy: 9, sell: 30, status: "", link: "https://www.alibaba.com/product-detail/HomeLead-Smart-GPS-Tracker-Key-Finder_1600605768003.html" },
+            { id: 4, name: "Protective Compression Knit Warmer Arthritic Knee Sleeve", buy: 3, sell: 24, status: "", link: "https://www.alibaba.com/product-detail/Protective-Compression-Knit-Warmer-Arthritic-Stretchy_1600412641438.html" },
+            { id: 5, name: "Smart Glasses Polarized Sunglasses with Bluetooth", buy: 7.5, sell: 28, status: "", link: "https://www.alibaba.com/product-detail/Smart-Glasses-Polarized-Sunglasses-with-Bluetooth_1601218777133.html" },
+            { id: 6, name: "Console Blanche de jeu rétro 20 000 jeux", buy: 15, sell: 37, status: "Valid", link: "https://www.alibaba.com/product-detail/Wholesale-M15-Retro-Classic-Game-Console_1601603689729.html" },
+            { id: 7, name: "2025 New Portable Sleep Aid and Anxiety Relief Device", buy: 5.5, sell: 27, status: "Invalid", link: "https://www.alibaba.com/product-detail/2025-New-Portable-Sleep-Aid-and_1601513075914.html" },
+            { id: 8, name: "Anti-blue light glasses", buy: 2.5, sell: 23, status: "Valid", link: "https://www.alibaba.com/product-detail/Custom-Women-Blue-Light-Glasses-Blue_1601607639527.html" },
+            { id: 9, name: "Automatic Choking Rescue Device", buy: 55, sell: 80, status: "", link: "https://www.alibaba.com/product-detail/Automatic-Choking-Rescue-Device-for-Kids_1601275295860.html" },
+            { id: 10, name: "Anti-Choking Device", buy: 7, sell: 28, status: "Invalid", link: "https://www.alibaba.com/product-detail/Top-Quality-Anti-Choking-Device-Easy_1601370343985.html" },
+            { id: 11, name: "Energy Saving Device", buy: 2.2, sell: 25, status: "Invalid", link: "https://www.alibaba.com/product-detail/1-2-4-6-Pack-Energy_1601227703413.html" },
+            { id: 12, name: "Multifunctional Beauty Face Lifting Device", buy: 9.5, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/Mini-Electric-V-shape-Home-Use_1601273829195.html" },
+            { id: 13, name: "Private Label Custom Professional Pure Vegan Hair Dye", buy: 2.5, sell: 28, status: "", link: "https://www.alibaba.com/product-detail/Private-Label-Custom-Professional-Pure-Vegan_1601331645984.html" },
+            { id: 14, name: "Easy inflatable neck pain relief device", buy: 3, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/FSPG-Cervical-Neck-Traction-Device-for_1601171783152.html" },
+            { id: 15, name: "Electric pepper and salt grinder", buy: 10, sell: 35, status: "", link: "https://www.alibaba.com/product-detail/2-Pcs-Battery-Operated-Electric-Spice_1601220563178.html" },
+            { id: 16, name: "UNIEAN F03-C Finder Mini Anti Alarme Locator", buy: 0, sell: 0, status: "Valid", link: "https://www.alibaba.com/product-detail/UNIEAN-F03-C-Finder-Mini-Anti_1601455419050.html" },
+            { id: 17, name: "Kids Cartoon U Shaped Sonic Automatic Electric Toothbrush", buy: 0, sell: 0, status: "Invalid", link: "https://www.alibaba.com/product-detail/Kids-Cartoon-U-Shaped-Sonic-Automatic_1601569256458.html" },
+            { id: 18, name: "Professional Manufacturer Punch Free Invisible Cabinet Lock", buy: 6.5, sell: 29, status: "Invalid", link: "https://www.alibaba.com/product-detail/Professional-Manufacturer-Punch-Free-Invisible-Cabinet_1601582254165.html" },
+            { id: 19, name: "Super ultrasonic dog chaser", buy: 3.5, sell: 30, status: "Valid", link: "https://www.alibaba.com/product-detail/Ultra-Sonido-Para-Repeler-Perros-Anti_1600593295406.html" },
+            { id: 20, name: "Custom Ultra Thin CNC Slide Pop Minimalist Aluminum RFID", buy: 6, sell: 30, status: "", link: "https://www.alibaba.com/product-detail/Custom-Ultra-Thin-CNC-Slide-Pop_1601362660119.html" },
+            { id: 21, name: "Portable 300Lumen Rechargeable EDC Keychain Torch LED", buy: 0, sell: 0, status: "", link: "https://www.alibaba.com/product-detail/Portable-300Lumen-Rechargeable-EDC-Keychain-Torch_1601539324986.html" },
+            { id: 22, name: "Relax Circuit™ Shiatsu Smart Neck Massager", buy: 0, sell: 0, status: "", link: "https://www.alibaba.com/product-detail/Master-Hand-Ultra-Quiet-New-Generation_1601608529552.html" },
+            { id: 23, name: "Dash Cam HD 1080P Car DVR Camera", buy: 13, sell: 40, status: "Valid", link: "https://www.alibaba.com/product-detail/New-3-16-Dash-Cam-1080P_1601628123334.html" },
+            { id: 24, name: "U Shaped Type Toothbrush 360 Degrees Ultrasonic", buy: 0, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/3-0-Version-4-Modes-Whitening_1601580342079.html" },
+            { id: 25, name: "Multifunctional storage bag", buy: 6, sell: 30, status: "Invalid", link: "https://www.alibaba.com/product-detail/Custom-Logo-PVC-Cable-Management-Accessory_1601193138689.html" },
+            { id: 26, name: "C801 Bone Conduction BT Vibration Stereo Audio", buy: 5, sell: 27, status: "Valid", link: "https://www.alibaba.com/product-detail/C801-Bone-Conduction-BT-Vibration-Stereo_1601408801623.html" },
+            { id: 27, name: "Cheap Price Table Tennis Sets 2 Rackets with 4 Balls", buy: 0, sell: 5, status: "Invalid", link: "https://www.alibaba.com/product-detail/Cheap-Price-Table-Tennis-Sets-2_1600263742333.html" },
+            { id: 28, name: "Adjustable Tint Sunglasses", buy: 6, sell: 30, status: "Valid", link: "https://www.alibaba.com/product-detail/Wholesale-Polarized-UV400-Sunglasses-Men-s_1601613842385.html" },
+            { id: 29, name: "360° Multi-Cereal Dispenser", buy: 8, sell: 33, status: "Invalid", link: "https://www.alibaba.com/product-detail/L-Round-Household-Airtight-Grain-Dispenser_1601298703279.html" },
+            { id: 30, name: "Mini Camera Wifi", buy: 4, sell: 28, status: "", link: "https://www.alibaba.com/product-detail/Wide-Angle-HD-X5-Factory-Price_1601648942255.html" }
+        ];
+
+        const myProducts = [
+            { name: "خيمة شاطئية وحمام سباحة للأطفال", sell: 28, buy: 11, stock: 100, profit: 2.5 },
+            { name: "محول شاشة السيارة إلى كار بلاي", sell: 28, buy: 9.5, stock: 47, profit: 5 },
+            { name: "مجموعة مفكات براغي صغيرة 46 في 1", sell: 25, buy: 9.71, stock: 120, profit: 0 }
+        ];
+
+        const objectifProducts = [
+            { name: "جهاز طارد الكلاب", qty: 200, cost: 600, status: "Valid" },
+            { name: "نظارات شمسية قابلة لتعديل اللون", qty: 250, cost: 1275, status: "" },
+            { name: "نظارات مضادة للضوء الأزرق", qty: 350, cost: 770, status: "" },
+            { name: "كاميرا السيارة ب 4 كاميرات", qty: 200, cost: 3110, status: "" },
+            { name: "مكبر صوت لاسلكي يحول أي شيء إلى مكبر صوت", qty: 200, cost: 1112, status: "" },
+            { name: "جهاز ألعاب فيديو مع 20000 لعبة", qty: 250, cost: 3037, status: "" },
+            { name: "جهاز تتبع الاغراض GPS", qty: 200, cost: 1100, status: "Valid" }
+        ];
+
+        // --- Core Functions ---
+
+        function init() {
+            calculateSimulation();
+            renderWinningTable(winningProducts);
+            renderMyProductTable();
+            renderObjectifTable();
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(id).classList.add('active');
+            document.querySelector(`button[onclick="showSection('${id}')"]`).classList.add('active');
+        }
+
+        function getVal(id) {
+            return parseFloat(document.getElementById(id).value) || 0;
+        }
+
+        function setHtml(id, val) {
+            document.getElementById(id).innerText = val;
+        }
+
+        // --- Simulator Logic ---
+        function calculateSimulation() {
+            // Inputs
+            const buyPrice = getVal('buy-price');
+            const importFees = getVal('import-fees');
+            const deliveryFees = getVal('delivery-fees');
+            const commissionFees = getVal('commission-fees');
+            const adsFees = getVal('ads-fees');
+            const testAdsFees = getVal('test-ads-fees');
+            const sellingPriceDh = getVal('selling-price-dh');
+
+            const exchangeRate = 9.0; // Fixed based on Excel logic ~21.11 * 9 = 190
+
+            // Calculate Total Cost per Unit (DH)
+            // Note: In Excel logic, some costs might be bulk, but we distribute for simulation logic here
+            // Or we keep them as fixed overhead. Let's assume per unit calc based on standard ecom logic
+            // The Excel structure implies "Bénéfice" column was 0 or formula based. 
+            // Let's implement: (Selling - (Buy + Import + Delivery + Comm + Ads + TestAds))
+            
+            const totalCostPerUnit = buyPrice + importFees + deliveryFees + commissionFees + adsFees + testAdsFees;
+            const profitPerUnit = sellingPriceDh - totalCostPerUnit;
+
+            // Update Selling Price in USD
+            const sellingPriceUsd = (sellingPriceDh / exchangeRate).toFixed(2);
+            setHtml('selling-price-usd', `$${sellingPriceUsd}`);
+
+            // Shipping Calculations
+            // Air
+            const airPriceKg = getVal('air-price-kg');
+            const airWeight = getVal('air-weight');
+            const airTotal = airPriceKg * airWeight;
+            setHtml('air-total', airTotal.toLocaleString());
+
+            // Ocean
+            const oceanPricePcs = getVal('ocean-price-pcs');
+            const oceanQty = getVal('ocean-qty');
+            const oceanImport = getVal('ocean-import');
+            const oceanTotal = (oceanPricePcs * oceanQty) + oceanImport;
+            setHtml('ocean-total', oceanTotal.toLocaleString());
+
+            // Store unit profit for projections
+            window.currentUnitProfit = profitPerUnit;
+            window.currentRevenuePerUnit = sellingPriceDh;
+            
+            updateProjections();
+        }
+
+        function updateProjections() {
+            const dailyQty = parseInt(document.getElementById('daily-qty-range').value);
+            setHtml('daily-qty-display', dailyQty);
+
+            const daysPerMonth = 20; // Based on Excel assumption "Quantité Produit/mois" col 4 usually ~20x daily
+            
+            // Revenue
+            const dailyRev = dailyQty * window.currentRevenuePerUnit;
+            const monthlyRev = dailyRev * daysPerMonth;
+
+            // Profit
+            const dailyProfit = dailyQty * window.currentUnitProfit;
+            const monthlyProfit = dailyProfit * daysPerMonth;
+
+            setHtml('proj-revenue-day', dailyRev.toLocaleString());
+            setHtml('proj-revenue-month', monthlyRev.toLocaleString());
+            setHtml('proj-profit-day', dailyProfit.toLocaleString());
+            setHtml('proj-profit-month', monthlyProfit.toLocaleString());
+        }
+
+        // --- Winning Product Logic ---
+        function renderWinningTable(data) {
+            const tbody = document.querySelector('#winning-table tbody');
+            tbody.innerHTML = '';
+            
+            data.forEach(p => {
+                const tr = document.createElement('tr');
+                const statusHtml = p.status ? 
+                    `<span class="badge ${p.status.toLowerCase()}">${p.status}</span>` : 
+                    '<span style="color:#ccc">-</span>';
+                
+                tr.innerHTML = `
+                    <td>${p.id}</td>
+                    <td><div style="width:40px; height:40px; background:#eee; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#999;">📷</div></td>
+                    <td style="max-width:300px;">${p.name}</td>
+                    <td>${p.buy > 0 ? '$'+p.buy : '-'}</td>
+                    <td>${p.sell > 0 ? '$'+p.sell : '-'}</td>
+                    <td>${statusHtml}</td>
+                    <td>
+                        ${p.link ? `<a href="${p.link}" target="_blank" class="link-btn">عرض Alibaba ↗</a>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterWinning() {
+            const term = document.getElementById('search-winning').value.toLowerCase();
+            const filtered = winningProducts.filter(p => p.name.toLowerCase().includes(term));
+            renderWinningTable(filtered);
+        }
+
+        // --- My Product Logic ---
+        function renderMyProductTable() {
+            const tbody = document.querySelector('#myproduct-table tbody');
+            let totalStock = 0;
+            let totalProfit = 0;
+
+            myProducts.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.name}</td>
+                    <td>${p.sell} DH</td>
+                    <td>${p.buy} DH</td>
+                    <td>${p.stock}</td>
+                    <td style="color:${p.profit > 0 ? 'var(--success)' : 'var(--danger)'}">${p.profit} DH</td>
+                `;
+                tbody.appendChild(tr);
+                totalStock += p.stock;
+                totalProfit += (p.profit * p.stock); // Assuming profit in table is unit profit * stock? No, table says "Profits" column 5. Row 1: 2.5, Total: 250. Stock 100. 2.5*100 = 250. Correct.
+            });
+
+            setHtml('total-stock', totalStock);
+            setHtml('total-profit-dh', totalProfit.toLocaleString() + ' DH');
+        }
+
+        // --- Objectif Logic ---
+        function renderObjectifTable() {
+            const tbody = document.querySelector('#objectif-table tbody');
+            objectifProducts.forEach(p => {
+                const tr = document.createElement('tr');
+                const statusHtml = p.status ? 
+                    `<span class="badge ${p.status.toLowerCase()}">${p.status}</span>` : 
+                    '<span style="color:#ccc">-</span>';
+                
+                tr.innerHTML = `
+                    <td>${p.name}</td>
+                    <td>${p.qty}</td>
+                    <td>$${p.cost.toLocaleString()}</td>
+                    <td>${statusHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // Run on load
+        window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
