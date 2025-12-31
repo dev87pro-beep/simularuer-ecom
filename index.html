@@ -352,6 +352,7 @@
         .btn-edit { background: #e0e7ff; color: var(--primary-color); }
         .btn-delete { background: #fee2e2; color: var(--danger-color); }
         .btn-check { background: #d1fae5; color: var(--success-color); }
+        .btn-preview { background: #f3f4f6; color: var(--dark-bg); } /* New style for preview */
 
         /* --- Modal --- */
         .modal {
@@ -594,10 +595,6 @@
                         <label>هامش الربح المطلوب (MAD)</label>
                         <input type="number" id="calc-margin" placeholder="0.00" oninput="calculateProfit()">
                     </div>
-                    <div class="input-group">
-                        <label>العمولة الثابتة</label>
-                        <input type="text" value="9 MAD" disabled style="background: #f3f4f6;">
-                    </div>
                 </div>
                 
                 <div class="result-box">
@@ -666,7 +663,7 @@
                 <button class="btn btn-primary" onclick="openModal('pages')"><i class="fas fa-plus"></i> إضافة صفحة</button>
             </div>
             <div id="pages-list" class="card-grid">
-                <!-- Pages rendered by JS -->
+                <!-- Pages rendered by HTML -->
             </div>
         </section>
 
@@ -697,7 +694,7 @@
             pages: JSON.parse(localStorage.getItem('pages')) || []
         };
 
-        const USD_RATE = 10.5; // Simple exchange rate
+        const USD_RATE = 9; // تم التعديل: 1 دولار = 9 دراهم
 
         // --- Navigation Logic ---
         function showSection(sectionId, element) {
@@ -745,7 +742,7 @@
             document.getElementById('stat-total-products').innerText = totalProducts;
             document.getElementById('stat-winning-products').innerText = db.winning.length;
 
-            // Capitals (Calculated as Price * Quantity for inventory, or just Price for others as per "Investment")
+            // Capitals
             let totalCapital = 0;
             let totalProfit = 0;
 
@@ -753,7 +750,7 @@
             db.importing.forEach(p => totalCapital += (p.price * p.quantity));
             db.winning.forEach(p => totalCapital += (p.buyPrice * p.quantity)); // Investment cost
             
-            // Expected Profit (Sum of winning products margins * quantity)
+            // Expected Profit
             db.winning.forEach(p => totalProfit += (p.margin * p.quantity));
 
             document.getElementById('stat-capital').innerHTML = `${totalCapital.toLocaleString()} <span>MAD</span>`;
@@ -776,15 +773,15 @@
             const delivery = parseFloat(document.getElementById('calc-delivery').value) || 0;
             const ads = parseFloat(document.getElementById('calc-ads').value) || 0;
             const margin = parseFloat(document.getElementById('calc-margin').value) || 0;
-            const fixedCommission = 9;
 
-            const totalCost = buy + delivery + ads + fixedCommission;
-            const salePrice = totalCost + margin; // Net profit is the margin input by user
+            const totalCost = buy + delivery + ads;
+            const salePrice = buy + delivery + ads + margin;
+            const netProfit = margin;
             const usdPrice = salePrice / USD_RATE;
 
             document.getElementById('res-cost').innerHTML = `${totalCost.toFixed(2)} <span>MAD</span>`;
             document.getElementById('res-sale').innerHTML = `${salePrice.toFixed(2)} <span>MAD</span>`;
-            document.getElementById('res-net').innerHTML = `${margin.toFixed(2)} <span>MAD</span>`;
+            document.getElementById('res-net').innerHTML = `${netProfit.toFixed(2)} <span>MAD</span>`;
             document.getElementById('res-usd').innerText = `$${usdPrice.toFixed(2)}`;
         }
 
@@ -878,9 +875,9 @@
 
         function createCardHTML(item, type) {
             const isInv = type === 'inventory';
-            const statusClass = isInv ? (item.status === 'available' ? 'badge-success' : 'badge-danger') : 'badge-warning';
-            const statusText = isInv ? (item.status === 'available' ? 'متوفر' : 'نفذت') : 'قيد الاستيراد';
-
+            // تم تعديل الجزء أدناه لإزالة شارة الحالة في المخزون
+            const statusBadge = !isInv ? '<span class="badge badge-warning">قيد الاستيراد</span>' : '';
+            
             return `
                 <div class="product-card">
                     <img src="${item.image || 'https://via.placeholder.com/300x200?text=No+Image'}" class="product-img">
@@ -892,15 +889,50 @@
                         </div>
                         <div class="product-meta">
                             <span>الاستثمار: ${(item.price * item.quantity).toFixed(1)}</span>
-                            <span class="badge ${statusClass}">${statusText}</span>
+                            ${statusBadge}
                         </div>
                     </div>
                     <div class="card-actions">
+                        <!-- زر المعاينة الجديد للمخزون فقط -->
+                        ${isInv ? `<button class="btn-icon btn-preview" onclick="showPreview('inventory', ${item.id})"><i class="fas fa-eye"></i></button>` : ''}
                         <button class="btn-icon btn-edit" onclick="openModal('${type}', ${item.id})"><i class="fas fa-edit"></i></button>
                         <button class="btn-icon btn-delete" onclick="deleteItem('${type}', ${item.id})"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `;
+        }
+
+        // --- Preview Modal Logic ---
+        function showPreview(type, id) {
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modal = document.getElementById('generic-modal');
+
+            let item;
+            if(type === 'inventory') item = db.inventory.find(i => i.id === id);
+            if(type === 'importing') item = db.importing.find(i => i.id === id);
+            if(type === 'winning') item = db.winning.find(i => i.id === id);
+
+            if(item) {
+                modalTitle.innerText = 'معاينة المنتج';
+                modalBody.innerHTML = `
+                    <div style="text-align:center;">
+                        <img src="${item.image || 'https://via.placeholder.com/400x300?text=No+Image'}" style="width:100%; border-radius:10px; max-height:300px; object-fit:contain; background:#f9fafb; margin-bottom:20px;">
+                        <h2 style="margin-bottom:10px; color:var(--dark-bg);">${item.name}</h2>
+                        
+                        <div style="background:#f3f4f6; padding:15px; border-radius:8px; text-align:right;">
+                            ${item.quantity !== undefined ? `<p style="margin-bottom:5px;"><strong>الكمية:</strong> ${item.quantity}</p>` : ''}
+                            ${item.price !== undefined ? `<p style="margin-bottom:5px;"><strong>ثمن الاستثمار:</strong> ${item.price} MAD</p>` : ''}
+                            ${item.buyPrice !== undefined ? `<p style="margin-bottom:5px;"><strong>سعر الشراء:</strong> ${item.buyPrice} MAD</p>` : ''}
+                            ${item.salePrice !== undefined ? `<p style="margin-bottom:5px;"><strong>سعر البيع:</strong> ${item.salePrice} MAD</p>` : ''}
+                            ${item.margin !== undefined ? `<p style="margin-bottom:5px;"><strong>هامش الربح:</strong> ${item.margin} MAD</p>` : ''}
+                            ${item.status ? `<p style="margin-bottom:5px;"><strong>الحالة:</strong> ${item.status === 'valid' ? 'ناجح' : (item.status === 'available' ? 'متوفر' : 'غير متوفر')}</p>` : ''}
+                            ${item.notes ? `<p style="margin-bottom:0; color:var(--text-gray); font-size:0.9rem;"><strong>ملاحظات:</strong> ${item.notes}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+                modal.classList.add('open');
+            }
         }
 
         // --- Modal & Form Logic ---
@@ -949,18 +981,11 @@
                         <label>ثمن الاستثمار/الوحدة (MAD)</label>
                         <input type="number" id="inp-price" value="${data.price || 0}">
                     </div>
-                    ${isInv ? `
-                    <div class="input-group">
-                        <label>الحالة</label>
-                        <select id="inp-status">
-                            <option value="available" ${data.status === 'available' ? 'selected' : ''}>متوفر</option>
-                            <option value="unavailable" ${data.status === 'unavailable' ? 'selected' : ''}>غير متوفر</option>
-                        </select>
-                    </div>` : `
+                    ${!isInv ? `
                     <div class="input-group">
                         <label>ملاحظات</label>
                         <textarea id="inp-notes" rows="3">${data.notes || ''}</textarea>
-                    </div>`}
+                    </div>` : ''}
                     
                     <button class="btn btn-primary" onclick="saveProduct()">حفظ</button>
                 `;
@@ -1065,7 +1090,8 @@
                 quantity: qty,
                 price,
                 image: tempImage,
-                status: currentModalType === 'inventory' ? document.getElementById('inp-status').value : 'importing',
+                // تمت إزالة status للمخزون، وسيتم تعيين قيمة افتراضية
+                status: currentModalType === 'inventory' ? 'available' : 'importing',
                 notes: currentModalType === 'importing' ? document.getElementById('inp-notes').value : ''
             };
 
