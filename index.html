@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة إدارة متقدمة | Production Version</title>
+    <title>لوحة إدارة متكاملة | Full Stack</title>
     <!-- مكتبة الأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- خط عربي (Cairo) -->
@@ -25,10 +25,10 @@
             /* ألوان الأيقونات والوظائف (Semantic) */
             --color-dashboard: #3b82f6;   /* أزرق */
             --color-inventory: #d97706;   /* بني */
-            --color-shipping: #0ea5e9;    /* أزرق محيطي */
-            --color-winning: #f59e0b;     /* برتقالي */
-            --color-pages: #8b5cf6;        /* بنفسجي */
-            --color-calc: #10b981;          /* أخضر */
+            --color-shipping: #0ea5e9;  /* أزرق محيطي */
+            --color-winning: #f59e0b;   /* برتقالي */
+            --color-pages: #8b5cf6;     /* بنفسجي */
+            --color-calc: #10b981;       /* أخضر */
             --color-success: #10b981;       /* أخضر للإضافة */
             --color-edit: #64748b;          /* رمادي للتعديل */
             --color-delete: #ef4444;       /* أحمر للحذف */
@@ -51,7 +51,51 @@
             color: var(--text-main);
             display: flex;
             min-height: 100vh;
+            transition: opacity 0.5s ease;
         }
+
+        /* --- Loading & Auth Overlays --- */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+        .spinner { width: 50px; height: 50px; border:5px solid var(--border); border-top:5px solid var(--color-dashboard); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #auth-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-sidebar);
+            z-index: 10000;
+            display: none; /* Hidden by default, managed by JS */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            background: var(--bg-white);
+            padding: 50px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .auth-card h2 { color: var(--text-main); margin-bottom: 30px; font-size: 1.8rem; font-weight: 800; }
+        .auth-input { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; font-size: 1.1rem; background: #f9fafb; font-family: inherit; }
+        .auth-input:focus { border-color: var(--color-dashboard); background: #fff; }
+        .auth-btn { width: 100%; padding: 15px; background: var(--color-dashboard); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
+        .auth-btn:hover { opacity: 0.9; }
+        .auth-btn.secondary { background: transparent; color: var(--color-dashboard); border: 2px solid var(--color-dashboard); }
+        .auth-btn.secondary:hover { background: rgba(59, 130, 246, 0.1); }
+        .auth-msg { margin-bottom: 20px; color: var(--color-delete); font-size: 0.95rem; font-weight: 600; display: none; }
 
         /* --- Sidebar --- */
         .sidebar {
@@ -85,7 +129,7 @@
         .nav-links a {
             display: flex;
             align-items: center;
-            padding: 14px 20px;
+            padding: 16px 20px;
             color: #9ca3af;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -142,7 +186,7 @@
             grid-auto-rows: min-content;
         }
 
-        /* --- 1. KPI Cards (Enhanced) --- */
+        /* --- 1. KPI Cards --- */
         .kpi-section { grid-column: span 12; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
 
         .kpi-card {
@@ -157,21 +201,21 @@
             border: 1px solid var(--border);
             transition: all 0.3s;
         }
-        .kpi-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .kpi-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
 
-        .kpi-info h4 { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+        .kpi-info h4 { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
         .kpi-info p { font-size: 2.4rem; font-weight: 800; color: var(--text-main); }
-        .kpi-icon { font-size: 2.5rem; opacity: 0.1; transition: 0.2s; }
+        .kpi-icon { font-size: 2.5rem; opacity: 0.1; transition: 0.3s; }
         .kpi-card:hover .kpi-icon { opacity: 0.8; transform: scale(1.05); }
 
         /* --- 2. Actions Section --- */
         .actions-section { grid-column: span 12; margin-bottom: 30px; }
-        .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+        .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 25px; }
         
         .action-card {
             background: var(--bg-white);
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
@@ -181,7 +225,7 @@
             transition: all 0.3s;
             border: 1px solid var(--border);
         }
-        .action-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--border); }
+        .action-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-color: var(--border); }
         
         .action-card i { font-size: 2rem; color: var(--text-muted); margin-bottom: 15px; transition: 0.3s; }
         .action-card:hover i { color: var(--color-dashboard); }
@@ -198,27 +242,23 @@
             border: 1px solid var(--border);
         }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #f3f4f6; padding-bottom: 20px; }
-        .card-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .card-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 15px; }
+        .card-header h3 i { color: var(--color-winning); }
         
         .top-list { display: flex; flex-direction: column; gap: 20px; }
         .top-item {
             display: flex; align-items: center; justify-content: space-between;
-            background: #f9fafb; padding: 18px 25px;
+            background: #f9fafb; padding: 20px 25px;
             border-radius: 14px;
             border-right: 5px solid transparent;
             transition: all 0.3s;
             border: 1px solid transparent;
         }
-        .top-item:hover { 
-            background: #fff; 
-            box-shadow: var(--shadow-md); 
-            transform: translateX(-8px); 
-            border-right-color: var(--color-winning);
-        }
+        .top-item:hover { background: #fff; box-shadow: var(--shadow-md); border-right-color: var(--color-winning); transform: translateX(-8px); }
         
         .item-info { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
         .item-img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); }
-        .item-name { font-weight: 700; font-size: 1.2rem; color: var(--text-main); }
+        .item-name { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
         .item-sub { font-size: 0.95rem; color: var(--text-muted); }
         .item-metrics { display: flex; align-items: center; gap: 15px; }
         .metric-badge { background: #fef3c7; color: #d97706; padding: 8px 16px; border-radius: 25px; font-weight: 700; font-size: 0.95rem; }
@@ -242,7 +282,7 @@
 
         /* --- 6. Full Sections --- */
         .card-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        .product-card { background: var(--bg-white); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: 0.3s; }
+        .product-card { background: var(--bg-white); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: 0.4s; }
         .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
         .product-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 1px solid #f3f4f6; background-color: #f3f4f6; }
         .product-body { padding: 30px; }
@@ -250,48 +290,48 @@
         .product-meta { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; }
         .product-actions { padding: 20px 30px; border-top: 1px solid #f3f4f6; display: flex; justify-content: flex-end; gap: 15px; }
         .badge { padding: 6px 16px; border-radius: 25px; font-size: 0.85rem; font-weight: 700; display: inline-block; }
-        .badge-success { background: #d1fae5; color: #065f46; } /* Available */
-        .badge-warning { background: #fef3c7; color: #92400e; } /* Importing */
-        .badge-danger { background: #fee2e2; color: #b91c1c; } /* Invalid */
-        .badge-neutral { background: #f3f4f6; color: #4b5563; } /* Unavailable */
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #b91c1c; }
+        .badge-neutral { background: #f3f4f6; color: #4b5563; }
         
         .status-text { font-weight: 700; font-size: 0.9rem; margin-top: 8px; }
         .status-success { color: var(--color-success); }
         .status-danger { color: var(--color-delete); }
 
-        /* --- 7. Calculator (Standalone) --- */
-        .calc-wrapper { background: var(--bg-white); padding: 50px; border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 1000px; margin: 0 auto; }
+        /* --- 7. Calculator --- */
+        .calc-wrapper { background: var(--bg-white); padding: 50px; border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 1000px; margin: 0 auto; border-bottom: 6px solid var(--color-calc); }
         .calc-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .calc-group { margin-bottom: 30px; position: relative; }
-        .calc-group label { display: block; margin-bottom: 12px; font-weight: 700; color: var(--text-main); font-size: 1.1rem; }
-        .calc-group i { position: absolute; left: 25px; top: 70%; transform: translateY(-50%); color: var(--color-calc); font-size: 1.3rem; }
+        .calc-group label { display: block; margin-bottom: 12px; font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
+        .calc-group i { position: absolute; left: 25px; top: 50%; transform: translateY(-50%); color: var(--color-calc); font-size: 1.3rem; }
         .calc-control { width: 100%; padding: 16px 25px 16px 50px; border: 1px solid #e2e8f0; border-radius: 12px; font-family: inherit; font-size: 1.1rem; background: #f9fafb; transition: 0.3s; }
-        .calc-control:focus { border-color: var(--color-dashboard); background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
-        .calc-res { margin-top: 40px; padding: 30px; background: #f9fafb; border-radius: 16px; border: 2px dashed #e2e8f0; display: flex; justify-content: space-around; text-align: center; }
+        .calc-control:focus { border-color: var(--color-dashboard); background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        .calc-res { margin-top: 30px; padding: 30px; background: #f9fafb; border-radius: 16px; border: 1px dashed #e2e8f0; display: flex; justify-content: space-around; text-align: center; }
         .res-box { flex: 1; }
-        .res-box h5 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; }
-        .res-box span { font-size: 2.2rem; font-weight: 800; color: var(--text-main); }
+        .res-box h5 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; }
+        .res-box span { font-size: 2rem; font-weight: 800; color: var(--text-main); }
 
         /* --- 8. Modal --- */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
         .modal.open { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-white); padding: 40px; border-radius: 20px; width: 100%; max-width: 600px; position: relative; transform: scale(0.9); transition: transform 0.3s; border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); max-height: 90vh; overflow-y: auto; }
         .modal.open .modal-content { transform: scale(1); }
-        .close-modal { position: absolute; left: 30px; top: 30px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 50%; color: var(--text-muted); font-size: 2rem; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .close-modal { position: absolute; left: 30px; top: 30px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 50%; color: var(--text-muted); font-size: 2rem; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .close-modal:hover { background: #fee2e2; color: var(--color-delete); }
         
         .form-group { margin-bottom: 30px; }
-        .form-label { display: block; margin-bottom: 10px; font-weight: 700; color: var(--text-main); font-size: 1.1rem; }
+        .form-label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
         .form-input { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 1.1rem; background: #f9fafb; transition: 0.3s; }
-        .form-input:focus { border-color: var(--color-dashboard); background: #fff; }
+        .form-input:focus { border-color: var(--color-dashboard); background: #fff; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .form-textarea { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 1.1rem; background: #f9fafb; transition: 0.3s; resize: vertical; min-height: 100px; }
         
         .btn { padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: 700; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 12px; color: white; }
         .btn-primary { background: var(--color-dashboard); }
         .btn-success { background: var(--color-success); }
-        .btn-warning { background: var(--color-shipping); }
+        .btn-warning { background: var(--color-delete); }
         .btn-purple { background: var(--color-pages); }
-        .btn-icon-sm { width: 40px; height: 40px; padding: 0; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; color: white; }
+        .btn-icon-sm { width: 40px; height: 40px; padding: 0; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; color: white; display: flex; align-items: center; justify-content: center; }
         .btn-icon-sm:hover { transform: scale(1.1); }
         
         /* Semantic Button Colors */
@@ -301,9 +341,9 @@
 
         /* --- 9. Toast --- */
         .toast-container { position: fixed; bottom: 40px; left: 40px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
-        .toast { background: var(--text-main); color: white; padding: 18px 30px; border-radius: 10px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; min-width: 350px; border-right: 6px solid var(--color-success); animation: slideIn 0.5s; }
+        .toast { background: var(--bg-sidebar); color: white; padding: 18px 30px; border-radius: 10px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; min-width: 350px; border-right: 6px solid var(--color-success); animation: slideIn 0.5s; }
         .toast.error { border-right-color: var(--color-delete); }
-        @keyframes slideIn { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* --- Toolbar --- */
         .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -342,281 +382,411 @@
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <i class="fas fa-layer-group fa-2x" style="color: var(--color-dashboard);"></i>
-            <h2>لوحة الإدارة</h2>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#" onclick="switchTab('dashboard')" class="active"><i class="fas fa-th-large" style="color: var(--color-dashboard);"></i> الرئيسية</a></li>
-            <li><a href="#" onclick="switchTab('inventory')"><i class="fas fa-boxes" style="color: var(--color-inventory);"></i> المخزون</a></li>
-            <li><a href="#" onclick="switchTab('importing')"><i class="fas fa-shipping-fast" style="color: var(--color-shipping);"></i> الاستيراد</a></li>
-            <li><a href="#" onclick="switchTab('winning')"><i class="fas fa-trophy" style="color: var(--color-winning);"></i> المنتجات الرابحة</a></li>
-            <li><a href="#" onclick="switchTab('pages')"><i class="fas fa-store" style="color: var(--color-pages);"></i> أفضل الصفحات</a></li>
-            <li><a href="#" onclick="switchTab('calculator')"><i class="fas fa-calculator" style="color: var(--color-calc);"></i> الآلة الحاسبة</a></li>
-        </ul>
-    </nav>
+    <!-- 1. Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <p style="margin-top:20px; font-weight:700; color:var(--color-dashboard);">جاري الاتصال بالسحابة...</p>
+    </div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <header>
-            <div style="display:flex; align-items:center;">
-                <i class="fas fa-bars toggle-menu" style="color: var(--text-main);"></i>
-                <h1>لوحة التحكم</h1>
+    <!-- 2. Auth Screen -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <i class="fas fa-layer-group fa-3x" style="color: var(--color-dashboard); margin-bottom: 20px;"></i>
+            <h2>لوحة الإدارة الشاملة</h2>
+            <div id="auth-msg" class="auth-msg"></div>
+            <input type="email" id="auth-email" class="auth-input" placeholder="البريد الإلكتروني">
+            <input type="password" id="auth-password" class="auth-input" placeholder="كلمة المرور">
+            <button class="auth-btn" onclick="login()">تسجيل الدخول</button>
+            <button class="auth-btn secondary" onclick="register()">إنشاء حساب جديد</button>
+            <div style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8;">
+                للتجربة استخدم:<br> test@test.com / 123456
             </div>
-            <div style="display:flex; align-items:center; gap:20px;">
-                <div style="text-align:left;">
-                    <div style="font-size:0.9rem; color:var(--text-muted);">مرحباً بك</div>
-                    <div style="font-weight:700; color: var(--text-main);">المسؤول</div>
-                </div>
-                <div style="width:50px; height:50px; background: var(--color-dashboard); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-user" style="color: white;"></i>
-                </div>
-            </div>
-        </header>
-
-        <!-- 1. DASHBOARD -->
-        <section id="dashboard" class="section active">
-            <div class="dashboard-grid">
-                
-                <!-- KPI -->
-                <div class="kpi-section">
-                    <div class="kpi-card">
-                        <div class="kpi-info"><h4>عدد المنتجات الكلي</h4><p id="kpi-total">0</p></div>
-                        <i class="fas fa-layer-group kpi-icon" style="color: var(--color-dashboard);"></i>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><h4>منتجات رابحة (Valid)</h4><p id="kpi-winning">0</p></div>
-                        <i class="fas fa-check-circle kpi-icon" style="color: var(--color-winning);"></i>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><h4>قيد الاستيراد</h4><p id="kpi-importing">0</p></div>
-                        <i class="fas fa-shipping-fast kpi-icon" style="color: var(--color-shipping);"></i>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><h4>إجمالي رأس المال المستثمر</h4><p id="kpi-capital">0 <span style="font-size:1.3rem; font-weight:500;">MAD</span></p></div>
-                        <i class="fas fa-coins kpi-icon" style="color: var(--color-winning);"></i>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><h4>إجمالي الربح المتوقع</h4><p id="kpi-profit">0 <span style="font-size:1.3rem; font-weight:500;">MAD</span></p></div>
-                        <i class="fas fa-chart-line kpi-icon" style="color: var(--color-calc);"></i>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="actions-section">
-                    <div class="actions-grid">
-                        <div class="action-card" style="border-color: var(--color-inventory);" onclick="openModal('inventory')">
-                            <i class="fas fa-plus-circle" style="color: var(--color-inventory);"></i>
-                            <span>إضافة منتج للمخزون</span>
-                        </div>
-                        <div class="action-card" style="border-color: var(--color-winning);" onclick="openModal('winning')">
-                            <i class="fas fa-trophy" style="color: var(--color-winning);"></i>
-                            <span>إضافة منتج رابح</span>
-                        </div>
-                        <div class="action-card" style="border-color: var(--color-shipping);" onclick="openModal('importing')">
-                            <i class="fas fa-shipping-fast" style="color: var(--color-shipping);"></i>
-                            <span>إضافة منتج قيد الاستيراد</span>
-                        </div>
-                        <div class="action-card" style="border-color: var(--color-pages);" onclick="openModal('pages')">
-                            <i class="fas fa-store" style="color: var(--color-pages);"></i>
-                            <span>إضافة صفحة ناجحة</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Winning -->
-                <div class="card winning-section">
-                    <div class="card-header">
-                        <h3><i class="fas fa-trophy" style="color: var(--color-winning);"></i> أفضل المنتجات الرابحة</h3>
-                    </div>
-                    <div class="top-list" id="top-winning-list"></div>
-                </div>
-
-                <!-- Weak Products -->
-                <div class="card weak-section">
-                    <div class="card-header"><h3><i class="fas fa-exclamation-triangle" style="color: var(--color-warning);"></i> تنبيهات (منتجات ضعيفة)</h3></div>
-                    <div id="weak-alert-container"></div>
-                </div>
-
-                <!-- Pages -->
-                <div class="card pages-section">
-                    <div class="card-header"><h3><i class="fas fa-link" style="color: var(--color-pages);"></i> أفضل الصفحات</h3></div>
-                    <div id="best-pages-list"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- OTHER SECTIONS -->
-        <section id="inventory" class="section">
-            <div class="toolbar">
-                <h2>إدارة المخزون</h2>
-                <button class="btn" style="background: var(--color-inventory);" onclick="openModal('inventory')"><i class="fas fa-plus"></i> إضافة منتج</button>
-            </div>
-            <div id="inventory-list" class="card-grid-full"></div>
-        </section>
-
-        <section id="importing" class="section">
-            <div class="toolbar">
-                <h2>قيد الاستيراد</h2>
-                <button class="btn" style="background: var(--color-shipping);" onclick="openModal('importing')"><i class="fas fa-plus"></i> إضافة منتج</button>
-            </div>
-            <div id="importing-list" class="card-grid-full"></div>
-        </section>
-
-        <section id="winning" class="section">
-            <div class="toolbar">
-                <h2>المنتجات الرابحة</h2>
-                <button class="btn" style="background: var(--color-winning);" onclick="openModal('winning')"><i class="fas fa-plus"></i> إضافة منتج رابح</button>
-            </div>
-            <div id="winning-list" class="card-grid-full"></div>
-        </section>
-
-        <section id="pages" class="section">
-            <div class="toolbar">
-                <h2>أفضل الصفحات</h2>
-                <button class="btn" style="background: var(--color-pages);" onclick="openModal('pages')"><i class="fas fa-plus"></i> إضافة صفحة</button>
-            </div>
-            <div id="pages-list" class="card-grid-full"></div>
-        </section>
-
-        <section id="calculator" class="section">
-            <div class="toolbar">
-                <h2>حاسبة الأرباح</h2>
-            </div>
-            <div class="calc-wrapper">
-                <div class="calc-inputs">
-                    <div class="calc-group">
-                        <label>ثمن شراء المنتج (MAD)</label>
-                        <input type="number" id="calc-buy-price" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="calc-group">
-                        <label>ثمن التوصيل (MAD)</label>
-                        <input type="number" id="calc-delivery" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <div class="calc-group">
-                        <label>ثمن الإشهار / Ads (MAD)</label>
-                        <input type="number" id="calc-ads" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-                    <div class="calc-group">
-                        <label>هامش الربح المطلوب (MAD)</label>
-                        <input type="number" id="calc-margin" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
-                        <i class="fas fa-percentage"></i>
-                    </div>
-                </div>
-                
-                <div class="calc-res">
-                    <div class="res-box">
-                        <h5>السعر النهائي للبيع</h5>
-                        <span id="res-sale" style="color: var(--color-dashboard);">0 <span>MAD</span></span>
-                    </div>
-                    <div class="res-box">
-                        <h5>الربح الصافي</h5>
-                        <span id="res-net" style="color: var(--color-calc);">0 <span>MAD</span></span>
-                    </div>
-                    <div class="res-box">
-                        <h5>السعر بالدولار (USD)</h5>
-                        <span id="res-usd" style="font-size: 1.7rem;">$0.00</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL -->
-    <div class="modal" id="modal-overlay">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <h2 style="margin-bottom: 40px; font-weight: 700; color: var(--text-main);" id="modal-title">عنوان النافذة</h2>
-            <div id="modal-form-body"></div>
         </div>
     </div>
 
-    <div class="toast-container" id="toast-container"></div>
+    <!-- 3. Main Application (Hidden by default) -->
+    <div id="app" style="display: none; opacity: 0; transition: opacity 0.5s;">
+        
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-layer-group fa-2x" style="color: var(--color-dashboard);"></i>
+                <h2>لوحة الإدارة</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="switchTab('dashboard')" class="active"><i class="fas fa-th-large" style="color: var(--color-dashboard);"></i> الرئيسية</a></li>
+                <li><a href="#" onclick="switchTab('inventory')"><i class="fas fa-boxes" style="color: var(--color-inventory);"></i> المخزون</a></li>
+                <li><a href="#" onclick="switchTab('importing')"><i class="fas fa-shipping-fast" style="color: var(--color-shipping);"></i> الاستيراد</a></li>
+                <li><a href="#" onclick="switchTab('winning')"><i class="fas fa-trophy" style="color: var(--color-winning);"></i> المنتجات الرابحة</a></li>
+                <li><a href="#" onclick="switchTab('pages')"><i class="fas fa-store" style="color: var(--color-pages);"></i> أفضل الصفحات</a></li>
+                <li><a href="#" onclick="switchTab('calculator')"><i class="fas fa-calculator" style="color: var(--color-calc);"></i> الآلة الحاسبة</a></li>
+            </ul>
+            <div style="margin-top: auto; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="display:flex; align-items:center; gap: 15px; margin-bottom: 20px;">
+                    <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user" style="color: #fff;"></i>
+                    </div>
+                    <div style="color: #cbd5e1; font-size: 0.9rem;" id="user-display">مسؤول</div>
+                </div>
+                <button onclick="logout()" style="background: transparent; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;">تسجيل الخروج</button>
+            </div>
+        </nav>
 
-    <script>
-        // --- STATE ---
-        const db = {
-            inventory: JSON.parse(localStorage.getItem('inventory')) || [],
-            importing: JSON.parse(localStorage.getItem('importing')) || [],
-            winning: JSON.parse(localStorage.getItem('winning')) || [],
-            pages: JSON.parse(localStorage.getItem('pages')) || []
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div style="display:flex; align-items:center;">
+                    <i class="fas fa-bars toggle-menu" style="color: var(--text-main);"></i>
+                    <h1>لوحة التحكم</h1>
+                </div>
+            </header>
+
+            <!-- 1. DASHBOARD -->
+            <section id="dashboard" class="section active">
+                <div class="dashboard-grid">
+                    
+                    <!-- KPI -->
+                    <div class="kpi-section">
+                        <div class="kpi-card">
+                            <div class="kpi-info"><h4>عدد المنتجات الكلي</h4><p id="kpi-total">0</p></div>
+                            <i class="fas fa-layer-group kpi-icon" style="color: var(--color-dashboard);"></i>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><h4>منتجات رابحة (Valid)</h4><p id="kpi-winning">0</p></div>
+                            <i class="fas fa-check-circle kpi-icon" style="color: var(--color-winning);"></i>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><h4>قيد الاستيراد</h4><p id="kpi-importing">0</p></div>
+                            <i class="fas fa-shipping-fast kpi-icon" style="color: var(--color-shipping);"></i>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><h4>رأس المال المستثمر</h4><p id="kpi-capital">0 <span style="font-size:1.3rem; font-weight:500;">MAD</span></p></div>
+                            <i class="fas fa-coins kpi-icon" style="color: var(--color-winning);"></i>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><h4>إجمالي الربح المتوقع</h4><p id="kpi-profit">0 <span style="font-size:1.3rem; font-weight:500;">MAD</span></p></div>
+                            <i class="fas fa-chart-line kpi-icon" style="color: var(--color-calc);"></i>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-section">
+                        <div class="actions-grid">
+                            <div class="action-card" style="border-color: var(--color-inventory);" onclick="openModal('inventory')">
+                                <i class="fas fa-plus-circle" style="color: var(--color-inventory);"></i>
+                                <span>منتج جديد</span>
+                            </div>
+                            <div class="action-card" style="border-color: var(--color-winning);" onclick="openModal('winning')">
+                                <i class="fas fa-trophy" style="color: var(--color-winning);"></i>
+                                <span>منتج رابح</span>
+                            </div>
+                            <div class="action-card" style="border-color: var(--color-shipping);" onclick="openModal('importing')">
+                                <i class="fas fa-dolly" style="color: var(--color-shipping);"></i>
+                                <span>استيراد</span>
+                            </div>
+                            <div class="action-card" style="border-color: var(--color-pages);" onclick="openModal('pages')">
+                                <i class="fas fa-store" style="color: var(--color-pages);"></i>
+                                <span>صفحة ناجحة</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Winning -->
+                    <div class="card winning-section">
+                        <div class="card-header">
+                            <h3><i class="fas fa-trophy" style="color: var(--color-winning);"></i> أفضل المنتجات الرابحة</h3>
+                        </div>
+                        <div class="top-list" id="top-winning-list"></div>
+                    </div>
+
+                    <!-- Weak Products -->
+                    <div class="card weak-section">
+                        <div class="card-header"><h3><i class="fas fa-exclamation-triangle" style="color: var(--color-warning);"></i> تنبيهات (منتجات ضعيفة)</h3></div>
+                        <div id="weak-alert-container"></div>
+                    </div>
+
+                    <!-- Pages -->
+                    <div class="card pages-section">
+                        <div class="card-header"><h3><i class="fas fa-link" style="color: var(--color-pages);"></i> أفضل الصفحات</h3></div>
+                        <div id="best-pages-list"></div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- OTHER SECTIONS -->
+            <section id="inventory" class="section">
+                <div class="toolbar">
+                    <h2>المخزون</h2>
+                    <button class="btn" style="background: var(--color-inventory);" onclick="openModal('inventory')"><i class="fas fa-plus"></i> إضافة منتج</button>
+                </div>
+                <div id="inventory-list" class="card-grid-full"></div>
+            </section>
+
+            <section id="importing" class="section">
+                <div class="toolbar">
+                    <h2>الاستيراد</h2>
+                    <button class="btn" style="background: var(--color-shipping);" onclick="openModal('importing')"><i class="fas fa-plus"></i> إضافة منتج</button>
+                </div>
+                <div id="importing-list" class="card-grid-full"></div>
+            </section>
+
+            <section id="winning" class="section">
+                <div class="toolbar">
+                    <h2>المنتجات الرابحة</h2>
+                    <button class="btn" style="background: var(--color-winning);" onclick="openModal('winning')"><i class="fas fa-plus"></i> إضافة منتج رابح</button>
+                </div>
+                <div id="winning-list" class="card-grid-full"></div>
+            </section>
+
+            <section id="pages" class="section">
+                <div class="toolbar">
+                    <h2>أفضل الصفحات</h2>
+                    <button class="btn" style="background: var(--color-pages);" onclick="openModal('pages')"><i class="fas fa-plus"></i> إضافة صفحة</button>
+                </div>
+                <div id="pages-list" class="card-grid-full"></div>
+            </section>
+
+            <section id="calculator" class="section">
+                <div class="toolbar">
+                    <h2>الآلة الحاسبة</h2>
+                </div>
+                <div class="calc-wrapper">
+                    <div class="calc-inputs">
+                        <div class="calc-group">
+                            <label>ثمن شراء المنتج (MAD)</label>
+                            <input type="number" id="calc-buy-price" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="calc-group">
+                            <label>ثمن التوصيل (MAD)</label>
+                            <input type="number" id="calc-delivery" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="calc-group">
+                            <label>ثمن الإشهار / Ads (MAD)</label>
+                            <input type="number" id="calc-ads" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="calc-group">
+                            <label>هامش الربح (MAD)</label>
+                            <input type="number" id="calc-margin" placeholder="0.00" class="calc-control" oninput="calculateProfit()">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-res">
+                        <div class="res-box">
+                            <h5>السعر النهائي للبيع</h5>
+                            <span id="res-sale">0 <span>MAD</span></span>
+                        </div>
+                        <div class="res-box">
+                            <h5>الربح الصافي</h5>
+                            <span id="res-net">0 <span>MAD</span></span>
+                        </div>
+                        <div class="res-box">
+                            <h5>السعر بالدولار (USD)</h5>
+                            <span id="res-usd" style="font-size: 1.7rem;">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- MODAL -->
+        <div class="modal" id="modal-overlay">
+            <div class="modal-content">
+                <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                <h2 style="margin-bottom: 40px; font-weight: 700; color: var(--text-main);" id="modal-title">عنوان النافذة</h2>
+                <div id="modal-form-body"></div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toast-container"></div>
+    </div>
+
+    <!-- FIREBASE SDK (Modular V9) -->
+    <script type="module">
+        // --- 1. Firebase Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+        // --- 2. Firebase Config ---
+        // REPLACE THE VALUES BELOW WITH YOUR PROJECT CONFIG
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
-        const USD_RATE = 9;
-        const WEAK_PROFIT_THRESHOLD = 20; // أقل من 20 ربح يعتبر ضعيفاً
-        const LOW_STOCK_THRESHOLD = 10;
+        // --- 3. Initialize Firebase ---
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderDashboard();
-            renderFullSections();
+        // --- 4. Expose Services to Global Scope ---
+        window.app = app;
+        window.auth = auth;
+        window.db = db;
+        window.collection = collection;
+        window.doc = doc;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.onSnapshot = onSnapshot;
+
+        // --- 5. State & Constants ---
+        const USD_RATE = 9;
+        const WEAK_PROFIT_THRESHOLD = 20;
+
+        // Global Collections Names
+        window.inventoryCollection = "inventory";
+        window.importingCollection = "importing";
+        window.winningCollection = "winning";
+        window.pagesCollection = "pages";
+
+        // Temporary Data Store for Rendering
+        let dbData = {
+            inventory: [],
+            importing: [],
+            winning: [],
+            pages: []
+        };
+
+        // --- 6. Auth State Listener (Backbone of the App) ---
+        onAuthStateChanged(auth, (user) => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const authScreen = document.getElementById('auth-screen');
+            const mainApp = document.getElementById('app');
+
+            if (user) {
+                // User Logged In
+                loadingScreen.style.display = 'none';
+                authScreen.style.display = 'none';
+                mainApp.style.display = 'block';
+                setTimeout(() => mainApp.style.opacity = '1', 50); // Fade in
+                
+                // Set User Display
+                document.getElementById('user-display').innerText = user.email;
+
+                // Load Data
+                loadDashboardData();
+            } else {
+                // User Logged Out
+                loadingScreen.style.display = 'none';
+                authScreen.style.display = 'flex';
+                mainApp.style.display = 'none';
+                mainApp.style.opacity = '0';
+            }
         });
 
-        // --- NAVIGATION ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            
-            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+        // --- 7. Auth Functions (Login/Register/Logout) ---
+        window.login = async () => {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const msgDiv = document.getElementById('auth-msg');
 
-            if(tabId === 'dashboard') renderDashboard();
-            if(tabId === 'inventory') renderInventory();
-            if(tabId === 'importing') renderImporting();
-            if(tabId === 'winning') renderWinning();
-            if(tabId === 'pages') renderPages();
-            if(tabId === 'calculator') {
-                document.getElementById('calc-buy-price').value = '';
-                document.getElementById('calc-delivery').value = '';
-                document.getElementById('calc-ads').value = '';
-                document.getElementById('calc-margin').value = '';
-                calculateProfit();
+            if (!email || !password) {
+                msgDiv.style.display = 'block';
+                msgDiv.innerText = 'يرجى إدخال البريد وكلمة المرور';
+                return;
             }
 
-            if(window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('active');
+            try {
+                await signInWithEmailAndPassword(window.auth, email, password);
+                msgDiv.style.display = 'none';
+                // Auth Listener will handle redirect
+            } catch (error) {
+                console.error(error);
+                msgDiv.style.display = 'block';
+                msgDiv.innerText = 'خطأ في البيانات: البريد غير موجود أو كلمة مرور خاطئة.';
             }
+        };
+
+        window.register = async () => {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const msgDiv = document.getElementById('auth-msg');
+
+            if (!email || !password || password.length < 6) {
+                msgDiv.style.display = 'block';
+                msgDiv.innerText = 'كلمة المرور يجب أن تكون 6 خانات على الأقل.';
+                return;
+            }
+
+            try {
+                await createUserWithEmailAndPassword(window.auth, email, password);
+                msgDiv.style.display = 'none';
+                // Auth Listener will handle redirect
+            } catch (error) {
+                console.error(error);
+                msgDiv.style.display = 'block';
+                msgDiv.innerText = 'حدث خطأ: ربما البريد مسجل مسبقاً.';
+            }
+        };
+
+        window.logout = () => {
+            signOut(window.auth).then(() => {
+                window.location.reload(); // Reload to clear state
+            });
+        };
+
+        // --- 8. Data Loading Logic ---
+        async function loadDashboardData() {
+            // Load Inventory
+            const invSnap = await getDocs(collection(window.db, window.inventoryCollection));
+            dbData.inventory = invSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Load Importing
+            const impSnap = await getDocs(collection(window.db, window.importingCollection));
+            dbData.importing = impSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Load Winning
+            const winSnap = await getDocs(collection(window.db, window.winningCollection));
+            dbData.winning = winSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Load Pages
+            const pagSnap = await getDocs(collection(window.db, window.pagesCollection));
+            dbData.pages = pagSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Render
+            window.renderApp(dbData);
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-
-        // --- DASHBOARD RENDERER ---
-        function renderDashboard() {
+        // --- 9. App Rendering Logic ---
+        window.renderApp = (data) => {
             // KPI
-            const total = db.inventory.length + db.importing.length + db.winning.length;
+            const total = data.inventory.length + data.importing.length + data.winning.length;
             document.getElementById('kpi-total').innerText = total;
 
-            const winningValid = db.winning.filter(w => w.status === 'valid').length;
+            const winningValid = data.winning.filter(w => w.status === 'valid').length;
             document.getElementById('kpi-winning').innerText = winningValid;
 
-            const importing = db.importing.length;
+            const importing = data.importing.length;
             document.getElementById('kpi-importing').innerText = importing;
 
             let capital = 0;
             let profit = 0;
 
-            db.inventory.forEach(p => capital += (p.price * p.quantity));
-            db.importing.forEach(p => capital += (p.price * p.quantity));
-            db.winning.forEach(p => capital += (p.buyPrice * p.quantity));
-            db.winning.forEach(p => profit += (p.margin * p.quantity));
+            data.inventory.forEach(p => capital += (p.price * p.quantity));
+            data.importing.forEach(p => capital += (p.price * p.quantity));
+            data.winning.forEach(p => capital += (p.buyPrice * p.quantity));
+            data.winning.forEach(p => profit += (p.margin * p.quantity));
 
-            document.getElementById('kpi-capital').innerHTML = `${capital.toLocaleString()} <span>MAD</span>`;
-            document.getElementById('kpi-profit').innerHTML = `${profit.toLocaleString()} <span>MAD</span>`;
+            document.getElementById('kpi-capital').innerHTML = `${capital.toLocaleString()} <span style="font-size:1.3rem; font-weight:500;">MAD</span>`;
+            document.getElementById('kpi-profit').innerHTML = `${profit.toLocaleString()} <span style="font-size:1.3rem; font-weight:500;">MAD</span>`;
 
-            // 1. أفضل الرابحة
+            // Winning
             const list = document.getElementById('top-winning-list');
             list.innerHTML = '';
-            
-            const sorted = [...db.winning].filter(p => p.status === 'valid').sort((a, b) => b.margin - a.margin).slice(0, 5);
-            if(sorted.length === 0) list.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:30px;">لا توجد منتجات رابحة</div>';
+            const sorted = [...data.winning].filter(p => p.status === 'valid').sort((a, b) => b.margin - a.margin).slice(0, 5);
+            if(sorted.length === 0) list.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:25px;">لا توجد منتجات رابحة</div>';
             else {
                 sorted.forEach(p => {
                     list.innerHTML += `
@@ -631,8 +801,8 @@
                             <div class="item-metrics">
                                 <div class="metric-badge">+${p.margin} MAD (صافي)</div>
                                 <div style="display:flex;">
-                                    <button class="btn-icon bg-green" onclick="toggleStatus(${p.id})"><i class="fas fa-check"></i></button>
-                                    <button class="btn-icon bg-red" onclick="deleteItem('winning', ${p.id})"><i class="fas fa-trash"></i></button>
+                                    <button class="btn-icon bg-green" onclick="toggleStatus('${p.id}')"><i class="fas fa-check"></i></button>
+                                    <button class="btn-icon bg-red" onclick="deleteItem('winning', '${p.id}')"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -640,29 +810,28 @@
                 });
             }
 
-            // 2. المنتجات الضعيفة (Weak Products Logic)
+            // Weak
             const weakContainer = document.getElementById('weak-alert-container');
             weakContainer.innerHTML = '';
-            const weakProducts = db.winning.filter(p => p.status === 'valid' && p.margin < WEAK_PROFIT_THRESHOLD);
-            if(weakProducts.length === 0) weakContainer.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:20px;">لا توجد تنبيهات، جميع المنتجات قوية</div>';
+            const weakProducts = data.winning.filter(p => p.status === 'valid' && p.margin < WEAK_PROFIT_THRESHOLD);
+            if(weakProducts.length === 0) weakContainer.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:20px;">لا توجد تنبيهات، المنتجات قوية</div>';
             else {
                 weakProducts.forEach(p => {
-                    let note = p.margin < 0 ? 'خسارة' : 'ربح ضعيف';
                     weakContainer.innerHTML += `
                         <div class="weak-row">
                             <strong>${p.name}</strong>
-                            <span>${note} (${p.margin} MAD)</span>
+                            <span>${p.margin} MAD (ربح ضعيف)</span>
                         </div>
                     `;
                 });
             }
 
-            // 3. أفضل الصفحات
+            // Pages
             const pagesContainer = document.getElementById('best-pages-list');
             pagesContainer.innerHTML = '';
-            if(db.pages.length === 0) pagesContainer.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:20px;">لم يتم حفظ أي صفحة</div>';
+            if(data.pages.length === 0) pagesContainer.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:20px;">لم يتم حفظ أي صفحة</div>';
             else {
-                db.pages.forEach(p => {
+                data.pages.forEach(p => {
                     pagesContainer.innerHTML += `
                         <a href="${p.link}" target="_blank" class="page-link">
                             <span>${p.name}</span>
@@ -671,20 +840,13 @@
                     `;
                 });
             }
-        }
+        };
 
-        // --- FULL SECTIONS RENDERERS ---
-        function renderFullSections() {
-            renderInventory();
-            renderImporting();
-            renderWinning();
-            renderPages();
-        }
-
-        function renderInventory() {
+        // --- 10. Section Renderers (Called after CRUD) ---
+        window.renderInventory = () => {
             const container = document.getElementById('inventory-list');
-            container.innerHTML = db.inventory.length ? '' : '<div class="empty-state">المخزون فارغ</div>';
-            db.inventory.forEach(item => {
+            container.innerHTML = dbData.inventory.length ? '' : '<div class="empty-state">المخزون فارغ</div>';
+            dbData.inventory.forEach(item => {
                 const isAvailable = item.quantity > 0;
                 const badge = isAvailable ? '<span class="badge badge-success">متوفر</span>' : '<span class="badge badge-danger">نفذت</span>';
                 
@@ -698,19 +860,19 @@
                             <div class="status-text status-success">${isAvailable ? 'متوفر في المخزون' : 'غير متوفر'}</div>
                         </div>
                         <div class="product-actions">
-                            <button class="btn-icon-sm" style="background:var(--color-dashboard); color:white;" onclick="showPreview('inventory', ${item.id})"><i class="fas fa-eye"></i></button>
-                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('inventory', ${item.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('inventory', ${item.id})"><i class="fas fa-trash"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-dashboard); color:white;" onclick="openModal('inventory', '${item.id}')"><i class="fas fa-eye"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('inventory', '${item.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('inventory', '${item.id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
-        }
+        };
 
-        function renderImporting() {
+        window.renderImporting = () => {
             const container = document.getElementById('importing-list');
-            container.innerHTML = db.importing.length ? '' : '<div class="empty-state">لا توجد واردات</div>';
-            db.importing.forEach(item => {
+            container.innerHTML = dbData.importing.length ? '' : '<div class="empty-state">لا توجد واردات</div>';
+            dbData.importing.forEach(item => {
                 container.innerHTML += `
                     <div class="product-card">
                         <img src="${item.image || 'https://via.placeholder.com/300x220?text=No+Image'}" class="product-img">
@@ -722,26 +884,21 @@
                             ${item.notes ? `<div style="margin-top:8px; font-size:0.85rem; color:var(--text-muted); background:#f9fafb; padding:8px; border-radius:6px;">${item.notes}</div>` : ''}
                         </div>
                         <div class="product-actions">
-                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('importing', ${item.id})"><i class="fas fa-pen"></i></button>
-                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('importing', ${item.id})"><i class="fas fa-trash"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('importing', '${item.id}')"><i class="fas fa-pen"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('importing', '${item.id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
-        }
+        };
 
-        function renderWinning() {
+        window.renderWinning = () => {
             const container = document.getElementById('winning-list');
-            container.innerHTML = db.winning.length ? '' : '<div class="empty-state">لم يتم إضافة منتجات رابحة</div>';
-            db.winning.forEach(item => {
+            container.innerHTML = dbData.winning.length ? '' : '<div class="empty-state">لم يتم إضافة منتجات رابحة</div>';
+            dbData.winning.forEach(item => {
                 const statusBadge = item.status === 'valid' ? '<span class="badge badge-success">Valid</span>' : '<span class="badge badge-danger">Invalid</span>';
                 const statusText = item.status === 'valid' ? 'منتج رابح' : 'منتج فاشل';
                 
-                let links = `<div style="font-size:0.9rem; margin-top:10px; word-break:break-all;">
-                    ${item.alibaba ? `<a href="${item.alibaba}" target="_blank" style="color:var(--color-shipping);"><i class="fas fa-link"></i> Alibaba</a>` : ''}
-                    ${item.store ? `<a href="${item.store}" target="_blank" style="color:var(--color-dashboard); margin-right:12px;"><i class="fas fa-link"></i> Store</a>` : ''}
-                </div>`;
-
                 container.innerHTML += `
                     <div class="product-card">
                         <img src="${item.image || 'https://via.placeholder.com/300x220?text=No+Image'}" class="product-img">
@@ -750,62 +907,64 @@
                             <div class="product-meta"><span>شراء: ${item.buyPrice}</span><span>بيع: ${item.salePrice}</span></div>
                             <div class="product-meta"><span>الربح الصافي: ${item.margin} MAD</span>${statusBadge}</div>
                             <div class="status-text" style="color:${item.status === 'valid' ? 'var(--color-success)' : 'var(--color-delete)'}">${statusText}</div>
-                            ${links}
+                            <div style="margin-top:12px; display:flex; gap:10px;">
+                                ${item.alibaba ? `<a href="${item.alibaba}" target="_blank" style="color:var(--color-shipping); font-size:0.9rem; font-weight:700;"><i class="fas fa-link"></i> Alibaba</a>` : ''}
+                                ${item.store ? `<a href="${item.store}" target="_blank" style="color:var(--color-dashboard); font-size:0.9rem; font-weight:700;"><i class="fas fa-link"></i> Store</a>` : ''}
+                            </div>
                         </div>
                         <div class="product-actions">
-                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="toggleStatus(${item.id})"><i class="fas fa-exchange-alt"></i></button>
-                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('winning', ${item.id})"><i class="fas fa-pen"></i></button>
-                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('winning', ${item.id})"><i class="fas fa-trash"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="toggleStatus('${item.id}')"><i class="fas fa-exchange-alt"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('winning', '${item.id}')"><i class="fas fa-pen"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('winning', '${item.id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
-        }
+        };
 
-        function renderPages() {
+        window.renderPages = () => {
             const container = document.getElementById('pages-list');
-            container.innerHTML = db.pages.length ? '' : '<div class="empty-state">لم يتم إضافة أي صفحة</div>';
-            db.pages.forEach(item => {
+            container.innerHTML = dbData.pages.length ? '' : '<div class="empty-state">لم يتم إضافة أي صفحة</div>';
+            dbData.pages.forEach(item => {
                 container.innerHTML += `
                     <div class="product-card">
                         <div class="product-body">
                             <div class="product-title">${item.name}</div>
                             <a href="${item.link}" target="_blank" style="color:var(--color-pages); text-decoration:none; font-weight:700; font-size:1rem; display:block; margin-bottom:15px;">
-                                <i class="fas fa-external-link-alt page-icon"></i> زيارة الصفحة
+                                <i class="fas fa-external-link-alt"></i> زيارة الصفحة
                             </a>
                             <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">${item.notes || 'لا توجد ملاحظات'}</p>
                         </div>
                         <div class="product-actions">
-                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('pages', ${item.id})"><i class="fas fa-pen"></i></button>
-                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('pages', ${item.id})"><i class="fas fa-trash"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="openModal('pages', '${item.id}')"><i class="fas fa-pen"></i></button>
+                            <button class="btn-icon-sm" style="background:var(--color-delete); color:white;" onclick="deleteItem('pages', '${item.id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
-        }
+        };
 
-        // --- CALCULATOR ---
-        function calculateProfit() {
+        // --- 11. Calculator Logic ---
+        window.calculateProfit = () => {
             const buy = parseFloat(document.getElementById('calc-buy-price').value) || 0;
             const delivery = parseFloat(document.getElementById('calc-delivery').value) || 0;
             const ads = parseFloat(document.getElementById('calc-ads').value) || 0;
             const margin = parseFloat(document.getElementById('calc-margin').value) || 0;
 
-            const totalCost = buy + delivery + ads;
             const salePrice = buy + delivery + ads + margin;
             const usdPrice = salePrice / USD_RATE;
 
             document.getElementById('res-sale').innerHTML = `${salePrice.toFixed(2)} <span>MAD</span>`;
             document.getElementById('res-net').innerHTML = `${margin.toFixed(2)} <span>MAD</span>`;
             document.getElementById('res-usd').innerText = `$${usdPrice.toFixed(2)}`;
-        }
+        };
 
-        // --- MODAL LOGIC ---
+        // --- 12. Modal Logic ---
         let currentModalType = '';
         let editingId = null;
         let tempImage = '';
 
-        function openModal(type, id = null) {
+        window.openModal = (type, id = null) => {
             currentModalType = type;
             editingId = id;
             tempImage = '';
@@ -818,17 +977,17 @@
 
             let data = {};
             if (id) {
-                if(type === 'inventory') data = db.inventory.find(i => i.id === id);
-                if(type === 'importing') data = db.importing.find(i => i.id === id);
-                if(type === 'winning') data = db.winning.find(i => i.id === id);
-                if(type === 'pages') data = db.pages.find(i => i.id === id);
+                if(type === 'inventory') data = dbData.inventory.find(i => i.id === id);
+                if(type === 'importing') data = dbData.importing.find(i => i.id === id);
+                if(type === 'winning') data = dbData.winning.find(i => i.id === id);
+                if(type === 'pages') data = dbData.pages.find(i => i.id === id);
                 tempImage = data.image || '';
             }
 
             modalTitle.innerText = id ? 'تعديل ' + getTitle(type) : 'إضافة ' + getTitle(type);
 
-            // Inventory Form
-            if (type === 'inventory') {
+            if (type === 'inventory' || type === 'importing') {
+                const isInv = type === 'inventory';
                 formBody.innerHTML = `
                     <div class="image-preview" onclick="document.getElementById('file-upload').click()">
                         ${tempImage ? `<img src="${tempImage}">` : '<div class="image-preview-placeholder"><i class="fas fa-camera fa-2x"></i><br>اضغط لرفع صورة</div></div>'}
@@ -845,30 +1004,17 @@
                     </div>
                     <div style="margin-top:20px;">
                         <label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ثمن الاستثمار/الوحدة (MAD)</label>
-                        <input type="number" id="inp-price" class="form-input" value="${data.price || 0}" placeholder="سعر شراء المنتج">
+                        <input type="number" id="inp-price" class="form-input" value="${data.price || 0}">
                     </div>
-                    <button class="btn" style="background: var(--color-inventory); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
-                `;
-            } 
-            // Importing Form
-            else if (type === 'importing') {
-                formBody.innerHTML = `
-                    <div class="image-preview" onclick="document.getElementById('file-upload').click()">
-                        ${tempImage ? `<img src="${tempImage}">` : '<div class="image-preview-placeholder"><i class="fas fa-camera fa-2x"></i><br>اضغط لرفع صورة</div></div>'}
-                    </div>
-                    <input type="file" id="file-upload" style="display:none" accept="image/*" onchange="handleImageUpload(this)">
-
-                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم المنتج</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
-                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الكمية</label><input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}"></div>
-                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ثمن الاستثمار/الوحدة (MAD)</label><input type="number" id="inp-price" class="form-input" value="${data.price || 0}"></div>
-                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ملاحظات (اختياري)</label>
+                    ${!isInv ? `
+                    <div style="margin-top:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ملاحظات</label>
                         <textarea id="inp-notes" class="form-textarea" rows="3">${data.notes || ''}</textarea>
-                    </div>
-                    <button class="btn" style="background: var(--color-shipping); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    </div>` : ''}
+                    
+                    <button class="btn" style="background: var(--color-dashboard); width:100%; margin-top:10px;" onclick="saveItem()">حفظ</button>
                 `;
-            }
-            // Winning Form
-            else if (type === 'winning') {
+            } else if (type === 'winning') {
                 formBody.innerHTML = `
                     <div class="image-preview" onclick="document.getElementById('file-upload').click()">
                         ${tempImage ? `<img src="${tempImage}">` : '<div class="image-preview-placeholder"><i class="fas fa-camera fa-2x"></i><br>اضغط لرفع صورة</div></div>'}
@@ -878,9 +1024,7 @@
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم المنتج</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">سعر الشراء (MAD)</label><input type="number" id="inp-buy" class="form-input" value="${data.buyPrice || 0}"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">سعر البيع (MAD)</label><input type="number" id="inp-sale" class="form-input" value="${data.salePrice || 0}"></div>
-                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">هامش الربح (MAD)</label>
-                        <input type="number" id="inp-margin" class="form-input" value="${data.margin || ''}" placeholder="سيتم الحساب تلقائياً إن تركه فارغاً">
-                    </div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">هامش الربح (MAD)</label><input type="number" id="inp-margin" class="form-input" value="${data.margin || ''}" placeholder="سيتم الحساب تلقائياً إن تركه فارغاً"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">رابط Alibaba</label><input type="text" id="inp-alibaba" class="form-input" value="${data.alibaba || ''}"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">رابط المتجر</label><input type="text" id="inp-store" class="form-input" value="${data.store || ''}"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الحالة</label>
@@ -890,19 +1034,17 @@
                         </select>
                     </div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الكمية</label><input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}"></div>
-                    <button class="btn" style="background: var(--color-winning); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    <button class="btn" style="background: var(--color-success); width:100%; margin-top:10px;" onclick="saveItem()">حفظ</button>
                 `;
-            }
-            // Pages Form
-            else if (type === 'pages') {
+            } else if (type === 'pages') {
                 formBody.innerHTML = `
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم الصفحة</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الرابط</label><input type="text" id="inp-link" class="form-input" value="${data.link || ''}"></div>
                     <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ملاحظات</label><textarea id="inp-notes" class="form-textarea" rows="3">${data.notes || ''}</textarea></div>
-                    <button class="btn" style="background: var(--color-pages); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    <button class="btn" style="background: var(--color-pages); width:100%; margin-top:10px;" onclick="saveItem()">حفظ</button>
                 `;
             }
-        }
+        };
 
         function getTitle(type) {
             if(type === 'inventory') return 'منتج مخزون';
@@ -911,11 +1053,11 @@
             if(type === 'pages') return 'صفحة';
         }
 
-        function closeModal() {
+        window.closeModal = () => {
             document.getElementById('modal-overlay').classList.remove('open');
-        }
+        };
 
-        function handleImageUpload(input) {
+        window.handleImageUpload = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -924,12 +1066,11 @@
                 }
                 reader.readAsDataURL(input.files[0]);
             }
-        }
+        };
 
-        // --- SAVE LOGIC ---
-        function saveItem() {
-            // Inventory
-            if(currentModalType === 'inventory') {
+        // --- 13. Save Logic (Write to Firestore) ---
+        window.saveItem = async () => {
+            if(currentModalType === 'inventory' || currentModalType === 'importing') {
                 const name = document.getElementById('inp-name').value;
                 const qty = parseInt(document.getElementById('inp-qty').value);
                 const price = parseFloat(document.getElementById('inp-price').value);
@@ -937,49 +1078,24 @@
                 if(!name) { alert('الاسم مطلوب'); return; }
 
                 const item = {
-                    id: editingId || Date.now(),
-                    name, quantity: qty, price, image: tempImage
+                    name, quantity: qty, price, image: tempImage,
+                    status: currentModalType === 'inventory' ? 'available' : 'importing',
+                    notes: currentModalType === 'importing' ? document.getElementById('inp-notes').value : ''
                 };
 
                 if (editingId) {
-                    const idx = db.inventory.findIndex(i => i.id === editingId);
-                    db.inventory[idx] = item;
+                    await updateDoc(doc(window.db, type === 'inventory' ? window.inventoryCollection : window.importingCollection, editingId), item);
                     showToast('تم التعديل بنجاح');
                 } else {
-                    db.inventory.push(item);
+                    await addDoc(collection(window.db, type === 'inventory' ? window.inventoryCollection : window.importingCollection), item);
                     showToast('تمت الإضافة بنجاح');
                 }
-            }
-            // Importing
-            else if(currentModalType === 'importing') {
-                const name = document.getElementById('inp-name').value;
-                const qty = parseInt(document.getElementById('inp-qty').value);
-                const price = parseFloat(document.getElementById('inp-price').value);
-                const notes = document.getElementById('inp-notes').value;
-
-                if(!name) { alert('الاسم مطلوب'); return; }
-
-                const item = {
-                    id: editingId || Date.now(),
-                    name, quantity: qty, price, image: tempImage, notes
-                };
-
-                if (editingId) {
-                    const idx = db.importing.findIndex(i => i.id === editingId);
-                    db.importing[idx] = item;
-                    showToast('تم التعديل بنجاح');
-                } else {
-                    db.importing.push(item);
-                    showToast('تمت الإضافة بنجاح');
-                }
-            }
-            // Winning
-            else if (currentModalType === 'winning') {
+            } else if (currentModalType === 'winning') {
                 const name = document.getElementById('inp-name').value;
                 const buy = parseFloat(document.getElementById('inp-buy').value) || 0;
                 const sale = parseFloat(document.getElementById('inp-sale').value) || 0;
                 let margin = parseFloat(document.getElementById('inp-margin').value);
-                if(isNaN(margin)) margin = sale - buy; // Auto calc margin if empty
+                if(isNaN(margin)) margin = sale - buy;
                 
                 const alibaba = document.getElementById('inp-alibaba').value;
                 const store = document.getElementById('inp-store').value;
@@ -989,82 +1105,95 @@
                 if(!name) { alert('الاسم مطلوب'); return; }
 
                 const item = {
-                    id: editingId || Date.now(),
                     name, buyPrice: buy, salePrice: sale, margin,
                     alibaba, store, image: tempImage, status, quantity: qty
                 };
 
                 if (editingId) {
-                    const idx = db.winning.findIndex(i => i.id === editingId);
-                    db.winning[idx] = item;
+                    await updateDoc(doc(window.db, window.winningCollection, editingId), item);
                     showToast('تم التعديل بنجاح');
                 } else {
-                    db.winning.push(item);
+                    await addDoc(collection(window.db, window.winningCollection), item);
                     showToast('تمت الإضافة بنجاح');
                 }
-            }
-            // Pages
-            else if (currentModalType === 'pages') {
+            } else if (currentModalType === 'pages') {
                 const name = document.getElementById('inp-name').value;
                 const link = document.getElementById('inp-link').value;
                 const notes = document.getElementById('inp-notes').value;
 
                 if(!name || !link) { alert('الاسم والرابط مطلوبان'); return; }
 
-                const item = { id: editingId || Date.now(), name, link, notes };
+                const item = { name, link, notes };
                 if (editingId) {
-                    const idx = db.pages.findIndex(i => i.id === editingId);
-                    db.pages[idx] = item;
+                    await updateDoc(doc(window.db, window.pagesCollection, editingId), item);
                 } else {
-                    db.pages.push(item);
+                    await addDoc(collection(window.db, window.pagesCollection), item);
                 }
             }
 
-            updateDB();
             closeModal();
-            renderDashboard();
-            renderFullSections();
-        }
+            loadDashboardData(); // Reload from DB
+        };
 
-        // --- DELETE LOGIC ---
-        function deleteItem(type, id) {
+        // --- 14. Delete Logic ---
+        window.deleteItem = async (type, id) => {
             if(confirm('هل أنت متأكد من الحذف؟')) {
-                if(type === 'inventory') { db.inventory = db.inventory.filter(i => i.id !== id); renderInventory(); }
-                if(type === 'importing') { db.importing = db.importing.filter(i => i.id !== id); renderImporting(); }
-                if(type === 'winning') { db.winning = db.winning.filter(i => i.id !== id); renderWinning(); }
-                if(type === 'pages') { db.pages = db.pages.filter(i => i.id !== id); renderPages(); }
+                let collName = '';
+                if(type === 'inventory') collName = window.inventoryCollection;
+                if(type === 'importing') collName = window.importingCollection;
+                if(type === 'winning') collName = window.winningCollection;
+                if(type === 'pages') collName = window.pagesCollection;
+
+                await deleteDoc(doc(window.db, collName, id));
                 
-                updateDB();
-                renderDashboard();
+                loadDashboardData(); // Reload
                 showToast('تم الحذف بنجاح');
             }
-        }
+        };
 
-        function toggleStatus(id) {
-            const item = db.winning.find(i => i.id === id);
+        window.toggleStatus = async (id) => {
+            // We need to find the item in local db to get current status efficiently, 
+            // but usually better to fetch the doc directly. For simplicity here we use local state logic.
+            const item = dbData.winning.find(i => i.id === id);
             if(item) {
-                item.status = item.status === 'valid' ? 'invalid' : 'valid';
-                updateDB();
-                renderWinning();
-                renderDashboard();
+                const newStatus = item.status === 'valid' ? 'invalid' : 'valid';
+                await updateDoc(doc(window.db, window.winningCollection, id), { status: newStatus });
                 showToast('تم تغيير الحالة');
+                loadDashboardData(); // Reload
             }
-        }
+        };
 
-        function showPreview(type, id) {
-            openModal(type, id);
-            const btn = document.querySelector('#modal-form-body button');
-            if(btn) { btn.innerText = 'إغلاق'; btn.onclick = closeModal; }
-        }
+        // --- 15. Navigation ---
+        window.switchTab = (tabId) => {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            event.currentTarget.classList.add('active');
 
-        // --- DB SYNC ---
-        function updateDB() {
-            localStorage.setItem('inventory', JSON.stringify(db.inventory));
-            localStorage.setItem('importing', JSON.stringify(db.importing));
-            localStorage.setItem('winning', JSON.stringify(db.winning));
-            localStorage.setItem('pages', JSON.stringify(db.pages));
-        }
+            if(tabId === 'dashboard') loadDashboardData();
+            if(tabId === 'inventory') window.renderInventory();
+            if(tabId === 'importing') window.renderImporting();
+            if(tabId === 'winning') window.renderWinning();
+            if(tabId === 'pages') window.renderPages();
+            if(tabId === 'calculator') {
+                document.getElementById('calc-buy-price').value = '';
+                document.getElementById('calc-delivery').value = '';
+                document.getElementById('calc-ads').value = '';
+                document.getElementById('calc-margin').value = '';
+                calculateProfit();
+            }
 
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        };
+
+        window.toggleSidebar = () => {
+            document.getElementById('sidebar').classList.toggle('active');
+        };
+
+        // --- 16. Toast Notification ---
         function showToast(msg) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1079,4 +1208,3 @@
     </script>
 </body>
 </html>
-
