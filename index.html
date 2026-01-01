@@ -14,7 +14,8 @@
             /* --- Semantic Palette --- */
             /* الخلفيات */
             --bg-white: #ffffff;
-            --bg-sidebar: #1e293b;
+            --bg-sidebar: #1e293b; 
+            --bg-light: #f3f4f6;
 
             /* النصوص */
             --text-main: #1f2937;
@@ -126,7 +127,7 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
         }
-        header h1 { font-size: 1.8rem; font-weight: 800; color: var(--text-main); }
+        header h1 { font-size: 1.7rem; font-weight: 800; color: var(--text-main); }
 
         /* --- Sections Visibility --- */
         .section { display: none; animation: fadeIn 0.3s ease; }
@@ -146,7 +147,7 @@
 
         .kpi-card {
             background: var(--bg-white);
-            padding: 30px;
+            padding: 35px;
             border-radius: 16px;
             box-shadow: var(--shadow-sm);
             display: flex;
@@ -158,9 +159,10 @@
         }
         .kpi-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
 
-        .kpi-info h4 { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
-        .kpi-info p { font-size: 2rem; font-weight: 800; color: var(--text-main); }
-        .kpi-icon { font-size: 2.5rem; opacity: 0.1; }
+        .kpi-info h4 { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+        .kpi-info p { font-size: 2.4rem; font-weight: 800; color: var(--text-main); }
+        .kpi-icon { font-size: 2.5rem; opacity: 0.1; transition: 0.2s; }
+        .kpi-card:hover .kpi-icon { opacity: 0.8; transform: scale(1.05); }
 
         /* --- 2. Actions Section --- */
         .actions-section { grid-column: span 12; margin-bottom: 30px; }
@@ -176,19 +178,14 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             border: 1px solid var(--border);
         }
-        .action-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--color-dashboard); }
+        .action-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--border); }
         
-        .action-card i { font-size: 2rem; color: var(--text-muted); margin-bottom: 10px; transition: 0.2s; }
+        .action-card i { font-size: 2rem; color: var(--text-muted); margin-bottom: 15px; transition: 0.3s; }
         .action-card:hover i { color: var(--color-dashboard); }
-        .action-card span { font-weight: 700; font-size: 1rem; color: var(--text-main); }
-
-        .act-blue:hover { border-color: var(--color-dashboard); }
-        .act-green:hover { border-color: var(--color-winning); }
-        .act-orange:hover { border-color: var(--color-shipping); }
-        .act-purple:hover { border-color: var(--color-pages); }
+        .action-card span { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
 
         /* --- 3. Winning Section --- */
         .winning-section { grid-column: span 8; display: flex; flex-direction: column; gap: 30px; }
@@ -200,40 +197,48 @@
             height: 100%;
             border: 1px solid var(--border);
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #f3f4f6; padding-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #f3f4f6; padding-bottom: 20px; }
         .card-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
         
         .top-list { display: flex; flex-direction: column; gap: 20px; }
         .top-item {
             display: flex; align-items: center; justify-content: space-between;
-            background: #f9fafb; padding: 15px 25px;
-            border-radius: 12px;
-            border-right: 4px solid transparent;
+            background: #f9fafb; padding: 18px 25px;
+            border-radius: 14px;
+            border-right: 5px solid transparent;
             transition: all 0.3s;
             border: 1px solid transparent;
         }
-        .top-item:hover { background: #fff; box-shadow: var(--shadow-md); border-right-color: var(--color-winning); transform: translateX(-5px); }
+        .top-item:hover { 
+            background: #fff; 
+            box-shadow: var(--shadow-md); 
+            transform: translateX(-8px); 
+            border-right-color: var(--color-winning);
+        }
         
-        .item-info { display: flex; align-items: center; gap: 15px; flex-grow: 1; }
+        .item-info { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
         .item-img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); }
-        .item-name { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
-        .item-sub { font-size: 0.9rem; color: var(--text-muted); }
+        .item-name { font-weight: 700; font-size: 1.2rem; color: var(--text-main); }
+        .item-sub { font-size: 0.95rem; color: var(--text-muted); }
         .item-metrics { display: flex; align-items: center; gap: 15px; }
-        .metric-badge { background: #f0f9ff; color: var(--color-dashboard); padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
-        .btn-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; color: white; }
+        .metric-badge { background: #fef3c7; color: #d97706; padding: 8px 16px; border-radius: 25px; font-weight: 700; font-size: 0.95rem; }
+        .btn-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: none; cursor: pointer; transition: 0.2s; color: white; }
         .btn-icon:hover { transform: scale(1.1); }
         .bg-green { background: var(--color-success); }
         .bg-red { background: var(--color-delete); }
 
         /* --- 4. Weak Products Section --- */
         .weak-section { grid-column: span 4; display: flex; flex-direction: column; gap: 30px; }
-        .weak-row { display: flex; justify-content: space-between; padding: 18px 25px; background: #fff7ed; border-radius: 12px; margin-bottom: 15px; font-size: 0.95rem; color: var(--text-main); border-right: 4px solid transparent; transition: 0.3s; }
-        .weak-row:hover { background: #fff; box-shadow: var(--shadow-sm); border-right-color: var(--color-warning); transform: translateX(-5px); }
+        .weak-row { display: flex; justify-content: space-between; padding: 18px 25px; background: #fff7ed; border-radius: 14px; margin-bottom: 15px; font-size: 0.95rem; color: var(--text-main); border-right: 5px solid transparent; transition: 0.3s; }
+        .weak-row:hover { background: #fff; box-shadow: var(--shadow-sm); border-right-color: #ef4444; transform: translateX(-8px); }
         .weak-row strong { font-weight: 700; flex-grow: 1; }
-        .weak-row span:last-child { font-weight: 700; color: var(--color-warning); font-size: 0.9rem; }
+        .weak-row span:last-child { font-weight: 800; color: #ef4444; }
 
-        /* --- 5. Stock Section (Hidden in favor of Weak/All) --- */
-        .stock-section { display: none; }
+        /* --- 5. Pages Section --- */
+        .pages-section { grid-column: span 8; display: flex; flex-direction: column; gap: 30px; }
+        .page-link { display: flex; justify-content: space-between; padding: 18px 25px; background: #f9fafb; border-radius: 14px; text-decoration: none; font-weight: 700; margin-bottom: 15px; border: 1px solid transparent; align-items: center; color: var(--text-main); transition: 0.3s; }
+        .page-link:hover { background: #fff; transform: translateX(-5px); box-shadow: var(--shadow-sm); border-color: var(--color-pages); color: var(--color-pages); }
+        .page-icon { font-size: 1.3rem; color: var(--color-pages); }
 
         /* --- 6. Full Sections --- */
         .card-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
@@ -244,7 +249,7 @@
         .product-title { font-weight: 700; font-size: 1.3rem; margin-bottom: 15px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .product-meta { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; }
         .product-actions { padding: 20px 30px; border-top: 1px solid #f3f4f6; display: flex; justify-content: flex-end; gap: 15px; }
-        .badge { padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: inline-block; }
+        .badge { padding: 6px 16px; border-radius: 25px; font-size: 0.85rem; font-weight: 700; display: inline-block; }
         .badge-success { background: #d1fae5; color: #065f46; } /* Available */
         .badge-warning { background: #fef3c7; color: #92400e; } /* Importing */
         .badge-danger { background: #fee2e2; color: #b91c1c; } /* Invalid */
@@ -254,45 +259,39 @@
         .status-success { color: var(--color-success); }
         .status-danger { color: var(--color-delete); }
 
-        /* --- 7. Pages Section --- */
-        .pages-section { grid-column: span 8; display: flex; flex-direction: column; gap: 30px; }
-        .page-link { display: flex; justify-content: space-between; padding: 18px 25px; background: #f9fafb; border-radius: 12px; text-decoration: none; font-weight: 700; margin-bottom: 15px; border: 1px solid transparent; align-items: center; color: var(--text-main); transition: 0.3s; }
-        .page-link:hover { background: #fff; transform: translateX(-5px); box-shadow: var(--shadow-sm); border-color: var(--color-pages); color: var(--color-pages); }
-        .page-icon { color: var(--color-pages); }
-
-        /* --- 8. Calculator --- */
+        /* --- 7. Calculator (Standalone) --- */
         .calc-wrapper { background: var(--bg-white); padding: 50px; border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 1000px; margin: 0 auto; }
         .calc-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .calc-group { margin-bottom: 30px; position: relative; }
-        .calc-group label { display: block; margin-bottom: 12px; font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
+        .calc-group label { display: block; margin-bottom: 12px; font-weight: 700; color: var(--text-main); font-size: 1.1rem; }
         .calc-group i { position: absolute; left: 25px; top: 50%; transform: translateY(-50%); color: var(--color-calc); font-size: 1.3rem; }
         .calc-control { width: 100%; padding: 16px 25px 16px 50px; border: 1px solid #e2e8f0; border-radius: 12px; font-family: inherit; font-size: 1.1rem; background: #f9fafb; transition: 0.3s; }
-        .calc-control:focus { border-color: var(--color-dashboard); background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-        .calc-res { margin-top: 40px; padding: 30px; background: #f9fafb; border-radius: 16px; border: 1px dashed #e2e8f0; display: flex; justify-content: space-around; text-align: center; }
+        .calc-control:focus { border-color: var(--color-dashboard); background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+        .calc-res { margin-top: 40px; padding: 30px; background: #f9fafb; border-radius: 16px; border: 2px dashed #e2e8f0; display: flex; justify-content: space-around; text-align: center; }
         .res-box { flex: 1; }
-        .res-box h5 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; }
-        .res-box span { font-size: 2rem; font-weight: 800; color: var(--text-main); }
+        .res-box h5 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; }
+        .res-box span { font-size: 2.2rem; font-weight: 800; color: var(--text-main); }
 
-        /* --- 9. Modal --- */
+        /* --- 8. Modal --- */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
         .modal.open { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-white); padding: 40px; border-radius: 20px; width: 100%; max-width: 600px; position: relative; transform: scale(0.9); transition: transform 0.3s; border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); max-height: 90vh; overflow-y: auto; }
         .modal.open .modal-content { transform: scale(1); }
-        .close-modal { position: absolute; left: 30px; top: 30px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 50%; color: var(--text-muted); font-size: 2rem; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .close-modal { position: absolute; left: 30px; top: 30px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 50%; color: var(--text-muted); font-size: 2rem; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .close-modal:hover { background: #fee2e2; color: var(--color-delete); }
         
-        .form-group { margin-bottom: 25px; }
-        .form-label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
+        .form-group { margin-bottom: 30px; }
+        .form-label { display: block; margin-bottom: 10px; font-weight: 700; color: var(--text-main); font-size: 1.1rem; }
         .form-input { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 1.1rem; background: #f9fafb; transition: 0.3s; }
-        .form-input:focus { border-color: var(--color-dashboard); background: #fff; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .form-input:focus { border-color: var(--color-dashboard); background: #fff; }
         .form-textarea { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 1.1rem; background: #f9fafb; transition: 0.3s; resize: vertical; min-height: 100px; }
         
-        .btn { padding: 14px 30px; border: none; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: 700; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: white; }
+        .btn { padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: 700; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 12px; color: white; }
         .btn-primary { background: var(--color-dashboard); }
         .btn-success { background: var(--color-success); }
         .btn-warning { background: var(--color-shipping); }
         .btn-purple { background: var(--color-pages); }
-        .btn-icon-sm { width: 40px; height: 40px; padding: 0; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-icon-sm { width: 40px; height: 40px; padding: 0; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; color: white; }
         .btn-icon-sm:hover { transform: scale(1.1); }
         
         /* Semantic Button Colors */
@@ -300,11 +299,11 @@
         .btn-winning { background: var(--color-winning); }
         .btn-importing { background: var(--color-shipping); }
 
-        /* --- 10. Toast --- */
+        /* --- 9. Toast --- */
         .toast-container { position: fixed; bottom: 40px; left: 40px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; }
-        .toast { background: var(--text-main); color: white; padding: 18px 30px; border-radius: 10px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; min-width: 350px; border-right: 6px solid var(--color-success); animation: slideIn 0.5s; }
+        .toast { background: var(--text-main); color: white; padding: 18px 30px; border-radius: 10px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; min-width: 350px; border-right: 6px solid var(--color-success); animation: slideIn 0.5s; }
         .toast.error { border-right-color: var(--color-delete); }
-        @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideIn { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* --- Toolbar --- */
         .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -329,7 +328,6 @@
         @media (max-width: 1024px) {
             .dashboard-grid > div { grid-column: span 12; }
             .winning-section, .weak-section, .pages-section { grid-column: span 12; }
-            .calc-inputs { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
@@ -365,7 +363,7 @@
         <header>
             <div style="display:flex; align-items:center;">
                 <i class="fas fa-bars toggle-menu" style="color: var(--text-main);"></i>
-                <h1>لوحة التحكم الشاملة</h1>
+                <h1>لوحة التحكم</h1>
             </div>
             <div style="display:flex; align-items:center; gap:20px;">
                 <div style="text-align:left;">
@@ -389,7 +387,7 @@
                         <i class="fas fa-layer-group kpi-icon" style="color: var(--color-dashboard);"></i>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-info"><h4>المنتجات الرابحة (Valid)</h4><p id="kpi-winning">0</p></div>
+                        <div class="kpi-info"><h4>منتجات رابحة (Valid)</h4><p id="kpi-winning">0</p></div>
                         <i class="fas fa-check-circle kpi-icon" style="color: var(--color-winning);"></i>
                     </div>
                     <div class="kpi-card">
@@ -397,11 +395,11 @@
                         <i class="fas fa-shipping-fast kpi-icon" style="color: var(--color-shipping);"></i>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-info"><h4>إجمالي رأس المال المستثمر</h4><p id="kpi-capital">0 <span style="font-size:1.2rem; font-weight:500;">MAD</span></p></div>
+                        <div class="kpi-info"><h4>إجمالي رأس المال المستثمر</h4><p id="kpi-capital">0 <span style="font-size:1.3rem; font-weight:500;">MAD</span></p></div>
                         <i class="fas fa-coins kpi-icon" style="color: var(--color-winning);"></i>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-info"><h4>إجمالي الربح المتوقع</h4><p id="kpi-profit">0 <span style="font-size:1.2rem; font-weight:500;">MAD</span></p></div>
+                        <div class="kpi-info"><h4>إجمالي الربح المتوقع</h4><p id="kpi-profit">0 <span style="font-size:1.3rem; font-weight:500;">MAD</span></p></div>
                         <i class="fas fa-chart-line kpi-icon" style="color: var(--color-calc);"></i>
                     </div>
                 </div>
@@ -409,25 +407,21 @@
                 <!-- Actions -->
                 <div class="actions-section">
                     <div class="actions-grid">
-                        <div class="action-card act-blue" onclick="openModal('inventory')">
+                        <div class="action-card" style="border-color: var(--color-inventory);" onclick="openModal('inventory')">
                             <i class="fas fa-plus-circle" style="color: var(--color-inventory);"></i>
                             <span>إضافة منتج للمخزون</span>
                         </div>
-                        <div class="action-card act-green" onclick="openModal('winning')">
+                        <div class="action-card" style="border-color: var(--color-winning);" onclick="openModal('winning')">
                             <i class="fas fa-trophy" style="color: var(--color-winning);"></i>
                             <span>إضافة منتج رابح</span>
                         </div>
-                        <div class="action-card act-orange" onclick="openModal('importing')">
+                        <div class="action-card" style="border-color: var(--color-shipping);" onclick="openModal('importing')">
                             <i class="fas fa-shipping-fast" style="color: var(--color-shipping);"></i>
                             <span>إضافة منتج قيد الاستيراد</span>
                         </div>
-                        <div class="action-card act-purple" onclick="openModal('pages')">
+                        <div class="action-card" style="border-color: var(--color-pages);" onclick="openModal('pages')">
                             <i class="fas fa-store" style="color: var(--color-pages);"></i>
                             <span>إضافة صفحة ناجحة</span>
-                        </div>
-                        <div class="action-card" onclick="switchTab('calculator')">
-                            <i class="fas fa-calculator" style="color: var(--color-calc);"></i>
-                            <span>حاسبة الأرباح</span>
                         </div>
                     </div>
                 </div>
@@ -442,17 +436,13 @@
 
                 <!-- Weak Products -->
                 <div class="card weak-section">
-                    <div class="card-header">
-                        <h3><i class="fas fa-exclamation-triangle" style="color: var(--color-warning);"></i> تنبيهات (منتجات ضعيفة)</h3>
-                    </div>
+                    <div class="card-header"><h3><i class="fas fa-exclamation-triangle" style="color: var(--color-warning);"></i> تنبيهات (منتجات ضعيفة)</h3></div>
                     <div id="weak-alert-container"></div>
                 </div>
 
                 <!-- Pages -->
                 <div class="card pages-section">
-                    <div class="card-header">
-                        <h3><i class="fas fa-link" style="color: var(--color-pages);"></i> أفضل الصفحات</h3>
-                    </div>
+                    <div class="card-header"><h3><i class="fas fa-link" style="color: var(--color-pages);"></i> أفضل الصفحات</h3></div>
                     <div id="best-pages-list"></div>
                 </div>
 
@@ -463,7 +453,7 @@
         <section id="inventory" class="section">
             <div class="toolbar">
                 <h2>إدارة المخزون</h2>
-                <button class="btn btn-inventory" onclick="openModal('inventory')"><i class="fas fa-plus"></i> إضافة منتج</button>
+                <button class="btn" style="background: var(--color-inventory);" onclick="openModal('inventory')"><i class="fas fa-plus"></i> إضافة منتج</button>
             </div>
             <div id="inventory-list" class="card-grid-full"></div>
         </section>
@@ -471,7 +461,7 @@
         <section id="importing" class="section">
             <div class="toolbar">
                 <h2>قيد الاستيراد</h2>
-                <button class="btn btn-importing" onclick="openModal('importing')"><i class="fas fa-plus"></i> إضافة منتج</button>
+                <button class="btn" style="background: var(--color-shipping);" onclick="openModal('importing')"><i class="fas fa-plus"></i> إضافة منتج</button>
             </div>
             <div id="importing-list" class="card-grid-full"></div>
         </section>
@@ -479,7 +469,7 @@
         <section id="winning" class="section">
             <div class="toolbar">
                 <h2>المنتجات الرابحة</h2>
-                <button class="btn btn-winning" onclick="openModal('winning')"><i class="fas fa-plus"></i> إضافة منتج رابح</button>
+                <button class="btn" style="background: var(--color-winning);" onclick="openModal('winning')"><i class="fas fa-plus"></i> إضافة منتج رابح</button>
             </div>
             <div id="winning-list" class="card-grid-full"></div>
         </section>
@@ -487,7 +477,7 @@
         <section id="pages" class="section">
             <div class="toolbar">
                 <h2>أفضل الصفحات</h2>
-                <button class="btn btn-purple" onclick="openModal('pages')"><i class="fas fa-plus"></i> إضافة صفحة</button>
+                <button class="btn" style="background: var(--color-pages);" onclick="openModal('pages')"><i class="fas fa-plus"></i> إضافة صفحة</button>
             </div>
             <div id="pages-list" class="card-grid-full"></div>
         </section>
@@ -523,19 +513,15 @@
                 <div class="calc-res">
                     <div class="res-box">
                         <h5>السعر النهائي للبيع</h5>
-                        <span id="res-sale">0 <span>MAD</span></span>
-                    </div>
-                    <div class="res-box">
-                        <h5>مجموع التكاليف</h5>
-                        <span id="res-cost">0 <span>MAD</span></span>
+                        <span id="res-sale" style="color: var(--color-dashboard);">0 <span>MAD</span></span>
                     </div>
                     <div class="res-box">
                         <h5>الربح الصافي</h5>
-                        <span id="res-net">0 <span>MAD</span></span>
+                        <span id="res-net" style="color: var(--color-calc);">0 <span>MAD</span></span>
                     </div>
                     <div class="res-box">
                         <h5>السعر بالدولار (USD)</h5>
-                        <span id="res-usd" style="font-size: 1.6rem; color: var(--text-muted);">$0.00</span>
+                        <span id="res-usd" style="font-size: 1.7rem;">$0.00</span>
                     </div>
                 </div>
             </div>
@@ -604,33 +590,31 @@
 
         // --- DASHBOARD RENDERER ---
         function renderDashboard() {
-            // KPI: العدد الكلي
+            // KPI
             const total = db.inventory.length + db.importing.length + db.winning.length;
             document.getElementById('kpi-total').innerText = total;
 
-            // KPI: الرابحة
             const winningValid = db.winning.filter(w => w.status === 'valid').length;
             document.getElementById('kpi-winning').innerText = winningValid;
 
-            // KPI: الاستيراد
             const importing = db.importing.length;
             document.getElementById('kpi-importing').innerText = importing;
 
-            // KPI: رأس المال
             let capital = 0;
+            let profit = 0;
+
             db.inventory.forEach(p => capital += (p.price * p.quantity));
             db.importing.forEach(p => capital += (p.price * p.quantity));
             db.winning.forEach(p => capital += (p.buyPrice * p.quantity));
-            document.getElementById('kpi-capital').innerHTML = `${capital.toLocaleString()} <span>MAD</span>`;
-
-            // KPI: الربح المتوقع
-            let profit = 0;
             db.winning.forEach(p => profit += (p.margin * p.quantity));
+
+            document.getElementById('kpi-capital').innerHTML = `${capital.toLocaleString()} <span>MAD</span>`;
             document.getElementById('kpi-profit').innerHTML = `${profit.toLocaleString()} <span>MAD</span>`;
 
             // 1. أفضل الرابحة
             const list = document.getElementById('top-winning-list');
             list.innerHTML = '';
+            
             const sorted = [...db.winning].filter(p => p.status === 'valid').sort((a, b) => b.margin - a.margin).slice(0, 5);
             if(sorted.length === 0) list.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:30px;">لا توجد منتجات رابحة</div>';
             else {
@@ -705,7 +689,7 @@
                 const badge = isAvailable ? '<span class="badge badge-success">متوفر</span>' : '<span class="badge badge-danger">نفذت</span>';
                 
                 container.innerHTML += `
-                    <div class="product-card" style="border-right: 5px solid var(--color-inventory);">
+                    <div class="product-card">
                         <img src="${item.image || 'https://via.placeholder.com/300x220?text=No+Image'}" class="product-img">
                         <div class="product-body">
                             <div class="product-title">${item.name}</div>
@@ -728,7 +712,7 @@
             container.innerHTML = db.importing.length ? '' : '<div class="empty-state">لا توجد واردات</div>';
             db.importing.forEach(item => {
                 container.innerHTML += `
-                    <div class="product-card" style="border-right: 5px solid var(--color-shipping);">
+                    <div class="product-card">
                         <img src="${item.image || 'https://via.placeholder.com/300x220?text=No+Image'}" class="product-img">
                         <div class="product-body">
                             <div class="product-title">${item.name}</div>
@@ -753,18 +737,20 @@
                 const statusBadge = item.status === 'valid' ? '<span class="badge badge-success">Valid</span>' : '<span class="badge badge-danger">Invalid</span>';
                 const statusText = item.status === 'valid' ? 'منتج رابح' : 'منتج فاشل';
                 
+                let links = `<div style="font-size:0.9rem; margin-top:10px; word-break:break-all;">
+                    ${item.alibaba ? `<a href="${item.alibaba}" target="_blank" style="color:var(--color-shipping);"><i class="fas fa-link"></i> Alibaba</a>` : ''}
+                    ${item.store ? `<a href="${item.store}" target="_blank" style="color:var(--color-dashboard); margin-right:12px;"><i class="fas fa-link"></i> Store</a>` : ''}
+                </div>`;
+
                 container.innerHTML += `
-                    <div class="product-card" style="border-right: 5px solid var(--color-winning);">
+                    <div class="product-card">
                         <img src="${item.image || 'https://via.placeholder.com/300x220?text=No+Image'}" class="product-img">
                         <div class="product-body">
                             <div class="product-title">${item.name}</div>
                             <div class="product-meta"><span>شراء: ${item.buyPrice}</span><span>بيع: ${item.salePrice}</span></div>
                             <div class="product-meta"><span>الربح الصافي: ${item.margin} MAD</span>${statusBadge}</div>
                             <div class="status-text" style="color:${item.status === 'valid' ? 'var(--color-success)' : 'var(--color-delete)'}">${statusText}</div>
-                            <div style="margin-top:12px; display:flex; gap:10px;">
-                                ${item.alibaba ? `<a href="${item.alibaba}" target="_blank" style="color:var(--color-shipping); font-size:0.9rem; font-weight:700;"><i class="fas fa-link"></i> Alibaba</a>` : ''}
-                                ${item.store ? `<a href="${item.store}" target="_blank" style="color:var(--color-dashboard); font-size:0.9rem; font-weight:700;"><i class="fas fa-link"></i> Store</a>` : ''}
-                            </div>
+                            ${links}
                         </div>
                         <div class="product-actions">
                             <button class="btn-icon-sm" style="background:var(--color-edit); color:white;" onclick="toggleStatus(${item.id})"><i class="fas fa-exchange-alt"></i></button>
@@ -781,11 +767,11 @@
             container.innerHTML = db.pages.length ? '' : '<div class="empty-state">لم يتم إضافة أي صفحة</div>';
             db.pages.forEach(item => {
                 container.innerHTML += `
-                    <div class="product-card" style="border-right: 5px solid var(--color-pages);">
+                    <div class="product-card">
                         <div class="product-body">
                             <div class="product-title">${item.name}</div>
                             <a href="${item.link}" target="_blank" style="color:var(--color-pages); text-decoration:none; font-weight:700; font-size:1rem; display:block; margin-bottom:15px;">
-                                <i class="fas fa-external-link-alt"></i> زيارة الصفحة
+                                <i class="fas fa-external-link-alt page-icon"></i> زيارة الصفحة
                             </a>
                             <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">${item.notes || 'لا توجد ملاحظات'}</p>
                         </div>
@@ -810,7 +796,6 @@
             const usdPrice = salePrice / USD_RATE;
 
             document.getElementById('res-sale').innerHTML = `${salePrice.toFixed(2)} <span>MAD</span>`;
-            document.getElementById('res-cost').innerHTML = `${totalCost.toFixed(2)} <span>MAD</span>`;
             document.getElementById('res-net').innerHTML = `${margin.toFixed(2)} <span>MAD</span>`;
             document.getElementById('res-usd').innerText = `$${usdPrice.toFixed(2)}`;
         }
@@ -850,19 +835,19 @@
                     </div>
                     <input type="file" id="file-upload" style="display:none" accept="image/*" onchange="handleImageUpload(this)">
                     
-                    <div class="form-group">
-                        <label class="form-label">اسم المنتج</label>
-                        <input type="text" id="inp-name" class="form-input" placeholder="مثلاً: قميص مانيكي" value="${data.name || ''}">
+                    <div style="margin-top:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم المنتج</label>
+                        <input type="text" id="inp-name" class="form-input" value="${data.name || ''}">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">الكمية</label>
+                    <div style="margin-top:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الكمية</label>
                         <input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">ثمن الاستثمار/الوحدة (MAD)</label>
+                    <div style="margin-top:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ثمن الاستثمار/الوحدة (MAD)</label>
                         <input type="number" id="inp-price" class="form-input" value="${data.price || 0}" placeholder="سعر شراء المنتج">
                     </div>
-                    <button class="btn btn-inventory" style="width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    <button class="btn" style="background: var(--color-inventory); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
                 `;
             } 
             // Importing Form
@@ -873,23 +858,13 @@
                     </div>
                     <input type="file" id="file-upload" style="display:none" accept="image/*" onchange="handleImageUpload(this)">
 
-                    <div class="form-group">
-                        <label class="form-label">اسم المنتج</label>
-                        <input type="text" id="inp-name" class="form-input" value="${data.name || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">الكمية</label>
-                        <input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">ثمن الاستثمار/الوحدة (MAD)</label>
-                        <input type="number" id="inp-price" class="form-input" value="${data.price || 0}">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">ملاحظات (اختياري)</label>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم المنتج</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الكمية</label><input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ثمن الاستثمار/الوحدة (MAD)</label><input type="number" id="inp-price" class="form-input" value="${data.price || 0}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ملاحظات (اختياري)</label>
                         <textarea id="inp-notes" class="form-textarea" rows="3">${data.notes || ''}</textarea>
                     </div>
-                    <button class="btn btn-importing" style="width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    <button class="btn" style="background: var(--color-shipping); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
                 `;
             }
             // Winning Form
@@ -900,32 +875,31 @@
                     </div>
                     <input type="file" id="file-upload" style="display:none" accept="image/*" onchange="handleImageUpload(this)">
 
-                    <div class="form-group"><label class="form-label">اسم المنتج</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
-                    <div class="form-group"><label class="form-label">سعر الشراء (MAD)</label><input type="number" id="inp-buy" class="form-input" value="${data.buyPrice || 0}"></div>
-                    <div class="form-group"><label class="form-label">سعر البيع (MAD)</label><input type="number" id="inp-sale" class="form-input" value="${data.salePrice || 0}"></div>
-                    <div class="form-group">
-                        <label class="form-label">هامش الربح (MAD) <span style="font-size:0.8rem; color:#94a3b8; font-weight:400;">(يحسب تلقائياً)</span></label>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم المنتج</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">سعر الشراء (MAD)</label><input type="number" id="inp-buy" class="form-input" value="${data.buyPrice || 0}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">سعر البيع (MAD)</label><input type="number" id="inp-sale" class="form-input" value="${data.salePrice || 0}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">هامش الربح (MAD)</label>
                         <input type="number" id="inp-margin" class="form-input" value="${data.margin || ''}" placeholder="سيتم الحساب تلقائياً إن تركه فارغاً">
                     </div>
-                    <div class="form-group"><label class="form-label">رابط Alibaba</label><input type="text" id="inp-alibaba" class="form-input" value="${data.alibaba || ''}"></div>
-                    <div class="form-group"><label class="form-label">رابط المتجر</label><input type="text" id="inp-store" class="form-input" value="${data.store || ''}"></div>
-                    <div class="form-group"><label class="form-label">الحالة</label>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">رابط Alibaba</label><input type="text" id="inp-alibaba" class="form-input" value="${data.alibaba || ''}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">رابط المتجر</label><input type="text" id="inp-store" class="form-input" value="${data.store || ''}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الحالة</label>
                         <select id="inp-status" class="form-input">
                             <option value="valid" ${data.status === 'valid' ? 'selected' : ''}>Valid (ناجح)</option>
                             <option value="invalid" ${data.status === 'invalid' ? 'selected' : ''}>Invalid (فاشل)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label class="form-label">الكمية</label><input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}"></div>
-                    <button class="btn btn-winning" style="width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الكمية</label><input type="number" id="inp-qty" class="form-input" value="${data.quantity || 0}"></div>
+                    <button class="btn" style="background: var(--color-winning); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
                 `;
             }
             // Pages Form
             else if (type === 'pages') {
                 formBody.innerHTML = `
-                    <div class="form-group"><label class="form-label">اسم الصفحة</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
-                    <div class="form-group"><label class="form-label">رابط الصفحة</label><input type="text" id="inp-link" class="form-input" value="${data.link || ''}"></div>
-                    <div class="form-group"><label class="form-label">ملاحظات</label><textarea id="inp-notes" class="form-textarea" rows="3">${data.notes || ''}</textarea></div>
-                    <button class="btn btn-purple" style="width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">اسم الصفحة</label><input type="text" id="inp-name" class="form-input" value="${data.name || ''}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">الرابط</label><input type="text" id="inp-link" class="form-input" value="${data.link || ''}"></div>
+                    <div style="margin-top:20px;"><label style="display:block; margin-bottom:8px; font-weight:700; color:var(--text-main);">ملاحظات</label><textarea id="inp-notes" class="form-textarea" rows="3">${data.notes || ''}</textarea></div>
+                    <button class="btn" style="background: var(--color-pages); width:100%; margin-top:10px;" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
                 `;
             }
         }
