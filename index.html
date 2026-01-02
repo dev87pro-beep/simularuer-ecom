@@ -2,529 +2,451 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Senix Flow | Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senix Flow | Enterprise UI</title>
     
-    <!-- مكتبة الأيقونات -->
+    <!-- الخطوط (Inter for English, Cairo for Arabic) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- أيقونات Material Symbols / FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- الخط العربي -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
-        /* --- 1. المتغيرات العامة (Variables) --- */
+        /* --- 1. Design System (Enterprise Palette) --- */
         :root {
-            /* ألوان الخلفية */
-            --bg-body: #f8fafc;
-            --bg-sidebar: #0f172a;
-            --bg-card: #ffffff;
-            --bg-glass: rgba(15, 23, 42, 0.95);
+            /* الألوان الأساسية (Slate - لون رمادي مزرق هادئ) */
+            --bg-body: #f8fafc;          /* رمادي فاتح جداً (خلفية) */
+            --bg-surface: #ffffff;         /* أبيض نقي (البطاقات) */
+            --bg-hover: #f1f5f9;          /* رمادي فاتح (عند التحويم) */
 
-            /* ألوان النصوص */
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --text-white: #f1f5f9;
+            /* النصوص */
+            --text-primary: #0f172a;      /* أسود غامق جداً */
+            --text-secondary: #64748b;    /* رمادي */
+            --text-tertiary: #94a3b8;     /* رمادي فاتح */
 
-            /* ألوان البرند (Senix) */
-            --brand-primary: #6366f1;
-            --brand-accent: #0ea5e9;
+            /* ألوان البرند (Brand) - أخضر زمردي هادئ (Emerald) */
+            --brand-primary: #10b981;      
+            --brand-hover: #059669;
+            --brand-light: #d1fae5;
 
-            /* ألوان الحالة (State) */
-            --color-success: #10b981;
-            --color-danger: #ef4444;
-            --color-warning: #f59e0b;
+            /* ألوان الوظائف (Functional) - بدقة عالية */
+            --color-danger: #ef4444;       /* أحمر لين */
+            --color-success: #10b981;      /* أخضر لين */
+            --color-warning: #f59e0b;      /* برتقالي لين */
+            --color-info: #3b82f6;         /* أزرق لين */
+
+            /* الوظلال (Shadows) - ناعمة جداً */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+            /* الحدود (Borders) - خفيفة جداً */
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+
+            /* الزوايا (Radius) */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
         }
 
-        /* تصفير الإعدادات الافتراضية */
+        /* --- 2. Global Reset & Typography --- */
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-body);
-            color: var(--text-main);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
         }
 
-        /* --- 2. شاشة التحميل (Loading Screen) --- */
-        #loading-overlay {
-            position: fixed; inset: 0;
-            background-color: var(--bg-body);
-            z-index: 9999;
-            display: flex; align-items: center; justify-content: center; flex-direction: column;
-            transition: opacity 0.5s ease;
-        }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        a:hover { color: var(--brand-primary); }
+
+        /* --- 3. Components (Atoms) --- */
         
-        .spinner {
-            width: 50px; height: 50px;
-            border: 5px solid var(--brand-accent);
-            border-top: 5px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
+
+        /* Cards */
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, border-color 0.2s;
+            overflow: hidden;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-hover);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            gap: 0.5rem;
+        }
+        .btn-primary { background-color: var(--brand-primary); color: white; }
+        .btn-primary:hover { background-color: var(--brand-hover); transform: translateY(-1px); }
+        .btn-outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-primary); }
+        .btn-outline:hover { background-color: var(--bg-hover); border-color: var(--text-secondary); }
         
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* --- 3. رسالة الخطأ (Error Banner) --- */
-        #error-banner {
-            display: none;
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background-color: #fee2e2; color: #991b1b; padding: 15px 30px;
-            border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 10000; text-align: center; font-weight: bold; cursor: pointer;
-            border: 1px solid #fecaca;
+        /* Inputs */
+        .input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: 0.2s;
+        }
+        .input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
-        /* --- 4. شاشة المصادقة (Auth Screen) --- */
-        #auth-screen {
-            position: fixed; inset: 0;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            z-index: 5000;
-            display: none; flex; align-items: center; justify-content: center;
+        /* Badges */
+        .badge {
+            display: inline-flex; align-items: center; padding: 0.25rem 0.625rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
         }
+        .badge-success { background-color: var(--brand-light); color: var(--brand-success); }
+        .badge-warning { background-color: #fef3c7; color: var(--color-warning); }
 
-        .auth-card {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 50px 40px;
-            border-radius: 24px;
-            width: 100%; max-width: 420px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        .auth-header { text-align: center; margin-bottom: 40px; }
-        .auth-logo { font-size: 3.5rem; color: var(--brand-accent); margin-bottom: 20px; }
-        .auth-title { font-size: 2rem; font-weight: 800; color: #0f172a; }
-
-        .input-group { margin-bottom: 20px; }
-        .input-field {
-            width: 100%; padding: 18px 20px;
-            border: 2px solid #e2e8f0; border-radius: 12px;
-            font-size: 1.1rem; background-color: #f8fafc;
-            font-family: inherit; transition: all 0.3s;
-        }
-        .input-field:focus {
-            border-color: var(--brand-accent);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
-        }
-
-        .btn-primary {
-            width: 100%; padding: 18px;
-            background-color: var(--brand-primary);
-            color: white;
-            border: none; border-radius: 12px;
-            font-size: 1.2rem; font-weight: 700; font-family: inherit;
-            cursor: pointer; transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
-            margin-bottom: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-primary:hover { transform: translateY(-2px); background-color: #4f46e5; }
-
-        /* --- 5. التطبيق الرئيسي (Main Application) --- */
-        #app-container {
-            display: none; /* مخفي افتراضياً */
-            max-width: 1400px; width: 100%; margin: 0 auto;
-            min-height: 100vh;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .layout-flex {
-            display: flex; height: 100vh;
-            position: relative;
+        /* --- 4. Layout Structure --- */
+        #app-layout {
+            display: flex;
+            width: 100%;
+            height: 100vh;
         }
 
         /* Sidebar */
         .sidebar {
-            width: 280px;
-            background-color: var(--bg-sidebar);
-            color: var(--text-white);
+            width: 260px;
+            background-color: var(--bg-surface);
+            border-left: 1px solid var(--border);
             display: flex; flex-direction: column;
-            padding: 30px 0;
             position: sticky; top: 0; height: 100vh;
-            z-index: 100;
+            z-index: 50;
         }
 
-        .sidebar-brand { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .brand-name { font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: 1px; }
+        .sidebar-header {
+            height: 64px;
+            display: flex; align-items: center; padding: 0 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-        .nav-menu { list-style: none; flex-grow: 1; }
-        .nav-item { margin-bottom: 10px; }
+        .brand-logo {
+            display: flex; align-items: center; gap: 0.75rem;
+            font-weight: 700; font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        .brand-icon { width: 32px; height: 32px; background-color: var(--brand-light); color: var(--brand-primary); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); font-size: 0.9rem; }
+
+        .nav-list { padding: 1rem 0; flex: 1; list-style: none; }
+        .nav-item { margin-bottom: 0.25rem; }
         
         .nav-link {
-            display: flex; align-items: center; padding: 16px 20px;
-            color: #94a3b8; text-decoration: none; border-radius: 12px;
-            font-weight: 500; transition: all 0.2s; position: relative; overflow: hidden;
+            display: flex; align-items: center; padding: 0.625rem 1rem;
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
         }
-        .nav-link:hover { background-color: rgba(255, 255, 255, 0.08); color: white; transform: translateX(-5px); }
-        .nav-link.active { background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, transparent 100%); color: var(--brand-accent); font-weight: 700; border-right: 4px solid var(--brand-accent); }
-        .nav-link i { margin-left: 15px; width: 24px; text-align: center; font-size: 1.2rem; }
+        .nav-link:hover { background-color: var(--bg-hover); color: var(--text-primary); }
+        .nav-link.active { background-color: var(--brand-light); color: var(--brand-primary); }
+        .nav-link i { margin-left: 0.75rem; width: 20px; text-align: center; }
 
         .sidebar-footer {
-            margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;
+            padding: 1rem; border-top: 1px solid var(--border); margin-top: auto;
         }
-        .user-info { text-align: center; margin-bottom: 15px; color: #94a3b8; }
-        .btn-logout { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; }
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.2); color: white; }
+        .user-profile { display: flex; align-items: center; gap: 0.75rem; }
+        .user-avatar { width: 32px; height: 32px; background-color: #e2e8f0; border-radius: 50%; }
+        .user-info { flex: 1; overflow: hidden; }
+        .user-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-email { font-size: 0.75rem; color: var(--text-tertiary); }
+        .btn-icon { width: 32px; height: 32px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); background: transparent; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { background-color: var(--bg-hover); color: var(--text-primary); }
 
         /* Main Content */
-        .main-content {
-            flex: 1; padding: 40px; overflow-y: auto;
-            background-color: white; /* للواضوحية */
+        .main {
+            flex: 1; background-color: var(--bg-body);
+            overflow-y: auto; padding: 2rem;
         }
 
-        .content-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .page-title { font-size: 2rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 15px; }
-        .brand-icon-small { font-size: 1.8rem; color: var(--brand-primary); }
-
-        /* KPIs */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .kpi-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: 0.3s; }
-        .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .kpi-value { font-size: 2rem; font-weight: 800; color: var(--brand-primary); margin: 10px 0; }
-        .kpi-label { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .kpi-icon { font-size: 1.5rem; color: var(--brand-primary); opacity: 0.1; }
-
-        /* Lists (Winning/Weak) */
-        .list-card { background: white; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8fafc; border-radius: 10px; margin-bottom: 10px; border: 1px solid transparent; transition: 0.2s; }
-        .list-item:hover { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-color: #e2e8f0; transform: translateX(-5px); }
-        .item-name { font-weight: 600; color: var(--text-main); }
-        .item-badge { background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
-        .item-actions { display: flex; gap: 8px; }
-        .btn-icon { width: 35px; height: 35px; border-radius: 8px; border: none; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: 0.2s; }
-        .btn-icon:hover { transform: scale(1.1); }
-        .bg-green { background: var(--color-success); }
-        .bg-red { background: var(--color-danger); }
-        .bg-orange { background: var(--brand-primary); }
-
-        /* Mobile Bottom Menu */
-        .mobile-menu-btn { display: none; position: fixed; bottom: 20px; left: 20px; width: 60px; height: 60px; background: var(--brand-primary); color: white; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1000; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
-        .mobile-menu-btn:active { transform: scale(0.9); }
-        .bottom-sheet {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: flex-end; justify-content: center;
-            padding: 20px; animation: fadeIn 0.3s;
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.025em; }
+        .header-meta { display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--text-secondary); }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+            margin-bottom: 2.5rem;
         }
-        .sheet-content { background: white; width: 100%; max-width: 300px; padding: 20px; border-radius: 20px 0 0 0; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .sheet-item { display: flex; align-items: center; padding: 15px; color: var(--text-main); cursor: pointer; border-bottom: 1px solid #f1f5f9; }
-        .sheet-item:last-child { border-bottom: none; }
-        .sheet-item:hover { background: #f8fafc; color: var(--brand-primary); }
+        .stat-card { padding: 1.5rem; }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+        .stat-trend { font-size: 0.875rem; color: var(--color-success); font-weight: 600; display: flex; align-items: center; gap: 0.25rem; margin-top: 0.5rem; }
+        .stat-trend.down { color: var(--text-tertiary); }
 
-        /* Responsive */
+        /* Products Grid */
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
+        }
+        .product-card { display: flex; flex-direction: column; height: 100%; }
+        .product-img { width: 100%; height: 180px; object-fit: cover; background-color: #f1f5f9; }
+        .product-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+        .product-title { font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem; }
+        .product-meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .price { font-weight: 700; color: var(--text-primary); font-size: 1.125rem; }
+        .status { font-size: 0.75rem; color: var(--text-tertiary); }
+        .product-actions { display: flex; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .mobile-menu-btn { display: flex; }
-            .main-content { padding: 20px; }
+            #app-layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--border); position: static; }
+            .nav-list { display: flex; overflow-x: auto; gap: 0.5rem; padding: 0.5rem; margin: 0; border-bottom: none; }
+            .nav-item { margin: 0; flex-shrink: 0; }
+            .nav-link { padding: 0.5rem; white-space: nowrap; border-radius: 999px; border: 1px solid transparent; }
+            .nav-link:hover { border-color: transparent; background-color: transparent; }
+            .nav-link.active { border-color: var(--brand-primary); background-color: transparent; }
+            .sidebar-footer { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .products-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. رسالة الخطأ -->
-    <div id="error-banner" onclick="this.style.display='none'">
-        حدث خطأ في النظام. انقر هنا للإخفاء.
-    </div>
-
-    <!-- 2. شاشة التحميل -->
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p style="color: #64748b; margin-top: 15px; font-weight: 600;">جاري تحميل Senix Flow...</p>
-    </div>
-
-    <!-- 3. شاشة الدخول -->
-    <div id="auth-screen">
-        <div class="auth-card">
-            <div class="auth-header">
-                <i class="fas fa-bolt auth-logo"></i>
-                <h1 class="auth-title">Senix Flow</h1>
-            </div>
-            <div class="input-group">
-                <input type="email" id="email" class="input-field" placeholder="البريد الإلكتروني">
-            </div>
-            <div class="input-group">
-                <input type="password" id="password" class="input-field" placeholder="كلمة المرور">
-            </div>
-            <button class="btn-primary" onclick="attemptLogin()">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-            </button>
-            <p style="text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 20px;">
-                حساب تجريبي:<br> Email: admin@test.com | Pass: 123456
-            </p>
-        </div>
-    </div>
-
-    <!-- 4. التطبيق الرئيسي -->
-    <div id="app-container">
-        <div class="layout-flex">
-            
-            <!-- Sidebar -->
-            <nav class="sidebar">
-                <div class="sidebar-brand">
-                    <i class="fas fa-bolt" style="font-size: 2rem; color: var(--brand-accent);"></i>
-                    <h2 class="brand-name">Senix Flow</h2>
-                </div>
-                <ul class="nav-menu">
-                    <li class="nav-item"><a href="#" onclick="showDashboard()" class="nav-link active"><i class="fas fa-th-large"></i> الرئيسية</a></li>
-                    <li class="nav-item"><a href="#" onclick="alert('المخزون')" class="nav-link"><i class="fas fa-boxes"></i> المخزون</a></li>
-                    <li class="nav-item"><a href="#" onclick="alert('الاستيراد')" class="nav-link"><i class="fas fa-shipping-fast"></i> الاستيراد</a></li>
-                    <li class="nav-item"><a href="#" onclick="alert('الرابحة')" class="nav-link"><i class="fas fa-trophy"></i> الرابحة</a></li>
-                    <li class="nav-item"><a href="#" onclick="alert('الحاسبة')" class="nav-link"><i class="fas fa-calculator"></i> الحاسبة</a></li>
-                </ul>
-                <div class="sidebar-footer">
-                    <div class="user-info">مسؤول النظام</div>
-                    <button class="btn-logout" onclick="attemptLogout()">
-                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-                    </button>
-                </div>
-            </nav>
-
-            <!-- Main Content -->
-            <main class="main-content">
-                <div class="content-header">
-                    <h1 class="page-title">
-                        <i class="fas fa-chart-pie brand-icon-small"></i> لوحة التحكم
-                    </h1>
-                    <button class="btn-primary" style="background: var(--bg-body); color: var(--text-main); border: 1px solid #e2e8f0;" onclick="alert('الإعدادات')">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                </div>
-
-                <!-- KPIs -->
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-cubes"></i></div>
-                        <div class="kpi-value" id="kpi-total">0</div>
-                        <div class="kpi-label">منتجات</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="kpi-value" id="kpi-valid">0</div>
-                        <div class="kpi-label">صحيح</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-rocket"></i></div>
-                        <div class="kpi-value" id="kpi-import">0</div>
-                        <div class="kpi-label">استيراد</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-dollar-sign"></i></div>
-                        <div class="kpi-value" id="kpi-capital">0</div>
-                        <div class="kpi-label">رأس المال</div>
-                    </div>
-                </div>
-
-                <!-- Content Placeholder (Simple text for stability) -->
-                <div class="list-card">
-                    <div class="card-title">
-                        <i class="fas fa-trophy" style="color: var(--brand-accent);"></i> أفضل المنتجات الرابحة
-                    </div>
-                    <div style="text-align: center; padding: 40px; color: #94a3b8;">
-                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #d1fae5; margin-bottom: 20px;"></i>
-                        <p style="font-size: 1.1rem;">النظام يعمل بشكل صحيح.<br>جميع الأقسام جاهزة للعمل.</p>
-                        <p style="font-size: 0.9rem; color: #cbd5e1; margin-top: 20px;">(يتم تجاهل المحتوى العشوائي لضمان الاستقرار في هذه النسخة)</p>
-                    </div>
-                </div>
-
-            </main>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <!-- Mobile Bottom Sheet -->
-        <div id="mobile-sheet" class="bottom-sheet">
-            <div class="sheet-content">
-                <div class="sheet-item" onclick="showDashboard(); toggleMobileMenu()"><i class="fas fa-th-large"></i> الرئيسية</div>
-                <div class="sheet-item" onclick="alert('المخزون'); toggleMobileMenu()"><i class="fas fa-boxes"></i> المخزون</div>
-                <div class="sheet-item" onclick="alert('الاستيراد'); toggleMobileMenu()"><i class="fas fa-shipping-fast"></i> الاستيراد</div>
-                <div class="sheet-item" onclick="alert('الرابحة'); toggleMobileMenu()"><i class="fas fa-trophy"></i> الرابحة</div>
-                <div class="sheet-item" style="background: #fef2f2; color: #ef4444;" onclick="attemptLogout(); toggleMobileMenu()"><i class="fas fa-sign-out-alt"></i> خروج</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FIREBASE SDK -->
-    <script type="module">
-        // --- 1. Imports ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
-
-        // --- 2. Configuration ---
-        // ملاحظة: تأكد من وضع بياناتك هنا، وإلا لن يعمل التطبيق.
-const firebaseConfig = {
-  apiKey: "AIzaSyDOfw9W2U1o5HGjtcUfnQhjudoQnqFccBk",
-  authDomain: "my-store-app-12651.firebaseapp.com",
-  projectId: "my-store-app-12651",
-  storageBucket: "my-store-app-12651.firebasestorage.app",
-  messagingSenderId: "52453040648",
-  appId: "1:52453040648:web:a8101a86e030c559f967bd"
-};
-
-        // --- 3. Application State ---
-        const appState = {
-            auth: null,
-            db: null,
-            user: null
-        };
-
-        // --- 4. Error Handler ---
-        function showError(message) {
-            console.error(message);
-            const errorBanner = document.getElementById('error-banner');
-            errorBanner.style.display = 'block';
-            errorBanner.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-        }
-
-        // --- 5. Initialize Firebase (Safe) ---
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
-
-            appState.auth = auth;
-            appState.db = db;
-
-            console.log("Firebase App Initialized");
-
-            // --- 6. Auth Listener ---
-            onAuthStateChanged(auth, (user) => {
-                const loadingOverlay = document.getElementById('loading-overlay');
-                const authScreen = document.getElementById('auth-screen');
-                const appContainer = document.getElementById('app-container');
-
-                if (user) {
-                    // User Logged In
-                    appState.user = user;
-                    
-                    // Remove Loading & Auth
-                    loadingOverlay.style.opacity = '0';
-                    setTimeout(() => loadingOverlay.style.display = 'none', 500);
-                    authScreen.style.display = 'none';
-
-                    // Show App
-                    appContainer.style.display = 'block';
-                    
-                    loadDashboardData();
-
-                } else {
-                    // User Logged Out
-                    appState.user = null;
-                    
-                    // Hide App
-                    appContainer.style.display = 'none';
-                    
-                    // Show Auth
-                    authScreen.style.display = 'flex';
-                    
-                    // Ensure Loading is hidden
-                    loadingOverlay.style.display = 'none';
-                }
-            });
-
-        } catch (err) {
-            console.error("Firebase Initialization Error:", err);
-            showError("فشل في تهيئة النظام: تأكد من ملفات الربط (Firebase Config).");
-            // Force hide loading
-            document.getElementById('loading-overlay').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
-        }
-
-        // --- 7. Data Loading ---
-        async function loadDashboardData() {
-            try {
-                const inventorySnap = await getDocs(collection(appState.db, 'inventory'));
-                const importingSnap = await getDocs(collection(appState.db, 'importing'));
-                const winningSnap = await getDocs(collection(appState.db, 'winning'));
-
-                const inventoryCount = inventorySnap.size;
-                const importingCount = importingSnap.size;
-                const winningCount = winningSnap.size;
-
-                // Update KPIs
-                document.getElementById('kpi-total').innerText = inventoryCount + importingCount + winningCount;
-                document.getElementById('kpi-valid').innerText = winningCount;
-                document.getElementById('kpi-import').innerText = importingCount;
-                
-                // Dummy Capital Calculation (sum of inventory * 100)
-                let capital = 0;
-                inventorySnap.docs.forEach(doc => {
-                    const data = doc.data();
-                    if(data.price) capital += data.price * (data.quantity || 1);
-                });
-                document.getElementById('kpi-capital').innerText = capital.toLocaleString();
-
-                console.log("Data Loaded Successfully");
-
-            } catch (err) {
-                console.error("Data Loading Error:", err);
-                showError("خطأ في تحميل البيانات");
-            }
-        }
-
-        // --- 8. Window Functions (Exposed to HTML) ---
+    <!-- 1. APP LAYOUT -->
+    <div id="app-layout">
         
-        // Login
-        window.attemptLogin = async () => {
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
+        <!-- 2. SIDEBAR (Fixed) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <div class="brand-icon"><i class="fas fa-chart-pie"></i></div>
+                    <span>Senix Flow</span>
+                </div>
+            </div>
 
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-th-large"></i> الرئيسية</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-boxes"></i> المخزون</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-rocket"></i> الاستيراد</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-trophy"></i> الفائزين</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-calculator"></i> الحسابات</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-cog"></i> الإعدادات</a></li>
+            </ul>
 
-            if (!email || !password) {
-                alert("يرجى إدخال البريد وكلمة المرور");
-                return;
-            }
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar"><i class="fas fa-user" style="font-size: 0.8rem; color: #94a3b8;"></i></div>
+                    <div class="user-info">
+                        <div class="user-name">المسؤول</div>
+                        <div class="user-email">admin@senix.com</div>
+                    </div>
+                </div>
+                <button class="btn-icon" title="تسجيل خروج"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
 
-            try {
-                await signInWithEmailAndPassword(appState.auth, email, password);
-            } catch (error) {
-                console.error("Login Error:", error);
-                if(error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    alert("البريد أو كلمة المرور غير صحيحة.");
-                } else {
-                    alert("حدث خطأ أثناء تسجيل الدخول. جرب مرة أخرى.");
-                }
-            }
-        };
+        <!-- 3. MAIN CONTENT -->
+        <main class="main">
+            <div class="container">
+                
+                <!-- Header -->
+                <header>
+                    <h1>لوحة التحكم</h1>
+                    <div class="header-meta">
+                        <span>آخر تحديث: الآن</span>
+                        <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </header>
 
-        // Logout
-        window.attemptLogout = () => {
-            try {
-                signOut(appState.auth);
-                window.location.reload();
-            } catch (error) {
-                console.error("Logout Error:", error);
-                alert("حدث خطأ أثناء تسجيل الخروج.");
-            }
-        };
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="card stat-card">
+                        <div class="stat-label">إجمالي المخزون</div>
+                        <div class="stat-value">248</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-up"></i> 12%</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">قيد الاستيراد</div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-up"></i> 2</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">منتجات فائزة</div>
+                        <div class="stat-value">42</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-down"></i> 5%</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">إجمالي الأرباح</div>
+                        <div class="stat-value">12.5K</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-up"></i> 24%</div>
+                    </div>
+                </div>
 
-        // Mobile Menu
-        window.toggleMobileMenu = () => {
-            const sheet = document.getElementById('mobile-sheet');
-            const isOpen = sheet.style.display === 'flex';
-            
-            if (isOpen) {
-                sheet.style.display = 'none';
-            } else {
-                sheet.style.display = 'flex';
-            }
-        };
+                <!-- Products Grid -->
+                <div class="products-grid">
+                    <!-- Product 1 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">سماعة بلوتوث لاسلكية S-50</div>
+                            <div class="product-meta">
+                                <span class="price">450 MAD</span>
+                                <span class="badge badge-success">متوفر</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
 
-        // Placeholders for other functions to prevent "not defined" errors
-        window.showDashboard = () => { /* Implementation placeholder */ };
-        window.alert = (msg) => alert(msg); // Using native alert for this version to reduce code complexity
+                    <!-- Product 2 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">ساعة ذكية Gen 5 بروتين</div>
+                            <div class="product-meta">
+                                <span class="price">820 MAD</span>
+                                <span class="badge badge-warning">نفذت</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary" style="flex:1;">إعادة الطلب</button>
+                                <button class="btn btn-outline" style="padding: 0.5rem;"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
 
-    </script>
+                    <!-- Product 3 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">ماكينة قهوة نوفا برايمو</div>
+                            <div class="product-meta">
+                                <span class="price">1,250 MAD</span>
+                                <span class="badge badge-success">متوفر</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">شاشة تلفزيون 4K 50 بوصة</div>
+                            <div class="product-meta">
+                                <span class="price">3,500 MAD</span>
+                                <span class="badge badge-success">متوفر</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">حقيبة ظهر رجالية برونز</div>
+                            <div class="product-meta">
+                                <span class="price">320 MAD</span>
+                                <span class="badge badge-success">متوفر</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Product 6 -->
+                     <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">طاولة مكتب خشب زجوني</div>
+                            <div class="product-meta">
+                                <span class="price">1,800 MAD</span>
+                                <span class="badge badge-success">متوفر</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 7 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">كاميرا مراقبة خارجية Wi-Fi</div>
+                            <div class="product-meta">
+                                <span class="price">250 MAD</span>
+                                <span class="badge badge-warning">نفذت</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 8 -->
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/400x180" class="product-img" alt="Product">
+                        <div class="product-body">
+                            <div class="product-title">مجموعة أدوات كهربائية DeWalt</div>
+                            <div class="product-meta">
+                                <span class="price">4,500 MAD</span>
+                                <span class="badge badge-success">متوفر</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-outline" style="flex:1; padding: 0.5rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
 </body>
 </html>
