@@ -12,12 +12,12 @@
     <style>
         /* --- 1. متغيرات التصميم (Design Tokens) --- */
         :root {
-            --bg-body: #f8fafc;
-            --bg-sidebar: #1e293b;
+            --bg-body: #f1f5f9;
+            --bg-sidebar: #0f172a;
             --bg-card: #ffffff;
             --bg-input: #ffffff;
             
-            --text-main: #0f172a;
+            --text-main: #1e293b;
             --text-muted: #64748b;
             --text-white: #f8fafc;
             
@@ -53,7 +53,7 @@
             display: flex;
         }
 
-        /* Scrollbar Styling */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -171,6 +171,13 @@
         .page-section { display: none; animation: fadeIn 0.4s ease-out; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Headings for Sections --- */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; border-bottom: 2px solid var(--border); padding-bottom: 15px;
+        }
+        .section-header h2 { font-size: 1.8rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
 
         /* --- 6. مكونات لوحة التحكم (Dashboard Components) --- */
         
@@ -380,6 +387,10 @@
             
             <!-- 1. DASHBOARD -->
             <section id="dashboard" class="page-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-home" style="color:var(--primary)"></i> لوحة المعلومات العامة</h2>
+                </div>
+
                 <!-- KPIs -->
                 <div class="kpi-grid">
                     <div class="kpi-card" style="border-bottom: 4px solid var(--primary);">
@@ -432,8 +443,8 @@
 
             <!-- 2. INVENTORY SECTION -->
             <section id="inventory" class="page-section">
-                <div class="panel-header" style="margin-bottom:20px;">
-                    <h2>المخزون الحالي</h2>
+                <div class="section-header">
+                    <h2><i class="fas fa-boxes" style="color:var(--inventory)"></i> قسم المخزون</h2>
                     <button class="btn btn-primary" style="width:auto; padding: 10px 20px;" onclick="window.openModal('inventory')">
                         <i class="fas fa-plus"></i> إضافة
                     </button>
@@ -443,8 +454,8 @@
 
             <!-- 3. WINNING SECTION -->
             <section id="winning" class="page-section">
-                <div class="panel-header" style="margin-bottom:20px;">
-                    <h2>المنتجات الرابحة</h2>
+                <div class="section-header">
+                    <h2><i class="fas fa-trophy" style="color:var(--winning)"></i> قسم المنتجات الرابحة</h2>
                     <button class="btn btn-primary" style="width:auto; padding: 10px 20px; background:var(--winning);" onclick="window.openModal('winning')">
                         <i class="fas fa-plus"></i> إضافة رابح
                     </button>
@@ -454,8 +465,10 @@
 
             <!-- 4. CALCULATOR SECTION -->
             <section id="calculator" class="page-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-calculator" style="color:var(--calc)"></i> أداة حساب الأرباح</h2>
+                </div>
                 <div class="calc-container">
-                    <h2 style="text-align:center; margin-bottom:25px; font-weight:700;">حاسبة الأرباح والهوامش</h2>
                     <div class="calc-form">
                         <div>
                             <label style="font-weight:600; margin-bottom:8px; display:block;">ثمن الشراء (MAD)</label>
@@ -494,10 +507,23 @@
             
             <!-- Other Sections Placeholders -->
             <section id="importing" class="page-section">
-                <div class="panel"><h3>قائمة الاستيراد</h3><div id="importing-list" class="list-group"></div></div>
+                <div class="section-header">
+                    <h2><i class="fas fa-shipping-fast" style="color:var(--shipping)"></i> قسم الاستيراد</h2>
+                    <button class="btn btn-primary" style="width:auto; padding: 10px 20px; background:var(--shipping);" onclick="window.openModal('importing')">
+                        <i class="fas fa-plus"></i> إضافة
+                    </button>
+                </div>
+                <div class="panel"><div id="importing-list" class="list-group"></div></div>
             </section>
+            
             <section id="pages" class="page-section">
-                <div class="panel"><h3>إدارة الصفحات</h3><div id="pages-full-list" class="list-group"></div></div>
+                <div class="section-header">
+                    <h2><i class="fas fa-store" style="color:var(--pages)"></i> قسم الصفحات</h2>
+                    <button class="btn btn-primary" style="width:auto; padding: 10px 20px; background:var(--pages);" onclick="window.openModal('pages')">
+                        <i class="fas fa-plus"></i> إضافة
+                    </button>
+                </div>
+                <div class="panel"><div id="pages-full-list" class="list-group"></div></div>
             </section>
 
         </main>
@@ -523,6 +549,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+        // إضافة Storage لرفع الصور
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
 
         // Firebase Config
         const firebaseConfig = {
@@ -537,6 +565,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         // Global State (accessible to window functions)
         window.dbData = { inventory: [], importing: [], winning: [], pages: [] };
@@ -677,6 +706,22 @@
             `).join('') || '<div class="empty-state">لا توجد عناصر</div>';
         }
 
+        // --- IMAGE UPLOAD LOGIC ---
+        window.handleImageUpload = async (file) => {
+            if (!file) return null;
+            showToast('جاري رفع الصورة...');
+            const storageRef = ref(storage, 'products/' + Date.now() + '_' + file.name);
+            try {
+                const snapshot = await uploadBytes(storageRef, file);
+                const url = await getDownloadURL(snapshot.ref);
+                return url;
+            } catch (error) {
+                console.error(error);
+                showToast('فشل رفع الصورة: ' + error.message);
+                return null;
+            }
+        };
+
         // --- CRUD OPERATIONS ---
 
         // Helper to find item in local cache
@@ -716,7 +761,11 @@
                     <input type="text" id="m-name" class="form-input" placeholder="اسم المنتج" value="${item.name}">
                     <input type="number" id="m-price" class="form-input" placeholder="سعر الشراء" value="${item.price}">
                     <input type="number" id="m-qty" class="form-input" placeholder="الكمية" value="${item.quantity}">
-                    <input type="text" id="m-img" class="form-input" placeholder="رابط الصورة" value="${item.image}">
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600;">الصورة الحالية:</label>
+                        <img src="${item.image}" style="width:100px; height:100px; object-fit:cover; border-radius:8px; margin-bottom:5px;">
+                        <input type="file" id="m-file" class="form-input" accept="image/*">
+                    </div>
                 `;
             } else if (type === 'winning') {
                 title.innerText = 'تعديل منتج رابح';
@@ -725,7 +774,11 @@
                     <input type="number" id="m-buy" class="form-input" placeholder="سعر الشراء" value="${item.buyPrice}">
                     <input type="number" id="m-sale" class="form-input" placeholder="سعر البيع" value="${item.salePrice}">
                     <input type="number" id="m-margin" class="form-input" placeholder="هامش الربح" value="${item.margin}">
-                    <input type="text" id="m-img" class="form-input" placeholder="رابط الصورة" value="${item.image}">
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600;">الصورة الحالية:</label>
+                        <img src="${item.image}" style="width:100px; height:100px; object-fit:cover; border-radius:8px; margin-bottom:5px;">
+                        <input type="file" id="m-file" class="form-input" accept="image/*">
+                    </div>
                 `;
             } else if (type === 'pages') {
                 title.innerText = 'تعديل صفحة';
@@ -755,7 +808,13 @@
                 if(document.getElementById('m-margin')) updateData.margin = Number(document.getElementById('m-margin').value);
                 if(document.getElementById('m-sale')) updateData.salePrice = Number(document.getElementById('m-sale').value);
                 if(document.getElementById('m-link')) updateData.link = document.getElementById('m-link').value;
-                if(document.getElementById('m-img')) updateData.image = document.getElementById('m-img').value;
+
+                // Handle Image Upload for Edit
+                const fileInput = document.getElementById('m-file');
+                if (fileInput && fileInput.files[0]) {
+                    const newUrl = await handleImageUpload(fileInput.files[0]);
+                    if (newUrl) updateData.image = newUrl;
+                }
 
                 try {
                     await updateDoc(doc(db, type, id), updateData);
@@ -784,7 +843,8 @@
                     <input type="text" id="m-name" class="form-input" placeholder="اسم المنتج">
                     <input type="number" id="m-price" class="form-input" placeholder="سعر الشراء">
                     <input type="number" id="m-qty" class="form-input" placeholder="الكمية">
-                    <input type="text" id="m-img" class="form-input" placeholder="رابط الصورة">
+                    <label style="display:block; margin-bottom:8px; font-weight:600;">رفع صورة:</label>
+                    <input type="file" id="m-file" class="form-input" accept="image/*">
                 `;
             } else if (type === 'winning') {
                 title.innerText = 'منتج رابح';
@@ -793,7 +853,8 @@
                     <input type="number" id="m-buy" class="form-input" placeholder="سعر الشراء">
                     <input type="number" id="m-sale" class="form-input" placeholder="سعر البيع">
                     <input type="number" id="m-margin" class="form-input" placeholder="هامش الربح">
-                    <input type="text" id="m-img" class="form-input" placeholder="رابط الصورة">
+                    <label style="display:block; margin-bottom:8px; font-weight:600;">رفع صورة:</label>
+                    <input type="file" id="m-file" class="form-input" accept="image/*">
                 `;
             } else if (type === 'pages') {
                 title.innerText = 'إضافة صفحة';
@@ -821,7 +882,22 @@
                 if(document.getElementById('m-margin')) data.margin = Number(document.getElementById('m-margin').value);
                 if(document.getElementById('m-sale')) data.salePrice = Number(document.getElementById('m-sale').value);
                 if(document.getElementById('m-link')) data.link = document.getElementById('m-link').value;
-                if(document.getElementById('m-img')) data.image = document.getElementById('m-img').value || 'https://picsum.photos/seed/'+name+'/200/200';
+                
+                // Image Upload Logic
+                const fileInput = document.getElementById('m-file');
+                if (fileInput && fileInput.files[0]) {
+                    showToast('جاري رفع الصورة...');
+                    const url = await handleImageUpload(fileInput.files[0]);
+                    if (url) {
+                        data.image = url;
+                    } else {
+                        // Fallback image if upload fails
+                        data.image = 'https://picsum.photos/seed/'+name+'/200/200';
+                    }
+                } else {
+                    // Fallback if no file selected
+                    data.image = 'https://picsum.photos/seed/'+name+'/200/200';
+                }
 
                 try {
                     await addDoc(collection(db, type), data);
