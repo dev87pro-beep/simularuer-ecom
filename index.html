@@ -143,6 +143,11 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
         .btn-icon-only:hover { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
+        
+        .btn-icon-blue {
+            background: rgba(59, 130, 246, 0.15); color: var(--primary);
+        }
+        .btn-icon-blue:hover { background: rgba(59, 130, 246, 0.3); }
 
         /* --- 5. المحتوى الرئيسي (Main Layout) --- */
         .main-wrapper {
@@ -268,6 +273,7 @@
         .modal-box {
             background: white; width: 90%; max-width: 500px; padding: 30px;
             border-radius: var(--radius-lg); transform: scale(0.95); transition: 0.3s;
+            max-height: 90vh; overflow-y: auto;
         }
         .modal-overlay.open .modal-box { transform: scale(1); }
         
@@ -324,10 +330,10 @@
             <h2 class="auth-title">لوحة الإدارة الشاملة</h2>
             <input type="email" id="login-email" class="form-input" placeholder="البريد الإلكتروني">
             <input type="password" id="login-pass" class="form-input" placeholder="كلمة المرور">
-            <button class="btn btn-primary" onclick="handleLogin()">
+            <button class="btn btn-primary" onclick="window.handleLogin()">
                 <i class="fas fa-sign-in-alt"></i> دخول للنظام
             </button>
-            <button class="btn btn-outline" onclick="handleRegister()">
+            <button class="btn btn-outline" onclick="window.handleRegister()">
                 <i class="fas fa-user-plus"></i> حساب جديد
             </button>
             <div id="auth-msg" style="color:var(--danger); margin-top:15px; font-size:0.9rem;"></div>
@@ -335,7 +341,7 @@
     </div>
 
     <!-- Sidebar Backdrop for Mobile -->
-    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="window.toggleSidebar()"></div>
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
@@ -344,26 +350,26 @@
             <h2>لوحة الإدارة</h2>
         </div>
         <ul class="nav-list">
-            <li class="nav-item"><a href="#" class="nav-link active" onclick="switchTab('dashboard', this)"><i class="fas fa-th-large" style="color:var(--primary)"></i> الرئيسية</a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('inventory', this)"><i class="fas fa-boxes" style="color:var(--inventory)"></i> المخزون</a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('importing', this)"><i class="fas fa-shipping-fast" style="color:var(--shipping)"></i> الاستيراد</a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('winning', this)"><i class="fas fa-trophy" style="color:var(--winning)"></i> الرابحة</a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('pages', this)"><i class="fas fa-store" style="color:var(--pages)"></i> الصفحات</a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('calculator', this)"><i class="fas fa-calculator" style="color:var(--calc)"></i> الحاسبة</a></li>
+            <li class="nav-item"><a href="#" class="nav-link active" onclick="window.switchTab('dashboard', this)"><i class="fas fa-th-large" style="color:var(--primary)"></i> الرئيسية</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="window.switchTab('inventory', this)"><i class="fas fa-boxes" style="color:var(--inventory)"></i> المخزون</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="window.switchTab('importing', this)"><i class="fas fa-shipping-fast" style="color:var(--shipping)"></i> الاستيراد</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="window.switchTab('winning', this)"><i class="fas fa-trophy" style="color:var(--winning)"></i> الرابحة</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="window.switchTab('pages', this)"><i class="fas fa-store" style="color:var(--pages)"></i> الصفحات</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="window.switchTab('calculator', this)"><i class="fas fa-calculator" style="color:var(--calc)"></i> الحاسبة</a></li>
         </ul>
         <div class="user-profile">
             <div class="user-info">
                 <div class="user-name" id="display-name">المدير العام</div>
                 <div class="user-email" id="display-email">admin@store.com</div>
             </div>
-            <button class="btn-icon-only" onclick="handleLogout()" title="خروج"><i class="fas fa-sign-out-alt"></i></button>
+            <button class="btn-icon-only" onclick="window.handleLogout()" title="خروج"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="main-wrapper">
         <header class="top-bar">
-            <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <button class="toggle-btn" onclick="window.toggleSidebar()"><i class="fas fa-bars"></i></button>
             <h2 style="font-size:1.4rem; font-weight:800; color:var(--text-main); margin-right: 15px;">لوحة التحكم</h2>
             <div style="width:35px; height:35px; background:#e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
                 <i class="fas fa-bell"></i>
@@ -396,10 +402,10 @@
 
                 <!-- Quick Actions -->
                 <div class="actions-grid">
-                    <div class="action-btn" onclick="openModal('inventory')"><i class="fas fa-plus"></i><span>منتج مخزون</span></div>
-                    <div class="action-btn" onclick="openModal('winning')"><i class="fas fa-trophy"></i><span>منتج رابح</span></div>
-                    <div class="action-btn" onclick="openModal('importing')"><i class="fas fa-dolly"></i><span>استيراد</span></div>
-                    <div class="action-btn" onclick="openModal('pages')"><i class="fas fa-link"></i><span>إضافة صفحة</span></div>
+                    <div class="action-btn" onclick="window.openModal('inventory')"><i class="fas fa-plus"></i><span>منتج مخزون</span></div>
+                    <div class="action-btn" onclick="window.openModal('winning')"><i class="fas fa-trophy"></i><span>منتج رابح</span></div>
+                    <div class="action-btn" onclick="window.openModal('importing')"><i class="fas fa-dolly"></i><span>استيراد</span></div>
+                    <div class="action-btn" onclick="window.openModal('pages')"><i class="fas fa-link"></i><span>إضافة صفحة</span></div>
                 </div>
 
                 <!-- Panels Grid -->
@@ -428,7 +434,7 @@
             <section id="inventory" class="page-section">
                 <div class="panel-header" style="margin-bottom:20px;">
                     <h2>المخزون الحالي</h2>
-                    <button class="btn btn-primary" style="width:auto; padding: 10px 20px;" onclick="openModal('inventory')">
+                    <button class="btn btn-primary" style="width:auto; padding: 10px 20px;" onclick="window.openModal('inventory')">
                         <i class="fas fa-plus"></i> إضافة
                     </button>
                 </div>
@@ -439,7 +445,7 @@
             <section id="winning" class="page-section">
                 <div class="panel-header" style="margin-bottom:20px;">
                     <h2>المنتجات الرابحة</h2>
-                    <button class="btn btn-primary" style="width:auto; padding: 10px 20px; background:var(--winning);" onclick="openModal('winning')">
+                    <button class="btn btn-primary" style="width:auto; padding: 10px 20px; background:var(--winning);" onclick="window.openModal('winning')">
                         <i class="fas fa-plus"></i> إضافة رابح
                     </button>
                 </div>
@@ -453,19 +459,19 @@
                     <div class="calc-form">
                         <div>
                             <label style="font-weight:600; margin-bottom:8px; display:block;">ثمن الشراء (MAD)</label>
-                            <input type="number" id="calc-buy" class="form-input" placeholder="0.00" oninput="runCalc()">
+                            <input type="number" id="calc-buy" class="form-input" placeholder="0.00" oninput="window.runCalc()">
                         </div>
                         <div>
                             <label style="font-weight:600; margin-bottom:8px; display:block;">التوصيل (MAD)</label>
-                            <input type="number" id="calc-ship" class="form-input" placeholder="0.00" oninput="runCalc()">
+                            <input type="number" id="calc-ship" class="form-input" placeholder="0.00" oninput="window.runCalc()">
                         </div>
                         <div>
                             <label style="font-weight:600; margin-bottom:8px; display:block;">الإعلانات (MAD)</label>
-                            <input type="number" id="calc-ads" class="form-input" placeholder="0.00" oninput="runCalc()">
+                            <input type="number" id="calc-ads" class="form-input" placeholder="0.00" oninput="window.runCalc()">
                         </div>
                         <div>
                             <label style="font-weight:600; margin-bottom:8px; display:block;">الربح المطلوب (MAD)</label>
-                            <input type="number" id="calc-profit" class="form-input" placeholder="0.00" oninput="runCalc()">
+                            <input type="number" id="calc-profit" class="form-input" placeholder="0.00" oninput="window.runCalc()">
                         </div>
                     </div>
                     
@@ -502,7 +508,7 @@
         <div class="modal-box">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
                 <h3 id="modal-title" style="font-weight:700;">عنوان</h3>
-                <button onclick="closeModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                <button onclick="window.closeModal()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div id="modal-content"></div>
             <button class="btn btn-primary" style="margin-top:20px;" id="modal-submit-btn">حفظ البيانات</button>
@@ -519,48 +525,59 @@
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
         // Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDOfw9W2U1o5HGjtcUfnQhjudoQnqFccBk",
-  authDomain: "my-store-app-12651.firebaseapp.com",
-  projectId: "my-store-app-12651",
-  storageBucket: "my-store-app-12651.firebasestorage.app",
-  messagingSenderId: "52453040648",
-  appId: "1:52453040648:web:a8101a86e030c559f967bd"
-};
+        const firebaseConfig = {
+          apiKey: "AIzaSyDOfw9W2U1o5HGjtcUfnQhjudoQnqFccBk",
+          authDomain: "my-store-app-12651.firebaseapp.com",
+          projectId: "my-store-app-12651",
+          storageBucket: "my-store-app-12651.firebasestorage.app",
+          messagingSenderId: "52453040648",
+          appId: "1:52453040648:web:a8101a86e030c559f967bd"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Global State
+        // Global State (accessible to window functions)
         window.dbData = { inventory: [], importing: [], winning: [], pages: [] };
         const USD_RATE = 9.5;
 
         // --- AUTH LISTENERS ---
         onAuthStateChanged(auth, (user) => {
+            const authScreen = document.getElementById('auth-screen');
             if (user) {
-                document.getElementById('auth-screen').style.display = 'none';
+                authScreen.style.display = 'none';
                 document.getElementById('display-email').textContent = user.email;
-                refreshData();
+                // Small delay to ensure Firebase is ready before rendering
+                setTimeout(refreshData, 500);
             } else {
-                document.getElementById('auth-screen').style.display = 'flex';
+                authScreen.style.display = 'flex';
             }
         });
 
+        // Global Auth Functions
         window.handleLogin = () => {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            signInWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message));
+            if(!email || !pass) return alert('يرجى ملء الحقول');
+            signInWithEmailAndPassword(auth, email, pass).catch(e => {
+                document.getElementById('auth-msg').innerText = "خطأ: " + e.message;
+            });
         };
         window.handleRegister = () => {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            createUserWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message));
+            if(!email || !pass) return alert('يرجى ملء الحقول');
+            createUserWithEmailAndPassword(auth, email, pass).catch(e => {
+                document.getElementById('auth-msg').innerText = "خطأ: " + e.message;
+            });
         };
-        window.handleLogout = () => signOut(auth);
+        window.handleLogout = () => {
+            signOut(auth).then(() => window.location.reload());
+        };
 
         // --- DATA LOGIC ---
         async function refreshData() {
-            // Fetch all collections
             const getCol = async (name) => (await getDocs(collection(db, name))).docs.map(d => ({id:d.id, ...d.data()}));
             window.dbData.inventory = await getCol('inventory');
             window.dbData.importing = await getCol('importing');
@@ -593,7 +610,10 @@ const firebaseConfig = {
                         <div class="item-title">${p.name}</div>
                         <div class="item-sub">ربح: ${p.margin} MAD</div>
                     </div>
-                    <button class="btn-icon-only" onclick="deleteItem('winning','${p.id}')"><i class="fas fa-trash"></i></button>
+                    <div class="item-actions">
+                        <button class="btn-icon-only btn-icon-blue" onclick="window.editItem('winning','${p.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon-only" onclick="window.deleteItem('winning','${p.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>
             `).join('') || '<div style="text-align:center; color:#94a3b8; padding:20px;">لا توجد بيانات</div>';
 
@@ -617,13 +637,13 @@ const firebaseConfig = {
             `).join('');
 
             // Render Full Lists
-            renderGrid('inventory-grid', d.inventory);
-            renderGrid('winning-grid', d.winning);
-            renderList('importing-list', d.importing);
-            renderList('pages-full-list', d.pages);
+            renderGrid('inventory-grid', d.inventory, 'inventory');
+            renderGrid('winning-grid', d.winning, 'winning');
+            renderList('importing-list', d.importing, 'importing');
+            renderList('pages-full-list', d.pages, 'pages');
         }
 
-        function renderGrid(id, data) {
+        function renderGrid(id, data, collectionName) {
             document.getElementById(id).innerHTML = data.map(p => `
                 <div class="product-card">
                     <div class="p-img-box"><img src="${p.image}" loading="lazy"></div>
@@ -635,26 +655,120 @@ const firebaseConfig = {
                         </div>
                     </div>
                     <div class="p-footer">
-                        <button class="btn-icon-only" style="background:#eff6ff; color:var(--primary);" onclick="alert('تعديل: ${p.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-icon-only" onclick="deleteItem('${id.includes('inventory')?'inventory':'winning'}','${p.id}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-icon-only btn-icon-blue" onclick="window.editItem('${collectionName}','${p.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon-only" onclick="window.deleteItem('${collectionName}','${p.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderList(id, data) {
+        function renderList(id, data, collectionName) {
              document.getElementById(id).innerHTML = data.map(p => `
                 <div class="list-item">
                     <div class="item-details">
                         <div class="item-title">${p.name || p.link}</div>
                         <div class="item-sub">${p.price ? p.price + ' MAD' : ''}</div>
                     </div>
-                    <button class="btn-icon-only" onclick="deleteItem('${id.includes('importing')?'importing':'pages'}','${p.id}')"><i class="fas fa-trash"></i></button>
+                    <div class="item-actions">
+                         <button class="btn-icon-only btn-icon-blue" onclick="window.editItem('${collectionName}','${p.id}')"><i class="fas fa-edit"></i></button>
+                         <button class="btn-icon-only" onclick="window.deleteItem('${collectionName}','${p.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>
             `).join('') || '<div class="empty-state">لا توجد عناصر</div>';
         }
 
-        // --- CRUD MODAL ---
+        // --- CRUD OPERATIONS ---
+
+        // Helper to find item in local cache
+        function findItem(col, id) {
+            return window.dbData[col].find(i => i.id === id);
+        }
+
+        // 1. DELETE
+        window.deleteItem = async (col, id) => {
+            if(confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
+                try {
+                    await deleteDoc(doc(db, col, id));
+                    refreshData(); // Reload data to update UI
+                    showToast('تم الحذف بنجاح');
+                } catch (e) {
+                    showToast('خطأ في الحذف: ' + e.message);
+                }
+            }
+        };
+
+        // 2. EDIT
+        window.editItem = (type, id) => {
+            const item = findItem(type, id);
+            if(!item) return;
+
+            const modal = document.getElementById('modal-overlay');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-content');
+            const submitBtn = document.getElementById('modal-submit-btn');
+            
+            let formHTML = '';
+            modal.classList.add('open');
+            
+            if(type === 'inventory') {
+                title.innerText = 'تعديل مخزون';
+                formHTML = `
+                    <input type="text" id="m-name" class="form-input" placeholder="اسم المنتج" value="${item.name}">
+                    <input type="number" id="m-price" class="form-input" placeholder="سعر الشراء" value="${item.price}">
+                    <input type="number" id="m-qty" class="form-input" placeholder="الكمية" value="${item.quantity}">
+                    <input type="text" id="m-img" class="form-input" placeholder="رابط الصورة" value="${item.image}">
+                `;
+            } else if (type === 'winning') {
+                title.innerText = 'تعديل منتج رابح';
+                formHTML = `
+                    <input type="text" id="m-name" class="form-input" placeholder="اسم المنتج" value="${item.name}">
+                    <input type="number" id="m-buy" class="form-input" placeholder="سعر الشراء" value="${item.buyPrice}">
+                    <input type="number" id="m-sale" class="form-input" placeholder="سعر البيع" value="${item.salePrice}">
+                    <input type="number" id="m-margin" class="form-input" placeholder="هامش الربح" value="${item.margin}">
+                    <input type="text" id="m-img" class="form-input" placeholder="رابط الصورة" value="${item.image}">
+                `;
+            } else if (type === 'pages') {
+                title.innerText = 'تعديل صفحة';
+                formHTML = `
+                    <input type="text" id="m-name" class="form-input" placeholder="اسم الصفحة" value="${item.name}">
+                    <input type="text" id="m-link" class="form-input" placeholder="رابط الصفحة" value="${item.link}">
+                `;
+            } else {
+                title.innerText = 'تعديل الاستيراد';
+                formHTML = `
+                    <input type="text" id="m-name" class="form-input" placeholder="اسم المنتج" value="${item.name}">
+                    <input type="number" id="m-price" class="form-input" placeholder="التكلفة" value="${item.price}">
+                `;
+            }
+
+            content.innerHTML = formHTML;
+            
+            // On Submit -> Update
+            submitBtn.onclick = async () => {
+                const name = document.getElementById('m-name').value;
+                if(!name) return showToast('الاسم مطلوب');
+
+                const updateData = { name };
+                if(document.getElementById('m-price')) updateData.price = Number(document.getElementById('m-price').value);
+                if(document.getElementById('m-qty')) updateData.quantity = Number(document.getElementById('m-qty').value);
+                if(document.getElementById('m-buy')) updateData.buyPrice = Number(document.getElementById('m-buy').value);
+                if(document.getElementById('m-margin')) updateData.margin = Number(document.getElementById('m-margin').value);
+                if(document.getElementById('m-sale')) updateData.salePrice = Number(document.getElementById('m-sale').value);
+                if(document.getElementById('m-link')) updateData.link = document.getElementById('m-link').value;
+                if(document.getElementById('m-img')) updateData.image = document.getElementById('m-img').value;
+
+                try {
+                    await updateDoc(doc(db, type, id), updateData);
+                    closeModal();
+                    refreshData();
+                    showToast('تم التعديل بنجاح');
+                } catch(e) {
+                    showToast('خطأ: ' + e.message);
+                }
+            };
+        };
+
+        // 3. ADD (New Item)
         window.openModal = (type) => {
             const modal = document.getElementById('modal-overlay');
             const title = document.getElementById('modal-title');
@@ -721,13 +835,6 @@ const firebaseConfig = {
         };
 
         window.closeModal = () => document.getElementById('modal-overlay').classList.remove('open');
-        window.deleteItem = async (col, id) => {
-            if(confirm('حذف هذا العنصر؟')) {
-                await deleteDoc(doc(db, col, id));
-                refreshData();
-                showToast('تم الحذف');
-            }
-        };
 
         // --- UI HELPERS ---
         window.switchTab = (id, el) => {
@@ -735,7 +842,7 @@ const firebaseConfig = {
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             if(el) el.classList.add('active');
-            if(window.innerWidth < 768) toggleSidebar(); // Close sidebar on mobile click
+            if(window.innerWidth < 768) window.toggleSidebar(); // Close sidebar on mobile click
         };
 
         window.toggleSidebar = () => {
