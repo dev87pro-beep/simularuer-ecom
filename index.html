@@ -3,724 +3,691 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الشقق المفروشة المتكامل</title>
+    <title>ProPilot - نظام إدارة العقارات الذكي</title>
+    
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --dark: #34495e;
-            --border: #ddd;
+            --bg-body: #f0f2f5;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --color-primary: #4f46e5;
+            --color-primary-light: #818cf8;
+            --color-secondary: #06b6d4;
+            --color-danger: #ef4444;
+            --color-warning: #f59e0b;
+            --color-success: #10b981;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.2s ease;
         }
 
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --bg-sidebar: #1e293b;
+            --bg-card: #1e293b;
+            --color-text: #f1f5f9;
+            --color-text-light: #94a3b8;
+        }
+
+        * { box-sizing: border-box; outline: none; }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--color-text);
             margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        /* Header */
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.3s;
         }
 
-        header h1 { margin: 0; font-size: 1.4rem; }
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border-left: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            z-index: 100;
+            flex-shrink: 0;
+        }
 
-        .header-actions { display: flex; gap: 10px; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
+        .logo h1 { margin: 0; font-size: 1.1rem; font-weight: 800; }
+        .logo span { display: block; font-size: 0.7rem; color: var(--color-text-light); }
+
+        .nav-section { margin-bottom: 1.5rem; }
+        .nav-section-title { font-size: 0.75rem; color: var(--color-text-light); text-transform: uppercase; margin-bottom: 0.8rem; letter-spacing: 0.5px; }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            color: var(--color-text-light);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .nav-item:hover { background: rgba(79, 70, 229, 0.05); color: var(--color-primary); }
+        .nav-item.active { background: var(--color-primary); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .nav-item i { width: 20px; margin-left: 12px; font-size: 0.9rem; }
+
+        .sidebar-footer { margin-top: auto; }
+        .theme-toggle {
+            width: 100%; padding: 10px; border: none; border-radius: 8px;
+            background: var(--bg-body); color: var(--color-text);
+            font-family: inherit; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: var(--transition);
+        }
+        .theme-toggle:hover { background: var(--color-primary); color: white; }
+
+        /* --- Main Content --- */
+        .main-content { flex: 1; overflow-y: auto; padding: 2rem; position: relative; }
+        
+        /* Page Sections (Hidden by default) */
+        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; }
+        .header p { margin: 5px 0 0; color: var(--color-text-light); font-size: 0.9rem; }
 
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: opacity 0.3s;
-            font-size: 0.95rem;
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-family: inherit; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: var(--transition); font-size: 0.9rem;
         }
+        .btn-primary { background: var(--color-primary); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3); }
+        .btn-outline { background: transparent; color: var(--color-text); border: 1px solid rgba(0,0,0,0.1); }
+        .btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+        .btn-danger { background: var(--color-danger); color: white; }
+        .btn-success { background: var(--color-success); color: white; }
 
-        .btn:hover { opacity: 0.9; }
-        .btn-primary { background: var(--secondary); color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--accent); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-edit { background: var(--secondary); color: white; padding: 5px 10px; font-size: 0.85rem; }
-        .btn-delete { background: var(--accent); color: white; padding: 5px 10px; font-size: 0.85rem; }
-        .btn-manage { background: var(--dark); color: white; padding: 5px 10px; font-size: 0.85rem; }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        /* Dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-top: 5px solid var(--secondary);
-            position: relative;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            borderBottom: 1px solid var(--light);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-        }
-
-        .card-header h3 { margin: 0; color: var(--primary); font-size: 1.2rem; }
+        /* --- Stats --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
-            font-size: 0.95rem;
+        .stat-card {
+            background: var(--bg-card); border-radius: var(--radius);
+            padding: 1.5rem; position: relative; overflow: hidden; box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
-
-        .stat-label { color: #7f8c8d; }
-        .stat-value { font-weight: bold; color: var(--primary); }
-        .stat-value.success { color: var(--success); }
-        .stat-value.warning { color: var(--warning); font-size: 1.1rem; }
-        .stat-value.danger { color: var(--accent); }
-
-        /* Table */
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: right;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background-color: var(--light);
-            color: var(--dark);
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        tr:hover { background-color: #f8f9fa; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: var(--icon-bg); opacity: 0.1; border-radius: 0 0 0 100%; }
         
-        .total-row {
-            background-color: var(--primary) !important;
-            color: white;
-            font-weight: bold;
-        }
-        .total-row td { border-bottom: none; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 1rem; }
+        .stat-info h3 { margin: 0; font-size: 1.5rem; }
+        .stat-info p { margin: 5px 0 0; color: var(--color-text-light); font-size: 0.85rem; }
 
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+        /* --- Table --- */
+        .card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .card-title { margin: 0; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 
-        .modal {
-            background-color: white;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 { margin: 0; }
-        .close-btn { font-size: 24px; cursor: pointer; color: white; }
-
-        .modal-body { padding: 20px; }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--dark); }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        th, td { padding: 12px 15px; text-align: right; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        th { color: var(--color-text-light); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+        tbody tr:hover { background: var(--bg-body); }
         
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .bg-success { background: rgba(16, 185, 129, 0.1); color: var(--color-success); }
+        .bg-warning { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+        .bg-danger { background: rgba(239, 68, 68, 0.1); color: var(--color-danger); }
 
-        input:focus, select:focus { border-color: var(--secondary); outline: none; }
+        .action-btn { width: 30px; height: 30px; border: none; background: transparent; color: var(--color-text-light); border-radius: 6px; cursor: pointer; transition: var(--transition); margin-left: 5px; }
+        .action-btn:hover { background: var(--bg-body); color: var(--color-text); }
+        .action-btn.danger:hover { background: rgba(239, 68, 68, 0.1); color: var(--color-danger); }
 
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        .form-row .form-group { flex: 1; }
-
-        /* Manage Apartments List */
-        .apt-list { list-style: none; padding: 0; }
-        .apt-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .apt-list li:last-child { border-bottom: none; }
+        /* --- Modals --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
         
-        .edit-input { flex: 1; margin-left: 10px; padding: 8px; }
+        .modal-content { width: 90%; max-width: 500px; background: var(--bg-card); border-radius: var(--radius); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); transform: scale(0.9) translateY(20px); transition: all 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        
+        .modal-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; font-size: 1.1rem; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; color: var(--color-text-light); cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: var(--color-danger); }
 
+        .modal-body { padding: 1.5rem; }
+        
+        .form-group { margin-bottom: 1rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group.full { grid-column: 1 / -1; }
+        
+        label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: var(--color-text-light); }
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; background: var(--bg-body); color: var(--color-text); font-family: inherit; transition: var(--transition); }
+        input:focus, select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+
+        /* --- Settings List --- */
+        .settings-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+        .settings-list li { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: 8px; margin-bottom: 5px; transition: var(--transition); }
+        .settings-list li:hover { background: var(--bg-body); }
+        
+        /* --- Toast Notification --- */
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); z-index: 2000; transition: transform 0.3s ease; font-weight: 500; }
+        #toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🏠 نظام إدارة الشقق المفروشة</h1>
-        <div class="header-actions">
-            <button class="btn btn-primary" onclick="app.openBookingModal()">+ إضافة حجز جديد</button>
-            <button class="btn btn-manage" onclick="app.openApartmentsModal()">⚙️ إدارة الشقق</button>
-        </div>
-    </header>
+    <!-- Toast Notification -->
+    <div id="toast"></div>
 
-    <div class="container">
-        
-        <!-- Dashboard Cards -->
-        <div id="dashboard-cards" class="dashboard-grid">
-            <!-- Injected by JS -->
-        </div>
-
-        <!-- Bookings Table -->
-        <div class="table-container">
-            <div class="section-title">
-                <h2>📊 سجل الحجوزات</h2>
-                <select id="filter-apartment" onchange="app.render()" style="width:auto; padding:8px;">
-                    <option value="all">جميع الشقق</option>
-                </select>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-building"></i></div>
+            <div>
+                <h1>ProPilot</h1>
+                <span>إدارة العقارات</span>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>الشقة</th>
-                        <th>التاريخ</th>
-                        <th>الأيام</th>
-                        <th>السعر/اليوم</th>
-                        <th>إجمالي Airbnb</th>
-                        <th>مبلغ المالك</th>
-                        <th>عمولتي</th>
-                        <th>المسلم</th>
-                        <th>المتبقي</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="bookings-body">
-                    <!-- Rows injected by JS -->
-                </tbody>
-                <tfoot>
-                    <tr class="total-row">
-                        <td colspan="4">الإجمالي الكلي</td>
-                        <td id="sum-airbnb">0</td>
-                        <td id="sum-owner">0</td>
-                        <td id="sum-commission">0</td>
-                        <td id="sum-advance">0</td>
-                        <td id="sum-reste">0</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
         </div>
-    </div>
 
-    <!-- Modal: Add/Edit Booking -->
-    <div id="booking-modal" class="modal-overlay">
-        <div class="modal">
+        <div class="nav-section">
+            <div class="nav-section-title">القائمة الرئيسية</div>
+            <!-- Added data-page attribute to handle navigation -->
+            <div class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard', this)">
+                <i class="fas fa-th-large"></i> لوحة التحكم
+            </div>
+            <div class="nav-item" data-page="bookings" onclick="navigateTo('bookings', this)">
+                <i class="fas fa-calendar-check"></i> الحجوزات
+            </div>
+            <div class="nav-item" onclick="app.openSettings()">
+                <i class="fas fa-city"></i> إدارة العقارات
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="theme-icon"></i>
+                <span>الوضع الليلي</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-content">
+        
+        <!-- PAGE 1: Dashboard -->
+        <div id="page-dashboard" class="page-section active">
+            <header class="header">
+                <div>
+                    <h2>نظرة عامة على الأعمال</h2>
+                    <p>مراقبة الأداء المالي والحجوزات</p>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline" onclick="app.openSettings()"><i class="fas fa-cog"></i> الإعدادات</button>
+                    <button class="btn btn-primary" onclick="app.openBookingModal()"><i class="fas fa-plus"></i> حجز جديد</button>
+                </div>
+            </header>
+
+            <section class="stats-grid" id="stats-grid"></section>
+            
+            <!-- Quick view table in Dashboard -->
+            <section class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-list" style="color:var(--color-primary)"></i> آخر الحجوزات</h3>
+                    <button class="btn btn-outline" onclick="navigateTo('bookings')">عرض الكل</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>العقار</th>
+                                <th>التاريخ</th>
+                                <th>المدة</th>
+                                <th>الإجمالي</th>
+                                <th>المتبقي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-tableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- PAGE 2: Bookings -->
+        <div id="page-bookings" class="page-section">
+            <header class="header">
+                <div>
+                    <h2>إدارة الحجوزات</h2>
+                    <p>قائمة تفصيلية بجميع الحجوزات المسجلة</p>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <select id="filter-apt-main" onchange="app.render()" style="padding:8px 12px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); background:var(--bg-card); cursor:pointer;">
+                        <option value="all">كل العقارات</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="app.openBookingModal()"><i class="fas fa-plus"></i> حجز جديد</button>
+                </div>
+            </header>
+
+            <section class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>العقار</th>
+                                <th>التاريخ</th>
+                                <th>المدة</th>
+                                <th>سعر Airbnb</th>
+                                <th>حقوق المالك</th>
+                                <th>عمولتي</th>
+                                <th>المسلم</th>
+                                <th>المتبقي</th>
+                                <th>خيارات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="main-tableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Modal: Booking -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-booking-title">إضافة حجز جديد</h3>
-                <span class="close-btn" onclick="app.closeBookingModal()">&times;</span>
+                <h3 id="modal-title">إضافة حجز</h3>
+                <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="booking-form" onsubmit="app.saveBooking(event)">
-                    <input type="hidden" id="booking-id">
-                    
-                    <div class="form-group">
-                        <label>اختر الشقة</label>
-                        <select id="apt-select" required></select>
-                    </div>
-
-                    <div class="form-row">
+                <form id="bookingForm" onsubmit="app.saveBooking(event)">
+                    <input type="hidden" id="b-id">
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label>العقار</label>
+                            <select id="b-apt" required></select>
+                        </div>
                         <div class="form-group">
-                            <label>الفترة (مثال: 21-28 Fév)</label>
-                            <input type="text" id="b-date" required>
+                            <label>تاريخ الدخول</label>
+                            <input type="text" id="b-date" placeholder="مثال: 15-20 Mars" required>
                         </div>
                         <div class="form-group">
                             <label>عدد الأيام</label>
-                            <input type="number" id="b-days" required oninput="app.calcBookingMath()">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>السعر اليومي (Prix)</label>
-                            <input type="number" id="b-price" required oninput="app.calcBookingMath()">
+                            <input type="number" id="b-days" placeholder="0" required oninput="app.calcMath()">
                         </div>
                         <div class="form-group">
-                            <label>سعر المالك/اليوم (Comis Proprieter)</label>
-                            <input type="number" id="b-owner-price" required oninput="app.calcBookingMath()">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>عمولتي/اليوم (Ma Comis)</label>
-                            <input type="number" id="b-comm" required oninput="app.calcBookingMath()">
+                            <label>سعر Airbnb/يوم</label>
+                            <input type="number" id="b-price" placeholder="0" required oninput="app.calcMath()">
                         </div>
                         <div class="form-group">
+                            <label>سعر المالك/يوم</label>
+                            <input type="number" id="b-owner" placeholder="0" required oninput="app.calcMath()">
+                        </div>
+                        <div class="form-group">
+                            <label>عمولتك/يوم</label>
+                            <input type="number" id="b-comm" placeholder="0" required oninput="app.calcMath()">
+                        </div>
+                        <div class="form-group full">
                             <label>المبلغ المسلم (Avance)</label>
-                            <input type="number" id="b-advance" required oninput="app.calcBookingMath()">
+                            <input type="number" id="b-advance" placeholder="0" required oninput="app.calcMath()">
                         </div>
                     </div>
 
-                    <div style="background:#f8f9fa; padding:15px; border-radius:5px; margin-bottom:15px; border:1px solid #eee;">
-                        <div class="stat-row">
-                            <span>إجمالي Airbnb:</span>
-                            <span><strong id="calc-total-airbnb">0</strong> درهم</span>
+                    <div style="background:var(--bg-body); padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <div>
+                            <small style="color:var(--color-text-light)">المتبقي (Reste)</small>
+                            <h3 style="margin:2px 0 0; color:var(--color-danger)" id="calc-reste">0 DH</h3>
                         </div>
-                        <div class="stat-row">
-                            <span>المتبقي (Reste):</span>
-                            <span class="stat-value danger"><strong id="calc-reste">0</strong> درهم</span>
+                        <div style="text-align:left">
+                            <small style="color:var(--color-text-light)">إجمالي Airbnb</small>
+                            <h3 style="margin:2px 0 0; color:var(--color-primary)" id="calc-total">0 DH</h3>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-success" style="width:100%;">حفظ الحجز</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">حفظ البيانات</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Manage Apartments -->
-    <div id="apartments-modal" class="modal-overlay">
-        <div class="modal">
+    <!-- Modal: Settings -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>إدارة الشقق</h3>
-                <span class="close-btn" onclick="app.closeApartmentsModal()">&times;</span>
+                <h3>إدارة العقارات</h3>
+                <button class="modal-close" onclick="closeModal('settingsModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <form onsubmit="app.addApartment(event)" style="display:flex; gap:10px; margin-bottom:20px;">
-                    <input type="text" id="new-apt-name" placeholder="اسم الشقة الجديدة" required style="flex:1;">
-                    <button type="submit" class="btn btn-success">إضافة</button>
-                </form>
-                <hr>
-                <h4>الشقق الحالية:</h4>
-                <ul id="apartments-list" class="apt-list">
-                    <!-- Injected by JS -->
-                </ul>
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <input type="text" id="newAptInput" placeholder="اسم العقار الجديد..." style="flex:1">
+                    <button class="btn btn-success" onclick="app.addApt()">إضافة</button>
+                </div>
+                <ul class="settings-list" id="aptList"></ul>
             </div>
         </div>
     </div>
 
     <script>
+        // --- Core App Logic ---
         const app = {
-            // === 1. التهيئة والبيانات ===
             data: {
-                apartments: ["Camping Elbarco", "Maison Mohamed Elgat"],
+                apts: ["Camping Elbarco", "Maison Mohamed Elgat", "Appartement Elgat"],
                 bookings: [
-                    // بيانات تجريبية بناءً على ملفك
-                    { id: 1, apt: "Camping Elbarco", date: "21-28 Fév", days: 7, price: 246, ownerPrice: 220, comm: 25, advance: 1000 },
-                    { id: 2, apt: "Camping Elbarco", date: "26-27 Fév", days: 1, price: 271, ownerPrice: 220, comm: 50, advance: 0 }
+                    { id: 1, apt: "Camping Elbarco", date: "21-28 Fév", days: 7, price: 246, owner: 220, comm: 25, advance: 1000 },
+                    { id: 2, apt: "Camping Elbarco", date: "26-27 Fév", days: 1, price: 271, owner: 220, comm: 50, advance: 0 }
                 ]
             },
 
-            init: function() {
-                // تحميل البيانات من الذاكرة المحلية إن وجدت
-                const storedData = localStorage.getItem('appData');
-                if (storedData) {
-                    this.data = JSON.parse(storedData);
-                }
+            init() {
+                // Load from LocalStorage if exists
+                const saved = localStorage.getItem('propilotData');
+                if (saved) this.data = JSON.parse(saved);
+                
                 this.render();
             },
 
-            saveData: function() {
-                localStorage.setItem('appData', JSON.stringify(this.data));
+            save() {
+                localStorage.setItem('propilotData', JSON.stringify(this.data));
+                showToast('تم حفظ البيانات بنجاح');
             },
 
-            // === 2. العرض (Rendering) ===
-            render: function() {
-                this.renderDashboard();
-                this.renderTable();
-                this.populateDropdowns();
+            render() {
+                this.renderStats();
+                this.renderDashboardTable(); // Quick view table
+                this.renderMainTable();      // Full view table
+                this.renderDropdowns();
             },
 
-            populateDropdowns: function() {
-                // قائمة التصفية في الجدول
-                const filterSelect = document.getElementById('filter-apartment');
-                const currentFilter = filterSelect.value;
-                filterSelect.innerHTML = '<option value="all">جميع الشقق</option>';
-                this.data.apartments.forEach(apt => {
-                    const opt = document.createElement('option');
-                    opt.value = apt;
-                    opt.innerText = apt;
-                    filterSelect.appendChild(opt);
-                });
-                if (this.data.apartments.includes(currentFilter)) filterSelect.value = currentFilter;
+            // --- Rendering ---
+            renderStats() {
+                const grid = document.getElementById('stats-grid');
+                let totalRev = 0, totalProfit = 0, totalReste = 0, totalDays = 0;
 
-                // قائمة الشقق في نموذج الإضافة
-                const formSelect = document.getElementById('apt-select');
-                formSelect.innerHTML = '';
-                this.data.apartments.forEach(apt => {
-                    const opt = document.createElement('option');
-                    opt.value = apt;
-                    opt.innerText = apt;
-                    formSelect.appendChild(opt);
-                });
-            },
-
-            renderDashboard: function() {
-                const container = document.getElementById('dashboard-cards');
-                const grouped = {};
-
-                // تجميع البيانات
                 this.data.bookings.forEach(b => {
-                    if (!grouped[b.apt]) {
-                        grouped[b.apt] = { days: 0, revenue: 0, ownerTotal: 0, commTotal: 0, advance: 0 };
-                    }
-                    grouped[b.apt].days += b.days;
-                    grouped[b.apt].revenue += (b.days * b.price);
-                    grouped[b.apt].ownerTotal += (b.days * b.ownerPrice);
-                    grouped[b.apt].commTotal += (b.days * b.comm);
-                    grouped[b.apt].advance += b.advance;
+                    totalRev += (b.days * b.price);
+                    totalProfit += (b.days * b.comm);
+                    totalDays += b.days;
+                    totalReste += ((b.days * b.owner) - b.advance);
                 });
 
-                container.innerHTML = '';
-                this.data.apartments.forEach(aptName => {
-                    const stats = grouped[aptName] || { days: 0, revenue: 0, ownerTotal: 0, commTotal: 0, advance: 0 };
-                    const reste = stats.ownerTotal - stats.advance;
-
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <h3>${aptName}</h3>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">📅 أيام الإشغال</span>
-                            <span class="stat-value">${stats.days} يوم</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">💰 إيرادات Airbnb</span>
-                            <span class="stat-value success">${stats.revenue.toLocaleString()} DH</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">🤝 حقوق المالك</span>
-                            <span class="stat-value">${stats.ownerTotal.toLocaleString()} DH</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">💸 ربحيتك (العمولة)</span>
-                            <span class="stat-value success">${stats.commTotal.toLocaleString()} DH</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">💵 تم تسليمه</span>
-                            <span class="stat-value">${stats.advance.toLocaleString()} DH</span>
-                        </div>
-                        <div class="stat-row" style="background:#f8f8f8; padding:5px; border-radius:4px; margin-top:5px;">
-                            <span class="stat-label"><strong>⚖️ المتبقي (Reste)</strong></span>
-                            <span class="stat-value ${reste > 0 ? 'warning' : 'success'}"><strong>${reste.toLocaleString()} DH</strong></span>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
+                grid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:var(--color-primary); --icon-bg:var(--color-primary)"><i class="fas fa-coins"></i></div>
+                        <div class="stat-info"><p>إجمالي الإيرادات</p><h3>${totalRev.toLocaleString()} <small style="font-size:0.6em">DH</small></h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:var(--color-success); --icon-bg:var(--color-success)"><i class="fas fa-hand-holding-usd"></i></div>
+                        <div class="stat-info"><p>صافي أرباحك</p><h3>${totalProfit.toLocaleString()} <small style="font-size:0.6em">DH</small></h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:var(--color-warning); --icon-bg:var(--color-warning)"><i class="fas fa-calendar-day"></i></div>
+                        <div class="stat-info"><p>أيام الإشغال</p><h3>${totalDays} <small style="font-size:0.6em">يوم</small></h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:var(--color-danger); --icon-bg:var(--color-danger)"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="stat-info"><p>مبالغ متبقية</p><h3>${totalReste.toLocaleString()} <small style="font-size:0.6em">DH</small></h3></div>
+                    </div>
+                `;
             },
 
-            renderTable: function() {
-                const tbody = document.getElementById('bookings-body');
-                const filterVal = document.getElementById('filter-apartment').value;
-                
-                // حساب المجاميع
-                const sums = { airbnb: 0, owner: 0, comm: 0, advance: 0, reste: 0 };
-                
-                // تصفية البيانات
-                const filtered = filterVal === 'all' 
-                    ? this.data.bookings 
-                    : this.data.bookings.filter(b => b.apt === filterVal);
+            renderDashboardTable() {
+                const tbody = document.getElementById('dash-tableBody');
+                // Show only last 3 bookings
+                const rows = this.data.bookings.slice(-3).reverse();
 
-                tbody.innerHTML = '';
-                
-                filtered.forEach(b => {
+                tbody.innerHTML = rows.map(b => {
                     const totalAirbnb = b.days * b.price;
-                    const totalOwner = b.days * b.ownerPrice;
+                    const totalOwner = b.days * b.owner;
+                    const reste = totalOwner - b.advance;
+                    const status = reste > 0 ? 'bg-warning' : 'bg-success';
+
+                    return `
+                        <tr>
+                            <td><strong>${b.apt}</strong></td>
+                            <td>${b.date}</td>
+                            <td>${b.days} ليالي</td>
+                            <td>${totalAirbnb.toLocaleString()} DH</td>
+                            <td><span class="badge ${status}">${reste.toLocaleString()} DH</span></td>
+                        </tr>
+                    `;
+                }).join('');
+            },
+
+            renderMainTable() {
+                const tbody = document.getElementById('main-tableBody');
+                const filterVal = document.getElementById('filter-apt-main').value;
+                const rows = filterVal === 'all' ? this.data.bookings : this.data.bookings.filter(b => b.apt === filterVal);
+
+                tbody.innerHTML = rows.map(b => {
+                    const totalAirbnb = b.days * b.price;
+                    const totalOwner = b.days * b.owner;
                     const totalComm = b.days * b.comm;
                     const reste = totalOwner - b.advance;
+                    const status = reste > 0 ? 'bg-warning' : 'bg-success';
 
-                    sums.airbnb += totalAirbnb;
-                    sums.owner += totalOwner;
-                    sums.comm += totalComm;
-                    sums.advance += b.advance;
-                    sums.reste += reste;
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${b.apt}</td>
-                        <td>${b.date}</td>
-                        <td>${b.days}</td>
-                        <td>${b.price}</td>
-                        <td>${totalAirbnb.toLocaleString()}</td>
-                        <td>${totalOwner.toLocaleString()}</td>
-                        <td>${totalComm.toLocaleString()}</td>
-                        <td>${b.advance.toLocaleString()}</td>
-                        <td class="${reste > 0 ? 'stat-value warning' : 'stat-value success'}">${reste.toLocaleString()}</td>
-                        <td>
-                            <button class="btn-edit" onclick="app.editBooking(${b.id})">✏️</button>
-                            <button class="btn-delete" onclick="app.deleteBooking(${b.id})">🗑️</button>
-                        </td>
+                    return `
+                        <tr>
+                            <td><strong>${b.apt}</strong></td>
+                            <td>${b.date}</td>
+                            <td>${b.days} ليالي</td>
+                            <td>${totalAirbnb.toLocaleString()} DH</td>
+                            <td>${totalOwner.toLocaleString()} DH</td>
+                            <td>${totalComm.toLocaleString()} DH</td>
+                            <td>${b.advance.toLocaleString()} DH</td>
+                            <td><span class="badge ${status}">${reste.toLocaleString()} DH</span></td>
+                            <td>
+                                <button class="action-btn" onclick="app.editBooking(${b.id})" title="تعديل"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn danger" onclick="app.deleteBooking(${b.id})" title="حذف"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
                     `;
-                    tbody.appendChild(tr);
-                });
-
-                // تحديث التذييل
-                document.getElementById('sum-airbnb').innerText = sums.airbnb.toLocaleString();
-                document.getElementById('sum-owner').innerText = sums.owner.toLocaleString();
-                document.getElementById('sum-commission').innerText = sums.comm.toLocaleString();
-                document.getElementById('sum-advance').innerText = sums.advance.toLocaleString();
-                document.getElementById('sum-reste').innerText = sums.reste.toLocaleString();
+                }).join('');
             },
 
-            // === 3. إدارة الحجوزات (CRUD) ===
-            openBookingModal: function(id = null) {
-                document.getElementById('booking-modal').style.display = 'flex';
-                document.getElementById('booking-form').reset();
-                document.getElementById('booking-id').value = '';
-                document.getElementById('modal-booking-title').innerText = 'إضافة حجز جديد';
-                this.populateDropdowns(); // تحديث القائمة
+            renderDropdowns() {
+                const bApt = document.getElementById('b-apt');
+                const fAptMain = document.getElementById('filter-apt-main');
+                
+                const currentFilter = fAptMain.value;
 
+                const options = this.data.apts.map(a => `<option value="${a}">${a}</option>`).join('');
+                
+                bApt.innerHTML = options;
+                
+                fAptMain.innerHTML = '<option value="all">كل العقارات</option>' + options;
+                
+                if(this.data.apts.includes(currentFilter)) fAptMain.value = currentFilter;
+            },
+
+            calcMath() {
+                const d = parseFloat(document.getElementById('b-days').value) || 0;
+                const p = parseFloat(document.getElementById('b-price').value) || 0;
+                const o = parseFloat(document.getElementById('b-owner').value) || 0;
+                const a = parseFloat(document.getElementById('b-advance').value) || 0;
+
+                document.getElementById('calc-total').innerText = (d * p).toLocaleString() + ' DH';
+                document.getElementById('calc-reste').innerText = ((d * o) - a).toLocaleString() + ' DH';
+            },
+
+            // --- Booking Actions ---
+            openBookingModal(id = null) {
+                document.getElementById('bookingForm').reset();
+                document.getElementById('b-id').value = '';
+                document.getElementById('modal-title').innerText = 'حجز جديد';
+                this.renderDropdowns(); 
+                
                 if (id) {
                     const b = this.data.bookings.find(x => x.id === id);
                     if (b) {
-                        document.getElementById('modal-booking-title').innerText = 'تعديل الحجز';
-                        document.getElementById('booking-id').value = b.id;
-                        document.getElementById('apt-select').value = b.apt;
+                        document.getElementById('modal-title').innerText = 'تعديل الحجز';
+                        document.getElementById('b-id').value = b.id;
+                        document.getElementById('b-apt').value = b.apt;
                         document.getElementById('b-date').value = b.date;
                         document.getElementById('b-days').value = b.days;
                         document.getElementById('b-price').value = b.price;
-                        document.getElementById('b-owner-price').value = b.ownerPrice;
+                        document.getElementById('b-owner').value = b.owner;
                         document.getElementById('b-comm').value = b.comm;
                         document.getElementById('b-advance').value = b.advance;
-                        this.calcBookingMath();
+                        this.calcMath();
                     }
                 }
+                openModal('bookingModal');
             },
 
-            closeBookingModal: function() {
-                document.getElementById('booking-modal').style.display = 'none';
-            },
-
-            calcBookingMath: function() {
-                const days = parseFloat(document.getElementById('b-days').value) || 0;
-                const price = parseFloat(document.getElementById('b-price').value) || 0;
-                const ownerPrice = parseFloat(document.getElementById('b-owner-price').value) || 0;
-                const advance = parseFloat(document.getElementById('b-advance').value) || 0;
-
-                const totalAirbnb = days * price;
-                const totalOwner = days * ownerPrice;
-                const reste = totalOwner - advance;
-
-                document.getElementById('calc-total-airbnb').innerText = totalAirbnb.toLocaleString();
-                document.getElementById('calc-reste').innerText = reste.toLocaleString();
-            },
-
-            saveBooking: function(e) {
+            saveBooking(e) {
                 e.preventDefault();
-                const id = document.getElementById('booking-id').value;
-                
-                const newBooking = {
+                const id = document.getElementById('b-id').value;
+                const payload = {
                     id: id ? parseInt(id) : Date.now(),
-                    apt: document.getElementById('apt-select').value,
+                    apt: document.getElementById('b-apt').value,
                     date: document.getElementById('b-date').value,
                     days: parseInt(document.getElementById('b-days').value),
                     price: parseFloat(document.getElementById('b-price').value),
-                    ownerPrice: parseFloat(document.getElementById('b-owner-price').value),
+                    owner: parseFloat(document.getElementById('b-owner').value),
                     comm: parseFloat(document.getElementById('b-comm').value),
                     advance: parseFloat(document.getElementById('b-advance').value)
                 };
 
                 if (id) {
-                    const index = this.data.bookings.findIndex(b => b.id == id);
-                    this.data.bookings[index] = newBooking;
+                    const idx = this.data.bookings.findIndex(x => x.id == id);
+                    this.data.bookings[idx] = payload;
                 } else {
-                    this.data.bookings.push(newBooking);
+                    this.data.bookings.push(payload);
                 }
 
-                this.saveData();
-                this.closeBookingModal();
+                this.save();
+                closeModal('bookingModal');
                 this.render();
             },
 
-            deleteBooking: function(id) {
-                if(confirm('هل أنت متأكد من حذف هذا الحجز؟ لا يمكن التراجع عن هذا الإجراء.')) {
-                    this.data.bookings = this.data.bookings.filter(b => b.id !== id);
-                    this.saveData();
-                    this.render();
-                }
-            },
-
-            editBooking: function(id) {
+            editBooking(id) {
                 this.openBookingModal(id);
             },
 
-            // === 4. إدارة الشقق (Settings) ===
-            openApartmentsModal: function() {
-                this.renderApartmentsList();
-                document.getElementById('apartments-modal').style.display = 'flex';
-            },
-
-            closeApartmentsModal: function() {
-                document.getElementById('apartments-modal').style.display = 'none';
-            },
-
-            renderApartmentsList: function() {
-                const list = document.getElementById('apartments-list');
-                list.innerHTML = '';
-                
-                this.data.apartments.forEach((apt, index) => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <span>${apt}</span>
-                        <div>
-                            <button class="btn-edit" onclick="app.editAptName(${index}, this)">✏️ تعديل</button>
-                            <button class="btn-delete" onclick="app.deleteApt(${index})">🗑️</button>
-                        </div>
-                    `;
-                    list.appendChild(li);
-                });
-            },
-
-            addApartment: function(e) {
-                e.preventDefault();
-                const input = document.getElementById('new-apt-name');
-                const name = input.value.trim();
-                if (name && !this.data.apartments.includes(name)) {
-                    this.data.apartments.push(name);
-                    this.saveData();
+            deleteBooking(id) {
+                if (confirm('هل أنت متأكد من حذف هذا الحجز؟')) {
+                    this.data.bookings = this.data.bookings.filter(b => b.id !== id);
+                    this.save();
                     this.render();
-                    this.renderApartmentsList(); // تحديث القائمة داخل النافذة
-                    input.value = ''; // تفريغ الحقل
-                } else {
-                    alert("اسم الشقة موجود مسبقاً أو فارغ!");
                 }
             },
 
-            deleteApt: function(index) {
-                const aptName = this.data.apartments[index];
-                // التحقق من وجود حجوزات مرتبطة
+            // --- Settings Actions ---
+            openSettings() {
+                this.renderAptList();
+                openModal('settingsModal');
+            },
+
+            renderAptList() {
+                const list = document.getElementById('aptList');
+                if(this.data.apts.length === 0) {
+                    list.innerHTML = '<li style="justify-content:center; color:var(--color-text-light)">لا توجد عقارات مضافة</li>';
+                    return;
+                }
+                list.innerHTML = this.data.apts.map((apt, idx) => `
+                    <li>
+                        <span>${apt}</span>
+                        <div style="display:flex; gap:5px;">
+                            <button class="action-btn danger" onclick="app.deleteApt(${idx})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                `).join('');
+            },
+
+            addApt() {
+                const input = document.getElementById('newAptInput');
+                const name = input.value.trim();
+                if (!name) return showToast('الرجاء كتابة اسم العقار', 'error');
+                if (this.data.apts.includes(name)) return showToast('هذا العقار موجود بالفعل', 'error');
+
+                this.data.apts.push(name);
+                this.save();
+                input.value = '';
+                this.renderAptList();
+                this.renderDropdowns();
+            },
+
+            deleteApt(index) {
+                const aptName = this.data.apts[index];
                 const hasBookings = this.data.bookings.some(b => b.apt === aptName);
                 
                 if (hasBookings) {
-                    alert("لا يمكن حذف هذه الشقة لوجود حجوزات مرتبطة بها. احذف الحجوزات أولاً.");
+                    showToast('لا يمكن حذف العقار لوجود حجوزات مرتبطة به', 'error');
                     return;
                 }
-                
-                if(confirm(`هل أنت متأكد من حذف شقة "${aptName}"؟`)) {
-                    this.data.apartments.splice(index, 1);
-                    this.saveData();
-                    this.render();
-                    this.renderApartmentsList();
+
+                if (confirm(`حذف عقار "${aptName}"؟`)) {
+                    this.data.apts.splice(index, 1);
+                    this.save();
+                    this.renderAptList();
+                    this.renderDropdowns();
                 }
-            },
-
-            editAptName: function(index, btn) {
-                const currentName = this.data.apartments[index];
-                const li = btn.parentElement.parentElement;
-                
-                // استبدال النص بحقل إدخال
-                li.innerHTML = `
-                    <input type="text" class="edit-input" value="${currentName}">
-                    <div>
-                        <button class="btn btn-success" onclick="app.saveAptName(${index}, this)">حفظ</button>
-                        <button class="btn btn-danger" onclick="app.renderApartmentsList()">إلغاء</button>
-                    </div>
-                `;
-            },
-
-            saveAptName: function(index, btn) {
-                const li = btn.parentElement.parentElement;
-                const newName = li.querySelector('input').value.trim();
-                const oldName = this.data.apartments[index];
-
-                if (newName && newName !== oldName) {
-                    // تحديث اسم الشقة في القائمة
-                    this.data.apartments[index] = newName;
-                    
-                    // تحديث اسم الشقة في جميع الحجوزات المرتبطة
-                    this.data.bookings.forEach(b => {
-                        if(b.apt === oldName) b.apt = newName;
-                    });
-
-                    this.saveData();
-                    this.render(); // إعادة تحديث كل شيء
-                }
-                this.renderApartmentsList(); // العودة للعرض العادي
             }
         };
 
-        // بدء التطبيق
+        // --- Navigation & UI Helpers ---
+        function navigateTo(pageId, element) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            // Show target page
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(element) element.classList.add('active');
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            const text = icon.nextElementSibling;
+            if (document.body.classList.contains('dark')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                text.innerText = "الوضع النهاري";
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                text.innerText = "الوضع الليلي";
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.background = type === 'success' ? '#10b981' : '#ef4444';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) closeModal(this.id);
+            });
+        });
+
+        // Initialize
         app.init();
     </script>
 </body>
